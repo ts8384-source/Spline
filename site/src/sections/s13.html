@@ -1,6 +1,7 @@
 <section id="s13">
     <h2>11 · Knots and the B-spline basis</h2>
-    <p>A spline curve is a weighted sum of bumps, and the <b>knots</b> decide where the bumps sit. The knots are the values of <span data-tex="t"></span> where one piece hands over to the next, written as a list called the <b>knot vector</b>. <b>Top:</b> the bumps. Drag the yellow knots along the bottom edge (click one to select it). <b>Bottom:</b> the curve you get from the bumps; drag the blue weights.</p>
+    <p>A spline curve is a weighted sum of bumps, and the <b>knots</b> decide where the bumps sit. The knots are the values of <span data-tex="t"></span> where one piece hands over to the next, written as a list called the <b>knot vector</b>. <b>Top:</b> the bumps. Each bump has its own colour and number. Click a chip to isolate one (click again to release). Drag the yellow knots along the bottom edge (click one to select it). <b>Bottom:</b> each bump scaled by its weight (faint) and their sum, the curve (white). Drag the numbered weights.</p>
+    <div id="kb-chips" class="chips"></div>
     <svg id="kb" viewBox="0 0 800 270"></svg>
     <label class="ctl">degree p <input id="kb-p" type="range" min="0" max="3" step="1" value="3"> <b id="kb-pv">3</b></label>
     <label class="ctl">copies of the selected knot <input id="kb-m" type="range" min="1" max="4" step="1" value="1"> <b id="kb-mv">1</b></label>
