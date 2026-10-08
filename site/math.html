@@ -142,7 +142,7 @@ table.mt[style*="text-align:left"] td,table.mt[style*="text-align:left"] th{text
 
 <section id="s24">
     <h2>5 · Interpolating cubic splines</h2>
-    <p>This slide is one concrete recipe built from everything before it. <b>The problem:</b> you are given data points <span data-tex="(x_i,y_i)"></span> and want the smooth curve that passes through all of them. <b>The answer:</b> a cubic spline (degree 3, so C² with ordinary knots) whose knots are the data points' x-values. On each interval <span data-tex="S_i"></span> is a cubic with four coefficients, so <span data-tex="k"></span> intervals have <span data-tex="4k"></span> unknowns. Interpolation and smoothness supply <span data-tex="4k-2"></span> conditions, and two <b>boundary conditions</b> fill the gap. (This matches slide 3: such a spline has <span data-tex="k+3"></span> free numbers, the <span data-tex="k+1"></span> data points use up <span data-tex="k+1"></span> of them, and exactly 2 are left over.) Drag the points, pick a boundary type, and hover each part of the equations.</p>
+    <p>This slide is one concrete recipe built from everything before it. <b>The problem:</b> you are given data points <span data-tex="(x_i,y_i)"></span> and want the smooth curve that passes through all of them. <b>The answer:</b> a cubic spline (degree 3, so C² with ordinary knots) whose knots are the data points' x-values. On each interval <span data-tex="P_i"></span> (piece number <i>i</i>: just a cubic polynomial, <b>not</b> a spline; there is only one spline, <span data-tex="S"></span>) is a cubic with four coefficients, so <span data-tex="k"></span> intervals have <span data-tex="4k"></span> unknowns. Interpolation and smoothness supply <span data-tex="4k-2"></span> conditions, and two <b>boundary conditions</b> fill the gap. (This matches slide 3: such a spline has <span data-tex="k+3"></span> free numbers, the <span data-tex="k+1"></span> data points use up <span data-tex="k+1"></span> of them, and exactly 2 are left over.) Drag the points, pick a boundary type, and hover each part of the equations.</p>
     <div id="e24" class="eqbox"></div>
     <p id="e24-cap" class="note"></p>
     <svg id="v24" viewBox="0 0 800 310"></svg>
@@ -677,10 +677,10 @@ function cubicSystem(xs, ys, type, s0, sn) {                     // interpolatin
   const P0 = [[.05, .3], [.18, .75], [.32, .45], [.5, .8], [.66, .35], [.8, .6], [.95, .5]];
   let P = P0.map(p => p.slice()), type = 'natural';
   const eq = eqLab('e24', String.raw`\begin{aligned}
-    S_{\htmlClass{eq-i}{i}}(x) &= \htmlClass{eq-a}{a_i}+\htmlClass{eq-b}{b_i}(x-x_i)+\htmlClass{eq-c}{c_i}(x-x_i)^2+\htmlClass{eq-d}{d_i}(x-x_i)^3\\[2pt]
-    &\htmlClass{eq-I}{S_i(x_i)=y_i,\ \ S_i(x_{i+1})=y_{i+1}}\\[2pt]
-    &\htmlClass{eq-C1}{S_i'(x_{i+1})=S_{i+1}'(x_{i+1})}\\[2pt]
-    &\htmlClass{eq-C2}{S_i''(x_{i+1})=S_{i+1}''(x_{i+1})}\\[2pt]
+    P_{\htmlClass{eq-i}{i}}(x) &= \htmlClass{eq-a}{a_i}+\htmlClass{eq-b}{b_i}(x-x_i)+\htmlClass{eq-c}{c_i}(x-x_i)^2+\htmlClass{eq-d}{d_i}(x-x_i)^3\\[2pt]
+    &\htmlClass{eq-I}{P_i(x_i)=y_i,\ \ P_i(x_{i+1})=y_{i+1}}\\[2pt]
+    &\htmlClass{eq-C1}{P_i'(x_{i+1})=P_{i+1}'(x_{i+1})}\\[2pt]
+    &\htmlClass{eq-C2}{P_i''(x_{i+1})=P_{i+1}''(x_{i+1})}\\[2pt]
     &\htmlClass{eq-bc}{\text{two boundary conditions (natural, clamped or not-a-knot)}}\\[2pt]
     &\htmlClass{eq-A}{A}\,\htmlClass{eq-M}{\mathbf M}=\htmlClass{eq-r}{\mathbf r}
   \end{aligned}`, () => draw());

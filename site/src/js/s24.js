@@ -5,10 +5,10 @@
   const P0 = [[.05, .3], [.18, .75], [.32, .45], [.5, .8], [.66, .35], [.8, .6], [.95, .5]];
   let P = P0.map(p => p.slice()), type = 'natural';
   const eq = eqLab('e24', String.raw`\begin{aligned}
-    S_{\htmlClass{eq-i}{i}}(x) &= \htmlClass{eq-a}{a_i}+\htmlClass{eq-b}{b_i}(x-x_i)+\htmlClass{eq-c}{c_i}(x-x_i)^2+\htmlClass{eq-d}{d_i}(x-x_i)^3\\[2pt]
-    &\htmlClass{eq-I}{S_i(x_i)=y_i,\ \ S_i(x_{i+1})=y_{i+1}}\\[2pt]
-    &\htmlClass{eq-C1}{S_i'(x_{i+1})=S_{i+1}'(x_{i+1})}\\[2pt]
-    &\htmlClass{eq-C2}{S_i''(x_{i+1})=S_{i+1}''(x_{i+1})}\\[2pt]
+    P_{\htmlClass{eq-i}{i}}(x) &= \htmlClass{eq-a}{a_i}+\htmlClass{eq-b}{b_i}(x-x_i)+\htmlClass{eq-c}{c_i}(x-x_i)^2+\htmlClass{eq-d}{d_i}(x-x_i)^3\\[2pt]
+    &\htmlClass{eq-I}{P_i(x_i)=y_i,\ \ P_i(x_{i+1})=y_{i+1}}\\[2pt]
+    &\htmlClass{eq-C1}{P_i'(x_{i+1})=P_{i+1}'(x_{i+1})}\\[2pt]
+    &\htmlClass{eq-C2}{P_i''(x_{i+1})=P_{i+1}''(x_{i+1})}\\[2pt]
     &\htmlClass{eq-bc}{\text{two boundary conditions (natural, clamped or not-a-knot)}}\\[2pt]
     &\htmlClass{eq-A}{A}\,\htmlClass{eq-M}{\mathbf M}=\htmlClass{eq-r}{\mathbf r}
   \end{aligned}`, () => draw());
