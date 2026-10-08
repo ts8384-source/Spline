@@ -26,3 +26,7 @@ Goal: learn splines. Claude presents facts; the user adds their own understandin
 - `python tools/build_site.py` also writes `site/artifact/learn.html` and `site/artifact/project.html`: fragment versions (no doctype/head/body, title first, dark `color-scheme`) for the Artifact tool.
 - Published (private) artifacts: Spline Lab https://claude.ai/artifact/EtsNTMDuD9z9nw9GqS3bf2 and Bouncing Ball Splines https://claude.ai/artifact/DiSiobxoJ2aeYSAFLQ5nCb. After rebuilding, republish by calling the Artifact tool with the same `file_path` (keeps the URL).
 - Test fragments by wrapping them in a minimal skeleton in headless Chromium; the sandbox cannot reach CDNs, so libraries stay inlined.
+
+## Math page (site/math.html, section files s20+)
+- Goal: cover the mathematics of the Wikipedia article "Spline (mathematics)" as interactive equations. Each symbol is wired to a visual (KaTeX `\htmlClass` with `trust: true`, hover or tap highlights it) and each equation is filled in with live numbers. Reuse visuals from the Spline Lab.
+- Prototype: s20 (the core equation S(t) = sum c_i B_{i,p}(t)). Remaining sections need the article text; en.wikipedia.org is blocked by the sandbox network policy, so the user must allow it (environment settings, Allowed domains) or paste the text.

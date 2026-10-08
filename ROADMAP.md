@@ -24,3 +24,6 @@ Catmull-Rom / Hermite (interpolating splines), arc-length reparametrisation (con
 
 ## Project (`site/project.html`)
 Knots on a bounce; spline as a network readout (oracle fit). Next: sliding window with per-frame correction; frames and difference-frames notebook.
+
+## Math page (math.html)
+Prototype done (core equation). Next: cover each section of the Wikipedia article 'Spline (mathematics)' as annotated, interactive equations. Blocked on article access (allow en.wikipedia.org in the environment network settings, or paste the text).
