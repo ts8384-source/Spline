@@ -11,3 +11,7 @@ Goal: learn splines. Claude presents facts; the user adds their own understandin
 - Live in `notebooks/`, plain `.py`. Run: `marimo edit notebooks/<name>.py`; static export: `marimo export html notebooks/<name>.py -o site/<name>.html`.
 - Every notebook has three sections: **Facts** (Claude), **My understanding** (user), **In my projects** (user). Copy `notebooks/_template.py`.
 - Math in markdown cells with `$...$` / `$$...$$`. Interactivity with `mo.ui.slider` etc. Diagrams with matplotlib or mermaid fenced blocks.
+
+## Skills (vendored in .claude/skills, see SOURCES.md)
+- `3b1b-style-animation` — Manim videos in 3Blue1Brown style (needs `pip install manim`; renders mp4, not interactive). Read SKILL.md first; open only the rule file you need.
+- `d3-viz` — only if a browser-side SVG visual is needed; default to marimo + matplotlib.
