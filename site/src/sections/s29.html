@@ -1,0 +1,14 @@
+<section id="s29">
+    <h2>4 · Why C^(n−1)? One free number per knot</h2>
+    <p>Take two neighbouring pieces of a spline of degree <span data-tex="n"></span> that agree in value and in the first <span data-tex="n-1"></span> derivatives at their shared knot. Their difference is a polynomial of degree at most <span data-tex="n"></span> that is flat to order <span data-tex="n-1"></span> at the knot, so it must be a single power, <span data-tex="c\,(t-t_i)^n"></span>. That leaves exactly <b>one free number <span data-tex="c_i"></span> per knot</b>: the jump in the n-th derivative. Drag the steps in the middle graph and watch the curve respond.</p>
+    <div id="e29" class="eqbox"></div>
+    <p id="e29-cap" class="note"></p>
+    <svg id="v29" viewBox="0 0 800 300"></svg>
+    <svg id="s29b" viewBox="0 0 800 190"></svg>
+    <svg id="s29c" viewBox="0 0 800 190"></svg>
+    <div id="kn29" class="chips"></div>
+    <label class="ctl" id="l29n">degree n <input id="i29n" type="range" min="1" max="4" step="1" value="3"> <b id="o29n">3</b></label>
+    <button class="alt" id="z29">force C<sup>n</sup>: set every c to 0</button> <button class="alt" id="b29">reset</button>
+    <div id="t29" class="tablewrap"></div>
+    <p id="e29-sub" class="readout"></p>
+  </section>

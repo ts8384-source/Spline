@@ -25,9 +25,9 @@ PAGES = {
     "math.html": dict(
         title="Spline Math", artifact_title="Spline Math", h1="Mathematics of splines",
         lede=("Every equation here is interactive: hover or tap a symbol and the picture shows what it is, and each equation is filled in with live numbers. "
-              "Contents: <a href=\"#s21\">1 Definition</a> · <a href=\"#s22\">2 Smoothness</a> · <a href=\"#s23\">3 Counting</a> · <a href=\"#s24\">4 Interpolating cubic splines</a> · "
-              "<a href=\"#s25\">5 Bending energy</a> · <a href=\"#s26\">6 Cox–de Boor recursion</a> · <a href=\"#s20\">7 The core equation</a> · <a href=\"#s27\">8 Basis properties</a> · <a href=\"#s28\">9 The matrix form</a>"),
-        sections=[21, 22, 23, 24, 25, 26, 20, 27, 28],
+              "Contents: <a href=\"#s21\">1 Definition</a> · <a href=\"#s22\">2 Smoothness</a> · <a href=\"#s23\">3 Counting</a> · <a href=\"#s29\">4 Why C^(n−1)</a> · <a href=\"#s24\">5 Interpolating cubic splines</a> · "
+              "<a href=\"#s25\">6 Bending energy</a> · <a href=\"#s26\">7 Cox–de Boor recursion</a> · <a href=\"#s20\">8 The core equation</a> · <a href=\"#s27\">9 Basis properties</a> · <a href=\"#s28\">10 The matrix form</a>"),
+        sections=[21, 22, 23, 29, 24, 25, 26, 20, 27, 28],
         footer=("Source: the mathematics covered by Wikipedia's <i>Spline (mathematics)</i> article, with <i>Spline interpolation</i> and <i>B-spline</i> for the interpolation and basis parts. "
                 "The article text could not be fetched from this environment, so the outline comes from search summaries of those articles plus standard theory; check coverage against the article when access is open. "
                 "Every numerical claim on the page is checked live by the page itself.")),

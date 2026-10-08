@@ -16,3 +16,6 @@ sources:
 6. **B-spline basis.** Minimal-support basis; Cox-de Boor recursion from degree-0 boxes; every spline of the given degree and knots is a linear combination of B-splines. (summaries)
 7. **Properties.** Non-negative, partition of unity, local support over p+1 spans, convex-hull property, end-point interpolation with clamped knots. (summaries + std; each checked live)
 8. **Matrix form.** X = B P with B[k,i] = N_i(t_k). (std)
+
+## Added: why C^(n-1) (math page section 4)
+(std, checked live on the page) Two adjacent degree-n pieces that agree in value and the first n-1 derivatives differ by c (t - t_i)^n, so each simple knot carries exactly one free number: the jump n! c in the n-th derivative. Equivalent form: S(t) = polynomial of degree n + sum_i c_i (t - t_i)_+^n (truncated powers; for n = 1 these are ReLU hinges). Matching one more derivative forces every c_i = 0, i.e. one polynomial, so C^(n-1) is the smoothest a genuine degree-n spline can be. A knot of multiplicity m carries m free numbers (hinges of degree n, n-1, ..., n-m+1), which gives dim = n + 1 + sum of multiplicities. The page checks that this form equals the B-spline form to about 1e-15.

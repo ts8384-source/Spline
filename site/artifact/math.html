@@ -69,7 +69,7 @@ table.mt tr.hot td{background:rgba(251,191,36,.18)}
 <main>
   <header>
     <h1>Mathematics of splines</h1>
-    <p class="lede">Every equation here is interactive: hover or tap a symbol and the picture shows what it is, and each equation is filled in with live numbers. Contents: <a href="#s21">1 Definition</a> · <a href="#s22">2 Smoothness</a> · <a href="#s23">3 Counting</a> · <a href="#s24">4 Interpolating cubic splines</a> · <a href="#s25">5 Bending energy</a> · <a href="#s26">6 Cox–de Boor recursion</a> · <a href="#s20">7 The core equation</a> · <a href="#s27">8 Basis properties</a> · <a href="#s28">9 The matrix form</a></p>
+    <p class="lede">Every equation here is interactive: hover or tap a symbol and the picture shows what it is, and each equation is filled in with live numbers. Contents: <a href="#s21">1 Definition</a> · <a href="#s22">2 Smoothness</a> · <a href="#s23">3 Counting</a> · <a href="#s29">4 Why C^(n−1)</a> · <a href="#s24">5 Interpolating cubic splines</a> · <a href="#s25">6 Bending energy</a> · <a href="#s26">7 Cox–de Boor recursion</a> · <a href="#s20">8 The core equation</a> · <a href="#s27">9 Basis properties</a> · <a href="#s28">10 The matrix form</a></p>
   </header>
 
 <section id="s21">
@@ -110,8 +110,23 @@ table.mt tr.hot td{background:rgba(251,191,36,.18)}
     <p id="e23-sub" class="readout"></p>
   </section>
 
+<section id="s29">
+    <h2>4 · Why C^(n−1)? One free number per knot</h2>
+    <p>Take two neighbouring pieces of a spline of degree <span data-tex="n"></span> that agree in value and in the first <span data-tex="n-1"></span> derivatives at their shared knot. Their difference is a polynomial of degree at most <span data-tex="n"></span> that is flat to order <span data-tex="n-1"></span> at the knot, so it must be a single power, <span data-tex="c\,(t-t_i)^n"></span>. That leaves exactly <b>one free number <span data-tex="c_i"></span> per knot</b>: the jump in the n-th derivative. Drag the steps in the middle graph and watch the curve respond.</p>
+    <div id="e29" class="eqbox"></div>
+    <p id="e29-cap" class="note"></p>
+    <svg id="v29" viewBox="0 0 800 300"></svg>
+    <svg id="s29b" viewBox="0 0 800 190"></svg>
+    <svg id="s29c" viewBox="0 0 800 190"></svg>
+    <div id="kn29" class="chips"></div>
+    <label class="ctl" id="l29n">degree n <input id="i29n" type="range" min="1" max="4" step="1" value="3"> <b id="o29n">3</b></label>
+    <button class="alt" id="z29">force C<sup>n</sup>: set every c to 0</button> <button class="alt" id="b29">reset</button>
+    <div id="t29" class="tablewrap"></div>
+    <p id="e29-sub" class="readout"></p>
+  </section>
+
 <section id="s24">
-    <h2>4 · Interpolating cubic splines</h2>
+    <h2>5 · Interpolating cubic splines</h2>
     <p>Given data points <span data-tex="(x_i,y_i)"></span>, find the cubic spline that passes through all of them. On each interval <span data-tex="S_i"></span> is a cubic with four coefficients, so <span data-tex="n"></span> intervals have <span data-tex="4n"></span> unknowns. Interpolation and smoothness supply <span data-tex="4n-2"></span> conditions, and two <b>boundary conditions</b> fill the gap. Drag the points, pick a boundary type, and hover each part of the equations.</p>
     <div id="e24" class="eqbox"></div>
     <p id="e24-cap" class="note"></p>
@@ -129,7 +144,7 @@ table.mt tr.hot td{background:rgba(251,191,36,.18)}
   </section>
 
 <section id="s25">
-    <h2>5 · The natural spline minimises bending energy</h2>
+    <h2>6 · The natural spline minimises bending energy</h2>
     <p>The wooden strip settles into the shape with the least bending energy. Mathematically, among all twice-differentiable curves through the data points, the <b>natural cubic spline</b> <span data-tex="S"></span> has the smallest <span data-tex="E[f]=\int (f'')^2dx"></span>. To test it, add to <span data-tex="S"></span> any smooth wiggle <span data-tex="w"></span> that is zero at every data point, so the curve still interpolates, and see what happens to the energy.</p>
     <div id="e25" class="eqbox"></div>
     <p id="e25-cap" class="note"></p>
@@ -141,7 +156,7 @@ table.mt tr.hot td{background:rgba(251,191,36,.18)}
   </section>
 
 <section id="s26">
-    <h2>6 · Where a B-spline bump comes from: the Cox–de Boor recursion</h2>
+    <h2>7 · Where a B-spline bump comes from: the Cox–de Boor recursion</h2>
     <p>A B-spline basis function <span data-tex="N_{i,p}"></span> is built from two of degree <span data-tex="p-1"></span>. Each is multiplied by a ramp that rises from 0 to 1 (or falls from 1 to 0) across its own stretch of the knots, and the two products are added. Start from boxes (degree 0) and you climb to the smooth cubic bump. Choose a degree and a bump, drag the knots, and hover each term.</p>
     <div id="e26" class="eqbox"></div>
     <p id="e26-cap" class="note"></p>
@@ -154,7 +169,7 @@ table.mt tr.hot td{background:rgba(251,191,36,.18)}
   </section>
 
 <section id="s20">
-    <h2>7 · The core equation: a spline as a weighted sum of bumps</h2>
+    <h2>8 · The core equation: a spline as a weighted sum of bumps</h2>
     <p>Hover over (or tap) any symbol in the equation. The picture highlights what that symbol is, and the line below the picture fills the equation in with the current numbers. Change the sliders or drag the weights and watch the numbers follow.</p>
     <div id="eq" class="eqbox"></div>
     <p id="eq-cap" class="note"></p>
@@ -166,7 +181,7 @@ table.mt tr.hot td{background:rgba(251,191,36,.18)}
   </section>
 
 <section id="s27">
-    <h2>7 · Properties of the basis</h2>
+    <h2>9 · Properties of the basis</h2>
     <p>The B-spline bumps have a handful of properties that make splines easy to compute with and hard to break. Each line below is a property; hover it and the picture shows it, while the readout checks it numerically for the current curve. Slide <span data-tex="t"></span>, change the degree, and drag the weights.</p>
     <div id="e27" class="eqbox"></div>
     <p id="e27-cap" class="note"></p>
@@ -180,7 +195,7 @@ table.mt tr.hot td{background:rgba(251,191,36,.18)}
   </section>
 
 <section id="s28">
-    <h2>8 · Putting it together: the curve as a matrix product</h2>
+    <h2>10 · Putting it together: the curve as a matrix product</h2>
     <p>For a curve in the plane, each control point <span data-tex="\mathbf P_i"></span> has an x and a y, and the same bumps are used for both. Sample the clock at <span data-tex="m"></span> moments. Then the whole curve is one multiplication: the matrix <span data-tex="\mathbf B"></span> of bump values (one row per moment) times the matrix <span data-tex="\mathbf P"></span> of control points. Drag a point on the plane, or drag a number in the <span data-tex="\mathbf P"></span> table up and down.</p>
     <div id="e28" class="eqbox"></div>
     <p id="e28-cap" class="note"></p>
@@ -492,6 +507,89 @@ function cubicSystem(xs, ys, type, s0, sn) {                     // interpolatin
   }
   ['i23k', 'i23n'].forEach(id => g(id).addEventListener('input', draw));
   g('b23').onclick = () => { mult = []; draw(); };
+  draw();
+})();
+/* ---------- 29 · Why C^(n-1): the truncated power form ---------- */
+(function () {
+  const g = id => document.getElementById(id), svg = d3.select('#v29'), sb = d3.select('#s29b'), sc = d3.select('#s29c');
+  const KN = [1, 2, 3, 4].map(i => i / 5), X = d3.scaleLinear([0, 1], [50, 780]), A0 = [0.25, 0.9, -1.4, 1.2, -0.5], CB = [0.12, -0.2, 0.18, -0.15];
+  const fact = m => d3.range(1, m + 1).reduce((a, b) => a * b, 1);
+  let n = 3, c = [], sel = 1, ymax = 10, lastN = 0, collapsed = false;
+  const eq = eqLab('e29', String.raw`\begin{aligned}
+    S(t)&=\htmlClass{eq-poly}{\sum_{j=0}^{n}a_jt^j}\;+\;\htmlClass{eq-trunc}{\sum_{i=1}^{k-1}\htmlClass{eq-c}{c_i}\,(t-t_i)_+^{\,n}}\\[2pt]
+    &\text{where}\ (t-t_i)_+^{\,n}=(t-t_i)^n\ \text{if}\ t\ge t_i,\ \text{and}\ 0\ \text{otherwise}\\[4pt]
+    &\htmlClass{eq-D}{P_i(t)-P_{i-1}(t)=c_i\,(t-t_i)^n}\\[4pt]
+    &\htmlClass{eq-C}{S\in C^{\,n-1}}\ \ \text{and}\ \ \htmlClass{eq-jump}{S^{(n)}\ \text{jumps by}\ n!\,c_i\ \text{at}\ t_i}\\[4pt]
+    &\htmlClass{eq-Cn}{S\in C^{\,n}\ \Rightarrow\ \text{every}\ c_i=0\ \Rightarrow\ S\ \text{is one polynomial}}
+  \end{aligned}`, () => draw());
+  const a = () => A0.slice(0, n + 1);
+  const tp = (t, ti, m) => t >= ti ? (m === 0 ? 1 : (t - ti) ** m) : 0;
+  const S = (t, r = 0) => d3.sum(a(), (aj, j) => j >= r ? aj * fact(j) / fact(j - r) * t ** (j - r) : 0) + (r > n ? 0 : d3.sum(KN, (ti, i) => c[i] * fact(n) / fact(n - r) * tp(t, ti, n - r)));
+
+  function draw() {
+    const hl = eq.hl; n = +g('i29n').value; g('o29n').textContent = n;
+    if (n !== lastN) { c = CB.map(v => v / 0.5 ** n); const lv = [fact(n) * A0[n]]; c.forEach(ci => lv.push(lv[lv.length - 1] + fact(n) * ci)); ymax = Math.max(4, 1.5 * d3.max(lv, Math.abs)); lastN = n; collapsed = false; }
+    const chips = d3.select('#kn29'); chips.selectAll('*').remove();
+    KN.forEach((k, i) => chips.append('button').attr('class', 'chip' + (i === sel ? ' on' : '')).text('knot t' + (i + 1) + ' = ' + k.toFixed(1)).on('click', () => { sel = i; draw(); }));
+    const ts = d3.range(0, 1.00001, 0.004), vals = ts.map(t => S(t)), lo = d3.min(vals), hi = d3.max(vals), pad = (hi - lo) * .15 || .2, Y = d3.scaleLinear([lo - pad, hi + pad], [270, 20]);
+    svg.selectAll('*').remove();
+    KN.forEach((k, i) => svg.append('line').attr('x1', X(k)).attr('x2', X(k)).attr('y1', 20).attr('y2', 270).attr('stroke', i === sel ? '#fbbf24' : '#444').attr('stroke-width', i === sel ? 2.5 : 1));
+    const dim = k => hl && hl !== k ? .3 : 1;
+    svg.append('path').attr('d', d3.line()(ts.map(t => [X(t), Y(d3.sum(a(), (aj, j) => aj * t ** j))]))).attr('fill', 'none').attr('stroke', '#9ca3af').attr('stroke-width', hl === 'poly' ? 6 : 2).attr('stroke-dasharray', '6 4').attr('opacity', hl && hl !== 'poly' ? .4 : .9);
+    KN.forEach((k, i) => svg.append('path').attr('d', d3.line()(ts.map(t => [X(t), Y(c[i] * tp(t, k, n))]))).attr('fill', 'none').attr('stroke', col7(i + 1)).attr('stroke-width', (hl === 'trunc' || hl === 'c') ? 4 : 2).attr('opacity', hl === 'trunc' || hl === 'c' ? 1 : hl ? .3 : .75));
+    svg.append('path').attr('d', d3.line()(ts.map((t, j) => [X(t), Y(vals[j])]))).attr('fill', 'none').attr('stroke', '#fff').attr('stroke-width', 4);
+    svg.append('text').attr('x', 54).attr('y', 16).attr('fill', '#9ca3af').attr('font-size', 12).text('S (white) = polynomial part (grey dashed) + one hinge-like term per knot (coloured)');
+    if (hl === 'Cn' || collapsed) svg.append('path').attr('d', d3.line()(ts.map(t => [X(t), Y(d3.sum(a(), (aj, j) => aj * t ** j))]))).attr('fill', 'none').attr('stroke', '#ef4444').attr('stroke-width', 5).attr('opacity', .85);
+
+    // staircase of the n-th derivative, draggable
+    sb.selectAll('*').remove();
+    const SY = d3.scaleLinear([-ymax, ymax], [170, 20]), levels = [fact(n) * A0[n]]; c.forEach(ci => levels.push(levels[levels.length - 1] + fact(n) * ci));
+    sb.append('text').attr('x', 54).attr('y', 14).attr('fill', '#9ca3af').attr('font-size', 12).text(`S^(${n}) (the ${n}-th derivative) is a staircase. Drag a step: its height change is n!·c_i`);
+    sb.append('line').attr('x1', 50).attr('x2', 780).attr('y1', SY(0)).attr('y2', SY(0)).attr('stroke', '#555').attr('stroke-dasharray', '3 4');
+    const edges = [0, ...KN, 1];
+    levels.forEach((L, s) => sb.append('line').attr('x1', X(edges[s])).attr('x2', X(edges[s + 1])).attr('y1', SY(L)).attr('y2', SY(L)).attr('stroke', hl === 'jump' ? '#fbbf24' : '#fff').attr('stroke-width', hl === 'jump' ? 5 : 3.5));
+    KN.forEach((k, i) => sb.append('line').attr('x1', X(k)).attr('x2', X(k)).attr('y1', SY(levels[i])).attr('y2', SY(levels[i + 1])).attr('stroke', col7(i + 1)).attr('stroke-width', 3).attr('stroke-dasharray', '4 3'));
+    sb.selectAll('.st').data(KN.map((_, i) => i)).join('circle').attr('cx', i => X(KN[i])).attr('cy', i => SY(levels[i + 1])).attr('r', hl === 'jump' || hl === 'c' ? 10 : 8).attr('fill', i => col7(i + 1)).attr('stroke', i => i === sel ? '#fff' : '#1c1c1c').attr('stroke-width', 3).style('cursor', 'ns-resize')
+      .call(d3.drag().on('start', (ev, i) => { sel = i; }).on('drag', (ev, i) => { const target = Math.max(-ymax, Math.min(ymax, SY.invert(ev.y))); c[i] = (target - levels[i]) / fact(n); collapsed = false; draw(); }));
+    KN.forEach((k, i) => sb.append('text').attr('x', X(k) + 12).attr('y', SY(levels[i + 1]) - 10).attr('fill', col7(i + 1)).attr('font-size', 11).attr('font-weight', 700).text((c[i] >= 0 ? '+' : '−') + Math.abs(fact(n) * c[i]).toFixed(1)));
+
+    // the two neighbouring pieces, extended past the knot
+    const ks = KN[sel], pl = t => d3.sum(a(), (aj, j) => aj * t ** j) + d3.sum(KN.slice(0, sel), (ti, i) => c[i] * (t - ti) ** n), pr = t => pl(t) + c[sel] * (t - ks) ** n;
+    const w = d3.range(ks - 0.2, ks + 0.2001, 0.004), pv = w.map(t => [pl(t), pr(t)]).flat(), CX = d3.scaleLinear([ks - 0.2, ks + 0.2], [50, 780]), CY = d3.scaleLinear([d3.min(pv) - .05, d3.max(pv) + .05], [170, 25]);
+    sc.selectAll('*').remove();
+    sc.append('text').attr('x', 54).attr('y', 14).attr('fill', '#9ca3af').attr('font-size', 12).text(`the two pieces next to knot t${sel + 1}, each extended past the knot: they hug each other to order ${n - 1}, then separate like (t − t${sel + 1})^${n}` + (hl === 'D' ? '   ← this' : ''));
+    sc.append('path').attr('d', d3.area().x(t => CX(t)).y0(t => CY(pl(t))).y1(t => CY(pr(t)))(w)).attr('fill', '#fbbf24').attr('opacity', hl === 'D' ? .5 : .22);
+    sc.append('path').attr('d', d3.line()(w.map(t => [CX(t), CY(pl(t))]))).attr('fill', 'none').attr('stroke', col7(sel)).attr('stroke-width', hl === 'D' ? 5 : 3).attr('stroke-dasharray', t => null);
+    sc.append('path').attr('d', d3.line()(w.map(t => [CX(t), CY(pr(t))]))).attr('fill', 'none').attr('stroke', col7(sel + 1)).attr('stroke-width', hl === 'D' ? 5 : 3);
+    sc.append('line').attr('x1', CX(ks)).attr('x2', CX(ks)).attr('y1', 25).attr('y2', 170).attr('stroke', '#fbbf24').attr('stroke-width', 2);
+    sc.append('text').attr('x', 54).attr('y', 184).attr('fill', col7(sel)).attr('font-size', 12).text(`left piece P${sel} (extended)`);
+    sc.append('text').attr('x', 780).attr('y', 184).attr('text-anchor', 'end').attr('fill', col7(sel + 1)).attr('font-size', 12).text(`right piece P${sel + 1}`);
+
+    // derivative table at the selected knot
+    const e = 1e-9, rows = d3.range(n + 1).map(r => ({r, L: S(ks - e, r), R: S(ks + e, r)})); rows.forEach(q => q.eq = Math.abs(q.L - q.R) < 1e-6 * (1 + Math.abs(q.L)));
+    g('t29').innerHTML = `<table class="mt"><tr><th>derivative r</th><th>left of t<sub>${sel + 1}</sub></th><th>right of t<sub>${sel + 1}</sub></th><th>equal?</th></tr>` +
+      rows.map(q => `<tr class="${hl === 'C' && q.r < n || hl === 'jump' && q.r === n ? 'hot' : ''}"><td>${q.r}${q.r === n ? ' (= n)' : ''}</td><td>${q.L.toFixed(3)}</td><td>${q.R.toFixed(3)}</td><td class="${q.eq ? 'yes' : 'no'}">${q.eq ? '✓' : '✗ jump ' + (q.R - q.L).toFixed(3)}</td></tr>`).join('') + '</table>';
+    // independent check: the same function written with B-spline bumps on the same knots
+    const kv = [...new Array(n + 1).fill(0), ...KN, ...new Array(n + 1).fill(1)], nb = kv.length - n - 1, xs = d3.range(0, 1.0001, 1 / 200), Bm = xs.map(t => d3.range(nb).map(i => bspline(i, n, Math.min(t, 1), kv)));
+    const AtA = d3.range(nb).map(r => d3.range(nb).map(q => d3.sum(Bm, row => row[r] * row[q]))), Atb = d3.range(nb).map(r => d3.sum(Bm, (row, k) => row[r] * S(xs[k]))), cf = solveLinear(AtA, Atb);
+    const res = d3.max(xs, (t, k) => Math.abs(d3.sum(cf, (v, i) => v * Bm[k][i]) - S(t)));
+    const jumpOk = rows[n] && !rows[n].eq === (Math.abs(c[sel]) > 1e-12);
+    g('e29-sub').innerHTML = `free numbers: ${n + 1} polynomial coefficients + ${KN.length} jumps = <b>${n + 1 + KN.length}</b> = ${nb} B-splines · the same function written with B-spline bumps differs by at most <b>${res.toExponential(0)}</b> ` +
+      (res < 1e-7 ? '<span class="yes">✓ it is a spline in the B-spline sense too</span>' : '<span class="no">✗</span>') + ` · jump of S<sup>(${n})</sup> at t${sel + 1}: n!·c = ${(fact(n) * c[sel]).toFixed(3)}`;
+    const CAP = {
+      poly: `<b>Σ a<sub>j</sub>t<sup>j</sup></b>: one ordinary polynomial of degree ${n}, the grey dashed curve. It is the spline's shape before any knot is felt.`,
+      trunc: `<b>Σ c<sub>i</sub>(t − t<sub>i</sub>)<sub>+</sub><sup>n</sup></b>: one term per knot, zero to the left of its knot and a power ${n} to the right (the coloured curves). For n = 1 these are hinges, exactly the shape of a ReLU. They are smooth to order ${n - 1} at the knot, so adding them cannot break C<sup>${n - 1}</sup>.`,
+      c: `<b>c<sub>i</sub></b>: the one free number at knot i, the size of its hinge term. Drag the coloured dots in the middle graph to change it.`,
+      D: `<b>P<sub>i</sub> − P<sub>i−1</sub> = c<sub>i</sub>(t − t<sub>i</sub>)<sup>n</sup></b>: because the two pieces agree to order ${n - 1}, their difference is flat to order ${n - 1} at the knot, so it can only be a multiple of (t − t<sub>i</sub>)<sup>${n}</sup>. The shaded gap shows it.`,
+      C: `<b>C<sup>n−1</sup></b>: every derivative below the n-th has no jump at a knot (✓ rows in the table). The n-th derivative is the first that can jump.`,
+      jump: `<b>S<sup>(n)</sup> jumps by n!·c<sub>i</sub></b>: the n-th derivative of each piece is a constant, so S<sup>(n)</sup> is a staircase and each knot's step height is n!·c<sub>i</sub>.`,
+      Cn: `<b>Why not C<sup>n</sup>?</b> Demanding the n-th derivative match too forces every c<sub>i</sub> = 0, leaving only the grey polynomial (red): the knots no longer do anything. C<sup>n−1</sup> is the smoothest a genuine spline of degree n can be. Press the button below to see it.`
+    };
+    g('e29-cap').innerHTML = hl ? CAP[hl] : 'Hover a symbol, or tap it to keep it highlighted.';
+  }
+  g('i29n').addEventListener('input', draw);
+  g('z29').onclick = () => { c = c.map(() => 0); collapsed = true; draw(); };
+  g('b29').onclick = () => { lastN = 0; draw(); };
   draw();
 })();
 /* ---------- 24 · Interpolating cubic splines ---------- */
