@@ -16,3 +16,11 @@ Two pieces: 7 control points free for C0, 6 for C1, 5 for C2. Five equals the nu
 
 ## Direction vs speed
 C1 matches the velocity vector (direction and speed, so the clock t matters). Matching only the tangent direction is the weaker geometric condition G1 (from memory).
+
+## Acceleration, in this context
+Position B(t), velocity B'(t), acceleration B''(t): derivatives with respect to the clock t (t itself runs at a constant rate). Acceleration splits into a part along the path (changes speed) and a sideways part toward the centre of the bend, of size speed^2 / radius (standard calculus, from memory).
+
+## When to ask for C2 (general knowledge, not source-checked)
+- Want: motion of cameras, robots, vehicles, animated objects (acceleration jumps are jolts); smoothing noisy data (cubic smoothing splines are C2); visible shapes such as car-body surfaces.
+- Don't want: impacts and bounces (velocity really flips, use a C0 knot), designed corners and glyph points, step commands.
+- Cubic B-spline with single knots is C2 everywhere (continuity C^(p-m) at a knot of multiplicity m); chained cubic Béziers need the locks above.

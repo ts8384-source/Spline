@@ -1,0 +1,13 @@
+<section id="s11">
+    <h2>7 · Position, velocity, acceleration: a refresher</h2>
+    <p>Three words for how a moving dot behaves, all measured against the clock <span data-tex="t"></span>. <b>Position</b> is where it is. <b class="yellow">Velocity</b> is how its position is changing (which way and how fast). <b class="red">Acceleration</b> is how the velocity itself is changing. Pick a motion and slide the clock. The acceleration arrow is split into two thinner parts: <b style="color:#f9a8d4">along the path</b> (changes the speed) and <b style="color:#f97316">sideways</b> (bends the path).</p>
+    <div id="rf-modes" class="chips">
+      <button class="chip" data-m="speed">straight road, speeding up</button><button class="chip" data-m="circle">circle, constant speed</button><button class="chip" data-m="curve">a Bézier curve</button>
+    </div>
+    <svg id="rf" viewBox="0 0 800 330"></svg>
+    <label class="ctl">clock <input id="rf-t" type="range" min="0" max="1" step="0.005" value="0.5"> <b id="rf-tv">0.50</b></label>
+    <button id="rf-play">▶ play</button>
+    <p id="rf-read" class="readout"></p>
+    <p id="rf-note" class="note"></p>
+    <p class="note">In symbols, with <span data-tex="B(t)"></span> the position: velocity is <span data-tex="B'(t)"></span>, acceleration is <span data-tex="B''(t)"></span>. These are derivatives with respect to <span data-tex="t"></span>. The clock itself runs at a steady rate, so it does not accelerate. The dots on the path are ticks every 0.1 of the clock.</p>
+  </section>

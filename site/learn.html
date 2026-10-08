@@ -54,6 +54,9 @@ nav a:hover{text-decoration:underline}
 .trio .readout{font-size:.8rem;min-height:2.6em}
 @media (max-width:720px){.trio{grid-template-columns:1fr}}
 .note p{margin:6px 0}
+h3.sub{margin:20px 0 8px;font-size:1.05rem;color:var(--blue)}
+.card2{background:var(--bg);border-radius:8px;padding:10px 14px}
+.card2 ul{margin:6px 0 4px;padding-left:18px}.card2 li{margin:4px 0;font-size:.92rem;color:var(--dim)}
 </style>
 </head>
 <body>
@@ -61,7 +64,7 @@ nav a:hover{text-decoration:underline}
   <nav><a href="index.html">home</a> · <a href="learn.html">Spline Lab (learning)</a> · <a href="project.html">Bouncing-ball project</a></nav>
   <header>
     <h1>Spline Lab</h1>
-    <p class="lede">Eight interactive demos for learning splines, ordered the 3Blue1Brown way: a hook, then intuition, then the formula.</p>
+    <p class="lede">Nine interactive demos for learning splines, ordered the 3Blue1Brown way: a hook, then intuition, then the formula.</p>
   </header>
 
 <section id="s1">
@@ -136,8 +139,22 @@ nav a:hover{text-decoration:underline}
     <p class="note"><b>Takeaway:</b> when a curve doubles back, one x belongs to several points on it, so no function of x can draw it, whatever the degree. Adding <span data-tex="t"></span> gives every point its own label, so "same x" stops being a clash. For a ball bouncing off a wall the path turns back exactly like this.</p>
   </section>
 
+<section id="s11">
+    <h2>7 · Position, velocity, acceleration: a refresher</h2>
+    <p>Three words for how a moving dot behaves, all measured against the clock <span data-tex="t"></span>. <b>Position</b> is where it is. <b class="yellow">Velocity</b> is how its position is changing (which way and how fast). <b class="red">Acceleration</b> is how the velocity itself is changing. Pick a motion and slide the clock. The acceleration arrow is split into two thinner parts: <b style="color:#f9a8d4">along the path</b> (changes the speed) and <b style="color:#f97316">sideways</b> (bends the path).</p>
+    <div id="rf-modes" class="chips">
+      <button class="chip" data-m="speed">straight road, speeding up</button><button class="chip" data-m="circle">circle, constant speed</button><button class="chip" data-m="curve">a Bézier curve</button>
+    </div>
+    <svg id="rf" viewBox="0 0 800 330"></svg>
+    <label class="ctl">clock <input id="rf-t" type="range" min="0" max="1" step="0.005" value="0.5"> <b id="rf-tv">0.50</b></label>
+    <button id="rf-play">▶ play</button>
+    <p id="rf-read" class="readout"></p>
+    <p id="rf-note" class="note"></p>
+    <p class="note">In symbols, with <span data-tex="B(t)"></span> the position: velocity is <span data-tex="B'(t)"></span>, acceleration is <span data-tex="B''(t)"></span>. These are derivatives with respect to <span data-tex="t"></span>. The clock itself runs at a steady rate, so it does not accelerate. The dots on the path are ticks every 0.1 of the clock.</p>
+  </section>
+
 <section id="s9">
-    <h2>7 · Joining two pieces: continuity</h2>
+    <h2>8 · Joining two pieces: continuity</h2>
     <p>A spline is several pieces joined end to end. At the join, how much must the two pieces agree? Two cubic pieces share the white join point. The <b class="yellow">yellow</b> and <b class="blue">blue</b> arrows are the velocity each piece has at the join. The short lines along the curves are a <b>curvature comb</b>: the longer the line, the tighter the bend there. Drag the points, then try the locks.</p>
     <div id="ct-modes" class="chips">
       <button class="chip" data-m="0">free: only touching (C⁰)</button><button class="chip" data-m="1">lock C¹</button><button class="chip" data-m="2">lock C²</button>
@@ -150,7 +167,7 @@ nav a:hover{text-decoration:underline}
   </section>
 
 <section id="s10">
-    <h2>8 · What C⁰, C¹ and C² feel like</h2>
+    <h2>9 · What C⁰, C¹ and C² feel like</h2>
     <p>Three joins, same left piece. A ball rides the whole curve on the clock <span data-tex="t"></span> (0 to 1 on the blue piece, 1 to 2 on the green one). The <b class="yellow">yellow arrow</b> is its velocity. The <b class="red">red arrow</b> is its acceleration: the push you would feel. The dashed circles at the join are the circles that each side is bending along. A smaller circle means a tighter bend.</p>
     <div class="trio">
       <figure><svg id="tr0" viewBox="0 0 300 300"></svg><figcaption><b>C⁰</b>: only position matches</figcaption><p id="tr0-r" class="readout"></p></figure>
@@ -164,6 +181,18 @@ nav a:hover{text-decoration:underline}
       <p><b>C¹:</b> the yellow arrow carries on smoothly, but the red arrow suddenly changes, and the two circles have different sizes. It is like holding the steering wheel at one angle and then snapping it to another: no corner, but a jolt.</p>
       <p><b>C²:</b> the red arrow also carries on smoothly, and both sides share the <b>same circle</b>. The bend changes gradually, so the ride is smooth.</p>
     </div>
+    <h3 class="sub">When do you want C², and when not?</h3>
+    <div class="duo">
+      <div class="card2"><p><b>Ask for C²</b> when a smooth ride or a gentle shape matters:</p>
+        <ul><li>Moving something along the curve: a camera, a robot arm, a vehicle, an animated object. A jump in acceleration is a jolt (and wear on hardware).</li>
+        <li>Smoothing noisy data: you want a gentle curve, not kinks invented by the fit. The usual cubic smoothing spline is C².</li>
+        <li>Shapes people look at: reflections reveal a jump in curvature, which is why car-body surfaces care.</li></ul></div>
+      <div class="card2"><p><b>Do not ask for C²</b> when the jump is the truth:</p>
+        <ul><li>Impacts and bounces: the velocity really does flip. That wants a C⁰ knot.</li>
+        <li>Sharp features by design: corners, edges, the points of letters.</li>
+        <li>Step commands: a setpoint that really does change instantly.</li></ul></div>
+    </div>
+    <p class="note"><b>How easy it is to get:</b> a cubic B-spline with ordinary (single) knots is C² everywhere automatically. A chain of cubic Béziers only gets C² if you use the locks from the previous demo, which cost you free control points. A repeated knot gives C² up deliberately. These are general-knowledge examples, not checked against a source.</p>
   </section>
 
   <footer>
@@ -627,6 +656,62 @@ function axes(g, x, y, xt, yt) {
   draw();
 })();
 
+/* ---------- 11 · Position, velocity, acceleration ---------- */
+(function () {
+  const svg = d3.select('#rf'), tIn = document.getElementById('rf-t');
+  const CP = [[60, 280], [160, 20], [560, 40], [740, 260]];
+  const bz = (t) => { const u = 1 - t, w = [u * u * u, 3 * u * u * t, 3 * u * t * t, t * t * t]; return [0, 1].map(k => w.reduce((s, wi, i) => s + wi * CP[i][k], 0)); };
+  const bv = (t) => { const u = 1 - t; return [0, 1].map(k => 3 * (u * u * (CP[1][k] - CP[0][k]) + 2 * u * t * (CP[2][k] - CP[1][k]) + t * t * (CP[3][k] - CP[2][k]))); };
+  const ba = (t) => [0, 1].map(k => 6 * ((1 - t) * (CP[2][k] - 2 * CP[1][k] + CP[0][k]) + t * (CP[3][k] - 2 * CP[2][k] + CP[1][k])));
+  const W = 2 * Math.PI;
+  const MODES = {
+    speed: {p: t => [60 + 680 * t * t, 165], v: t => [1360 * t, 0], a: () => [1360, 0], sv: .12, sa: .05,
+      note: 'Straight road, speeding up: the ticks spread out because the dot covers more road per tick. All of the acceleration is along the path.'},
+    circle: {p: t => [400 + 110 * Math.cos(W * t), 165 + 110 * Math.sin(W * t)], v: t => [-110 * W * Math.sin(W * t), 110 * W * Math.cos(W * t)],
+      a: t => [-110 * W * W * Math.cos(W * t), -110 * W * W * Math.sin(W * t)], sv: .12, sa: .025,
+      note: 'Constant speed (equally spaced ticks) but the direction keeps turning. All of the acceleration is sideways, aimed at the centre of the circle. Changing direction counts as accelerating.'},
+    curve: {p: bz, v: bv, a: ba, sv: .12, sa: .04,
+      note: 'A cubic Bézier piece: both parts at once. The dot speeds up and slows down along the path and bends sideways around the turns.'}
+  };
+  let mode = 'curve';
+  const dot = (a, b) => a[0] * b[0] + a[1] * b[1], len = a => Math.hypot(a[0], a[1]);
+  const arrow = (from, v, col, w) => {
+    const to = [from[0] + v[0], from[1] + v[1]], a = Math.atan2(v[1], v[0]), h = 8;
+    if (len(v) < 3) return;
+    svg.append('line').attr('x1', from[0]).attr('y1', from[1]).attr('x2', to[0]).attr('y2', to[1]).attr('stroke', col).attr('stroke-width', w);
+    svg.append('path').attr('d', `M${to[0]},${to[1]}L${to[0] - h * Math.cos(a - .45)},${to[1] - h * Math.sin(a - .45)}L${to[0] - h * Math.cos(a + .45)},${to[1] - h * Math.sin(a + .45)}Z`).attr('fill', col);
+  };
+  const tick = d3.scaleSequential(d3.interpolateViridis).domain([0, 1]);
+
+  function draw() {
+    const t = +tIn.value, M = MODES[mode]; document.getElementById('rf-tv').textContent = t.toFixed(2);
+    document.querySelectorAll('#rf-modes .chip').forEach(b => b.classList.toggle('on', b.dataset.m === mode));
+    svg.selectAll('*').remove();
+    svg.append('path').attr('d', d3.line()(d3.range(0, 1.0001, .01).map(M.p))).attr('fill', 'none').attr('stroke', '#555').attr('stroke-width', 2);
+    svg.selectAll('.tk').data(d3.range(0, 1.0001, .1)).join('circle').attr('cx', d => M.p(d)[0]).attr('cy', d => M.p(d)[1]).attr('r', 4).attr('fill', d => tick(d));
+    const p = M.p(t), v = M.v(t), a = M.a(t), s = len(v) || 1e-9, T = [v[0] / s, v[1] / s], N = [-T[1], T[0]];
+    const aT = dot(a, T), aN = dot(a, N);
+    arrow(p, [T[0] * aT * M.sa, T[1] * aT * M.sa], '#f9a8d4', 2.5);
+    arrow(p, [N[0] * aN * M.sa, N[1] * aN * M.sa], '#f97316', 2.5);
+    arrow(p, [a[0] * M.sa, a[1] * M.sa], C.red, 4);
+    arrow(p, [v[0] * M.sv, v[1] * M.sv], C.yellow, 4);
+    svg.append('circle').attr('cx', p[0]).attr('cy', p[1]).attr('r', 7).attr('fill', '#fff').attr('stroke', C.bg);
+    document.getElementById('rf-read').innerHTML =
+      `position (${Math.round(p[0])}, ${Math.round(p[1])}) · speed ${Math.round(s)} px per unit of t · acceleration ${Math.round(len(a))}: ` +
+      `along the path <b>${Math.round(aT)}</b> (${aT > 1 ? 'speeding up' : aT < -1 ? 'slowing down' : 'steady speed'}), sideways <b>${Math.round(aN)}</b> (${Math.abs(aN) > 1 ? 'bending the path' : 'no bend'})`;
+    document.getElementById('rf-note').textContent = M.note;
+  }
+  tIn.addEventListener('input', draw);
+  document.querySelectorAll('#rf-modes .chip').forEach(b => b.addEventListener('click', () => { mode = b.dataset.m; draw(); }));
+  let raf = null; const btn = document.getElementById('rf-play');
+  btn.onclick = () => {
+    if (raf) { cancelAnimationFrame(raf); raf = null; btn.textContent = '▶ play'; return; }
+    btn.textContent = '❚❚ pause'; const t0 = performance.now() - (+tIn.value) * 5000;
+    const step = now => { tIn.value = ((now - t0) / 5000) % 1; draw(); raf = requestAnimationFrame(step); };
+    raf = requestAnimationFrame(step);
+  };
+  draw();
+})();
 /* ---------- 9 · Continuity at a join ---------- */
 (function () {
   const W = 800, H = 420, svg = d3.select('#ct');

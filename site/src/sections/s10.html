@@ -1,5 +1,5 @@
 <section id="s10">
-    <h2>8 · What C⁰, C¹ and C² feel like</h2>
+    <h2>9 · What C⁰, C¹ and C² feel like</h2>
     <p>Three joins, same left piece. A ball rides the whole curve on the clock <span data-tex="t"></span> (0 to 1 on the blue piece, 1 to 2 on the green one). The <b class="yellow">yellow arrow</b> is its velocity. The <b class="red">red arrow</b> is its acceleration: the push you would feel. The dashed circles at the join are the circles that each side is bending along. A smaller circle means a tighter bend.</p>
     <div class="trio">
       <figure><svg id="tr0" viewBox="0 0 300 300"></svg><figcaption><b>C⁰</b>: only position matches</figcaption><p id="tr0-r" class="readout"></p></figure>
@@ -13,4 +13,16 @@
       <p><b>C¹:</b> the yellow arrow carries on smoothly, but the red arrow suddenly changes, and the two circles have different sizes. It is like holding the steering wheel at one angle and then snapping it to another: no corner, but a jolt.</p>
       <p><b>C²:</b> the red arrow also carries on smoothly, and both sides share the <b>same circle</b>. The bend changes gradually, so the ride is smooth.</p>
     </div>
+    <h3 class="sub">When do you want C², and when not?</h3>
+    <div class="duo">
+      <div class="card2"><p><b>Ask for C²</b> when a smooth ride or a gentle shape matters:</p>
+        <ul><li>Moving something along the curve: a camera, a robot arm, a vehicle, an animated object. A jump in acceleration is a jolt (and wear on hardware).</li>
+        <li>Smoothing noisy data: you want a gentle curve, not kinks invented by the fit. The usual cubic smoothing spline is C².</li>
+        <li>Shapes people look at: reflections reveal a jump in curvature, which is why car-body surfaces care.</li></ul></div>
+      <div class="card2"><p><b>Do not ask for C²</b> when the jump is the truth:</p>
+        <ul><li>Impacts and bounces: the velocity really does flip. That wants a C⁰ knot.</li>
+        <li>Sharp features by design: corners, edges, the points of letters.</li>
+        <li>Step commands: a setpoint that really does change instantly.</li></ul></div>
+    </div>
+    <p class="note"><b>How easy it is to get:</b> a cubic B-spline with ordinary (single) knots is C² everywhere automatically. A chain of cubic Béziers only gets C² if you use the locks from the previous demo, which cost you free control points. A repeated knot gives C² up deliberately. These are general-knowledge examples, not checked against a source.</p>
   </section>

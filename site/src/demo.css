@@ -46,3 +46,6 @@ nav a:hover{text-decoration:underline}
 .trio .readout{font-size:.8rem;min-height:2.6em}
 @media (max-width:720px){.trio{grid-template-columns:1fr}}
 .note p{margin:6px 0}
+h3.sub{margin:20px 0 8px;font-size:1.05rem;color:var(--blue)}
+.card2{background:var(--bg);border-radius:8px;padding:10px 14px}
+.card2 ul{margin:6px 0 4px;padding-left:18px}.card2 li{margin:4px 0;font-size:.92rem;color:var(--dim)}
