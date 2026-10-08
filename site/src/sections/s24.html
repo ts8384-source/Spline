@@ -1,0 +1,17 @@
+<section id="s24">
+    <h2>4 · Interpolating cubic splines</h2>
+    <p>Given data points <span data-tex="(x_i,y_i)"></span>, find the cubic spline that passes through all of them. On each interval <span data-tex="S_i"></span> is a cubic with four coefficients, so <span data-tex="n"></span> intervals have <span data-tex="4n"></span> unknowns. Interpolation and smoothness supply <span data-tex="4n-2"></span> conditions, and two <b>boundary conditions</b> fill the gap. Drag the points, pick a boundary type, and hover each part of the equations.</p>
+    <div id="e24" class="eqbox"></div>
+    <p id="e24-cap" class="note"></p>
+    <svg id="v24" viewBox="0 0 800 310"></svg>
+    <div id="bc24" class="chips"><button class="chip" data-t="natural">natural</button><button class="chip" data-t="clamped">clamped</button><button class="chip" data-t="nak">not-a-knot</button></div>
+    <label class="ctl" id="l24x">cursor x (picks the interval i) <input id="i24x" type="range" min="0.06" max="0.94" step="0.002" value="0.40"> <b id="o24x">0.40</b></label>
+    <label class="ctl" id="l24s0">end slope s₀ (clamped) <input id="i24s0" type="range" min="-4" max="4" step="0.05" value="1.5"> <b id="o24s0">1.5</b></label>
+    <label class="ctl" id="l24sn">end slope sₙ (clamped) <input id="i24sn" type="range" min="-4" max="4" step="0.05" value="-1.5"> <b id="o24sn">-1.5</b></label>
+    <button class="alt" id="b24">reset points</button>
+    <p id="e24-sub" class="readout"></p>
+    <svg id="d24" viewBox="0 0 800 230"></svg>
+    <p class="note">Above: the active cubic taken apart into its four terms. The white curve is their sum.</p>
+    <svg id="m24" viewBox="0 0 800 300"></svg>
+    <p class="note">Above: the system <span data-tex="A\mathbf M=\mathbf r"></span> that is solved for the second derivatives <span data-tex="M_i=S''(x_i)"></span>. Interior rows encode "C¹ and C² at a knot"; the first and last rows come from the boundary type.</p>
+  </section>

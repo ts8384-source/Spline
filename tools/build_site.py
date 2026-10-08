@@ -25,7 +25,7 @@ PAGES = {
     "math.html": dict(
         title="Spline Math", artifact_title="Spline Math", h1="Mathematics of splines",
         lede="Interactive equations: each symbol is wired to a picture, and every equation is filled in with the live numbers. First prototype: the core equation.",
-        sections=[20],
+        sections=[21, 22, 23, 24, 25, 20],
         footer="Reuses the visual ideas from the Spline Lab."),
     "project.html": dict(
         title="Bouncing-ball project", artifact_title="Bouncing Ball Splines", h1="Project: spline readout for a bouncing ball",

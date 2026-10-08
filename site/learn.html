@@ -63,6 +63,13 @@ h3.sub{margin:20px 0 8px;font-size:1.05rem;color:var(--blue)}
 .eqbox [class*="eq-"]{cursor:pointer;border-radius:4px;transition:background .15s}
 .eqbox [class*="eq-"]:hover,.eqbox .on{background:rgba(251,191,36,.28)}
 .flash{outline:2px solid var(--yellow);outline-offset:4px;border-radius:6px}
+.tablewrap{overflow-x:auto;margin:8px 0}
+table.mt{border-collapse:collapse;font-variant-numeric:tabular-nums;font-size:.9rem}
+table.mt th,table.mt td{border:1px solid #3a3a3a;padding:4px 12px;text-align:right}
+table.mt th{color:var(--dim);font-weight:600}
+table.mt tr.hot td{background:rgba(251,191,36,.18)}
+.yes{color:#22c55e;font-weight:700}.no{color:#ef4444;font-weight:700}
+.duo{margin-bottom:12px}
 </style>
 </head>
 <body>
@@ -302,6 +309,57 @@ function axes(g, x, y, xt, yt) {
     .call(a => a.selectAll('text,line,path').attr('fill', C.gray).attr('stroke', C.gray));
 }
 
+
+/* ---------- shared helpers for the math page ---------- */
+const PAL7 = ['#3b82f6', '#f97316', '#22c55e', '#e11d48', '#a855f7', '#06b6d4', '#eab308'], col7 = i => PAL7[i % PAL7.length];
+
+function bsD(i, pp, t, k, r) {                                   // r-th derivative of the B-spline basis function N_{i,pp}
+  if (r === 0) return bspline(i, pp, t, k);
+  if (pp === 0) return 0;
+  const d1 = k[i + pp] - k[i], d2 = k[i + pp + 1] - k[i + 1];
+  return pp * ((d1 ? bsD(i, pp - 1, t, k, r - 1) / d1 : 0) - (d2 ? bsD(i + 1, pp - 1, t, k, r - 1) / d2 : 0));
+}
+
+function solveLinear(A, b) {                                     // Gaussian elimination with partial pivoting (copies its input)
+  A = A.map(r => r.slice()); b = b.slice();
+  const n = b.length;
+  for (let c = 0; c < n; c++) {
+    let q = c; for (let r = c + 1; r < n; r++) if (Math.abs(A[r][c]) > Math.abs(A[q][c])) q = r;
+    [A[c], A[q]] = [A[q], A[c]]; [b[c], b[q]] = [b[q], b[c]];
+    for (let r = c + 1; r < n; r++) { const f = A[r][c] / A[c][c]; for (let k = c; k < n; k++) A[r][k] -= f * A[c][k]; b[r] -= f * b[c]; }
+  }
+  const s = new Array(n).fill(0);
+  for (let r = n - 1; r >= 0; r--) s[r] = (b[r] - d3.sum(d3.range(r + 1, n), k => A[r][k] * s[k])) / A[r][r];
+  return s;
+}
+
+function eqLab(id, tex, onChange) {                              // equation whose symbols (class "eq-<key>") are hoverable / tappable
+  const el = document.getElementById(id);
+  katex.render(tex, el, {displayMode: true, trust: true, throwOnError: false});
+  const keyOf = n => { const m = n && n.closest && n.closest('[class*="eq-"]'); const k = m && [...m.classList].find(x => x.startsWith('eq-')); return k ? k.slice(3) : null; };
+  const st = {hl: null, locked: null};
+  const apply = () => { el.querySelectorAll('[class*="eq-"]').forEach(e => e.classList.toggle('on', keyOf(e) === st.hl)); onChange(st.hl); };
+  el.addEventListener('mouseover', e => { st.hl = keyOf(e.target) || st.locked; apply(); });
+  el.addEventListener('mouseleave', () => { st.hl = st.locked; apply(); });
+  el.addEventListener('click', e => { const k = keyOf(e.target); st.locked = st.locked === k ? null : k; st.hl = st.locked; apply(); });
+  st.refresh = () => el.querySelectorAll('[class*="eq-"]').forEach(e => e.classList.toggle('on', keyOf(e) === st.hl));
+  return st;
+}
+
+function cubicSystem(xs, ys, type, s0, sn) {                     // interpolating cubic spline: system A M = r for M_i = S''(x_i), then coefficients
+  const n = xs.length - 1, h = d3.range(n).map(i => xs[i + 1] - xs[i]), dl = d3.range(n).map(i => (ys[i + 1] - ys[i]) / h[i]);
+  const A = d3.range(n + 1).map(() => new Array(n + 1).fill(0)), r = new Array(n + 1).fill(0);
+  for (let i = 1; i < n; i++) { A[i][i - 1] = h[i - 1]; A[i][i] = 2 * (h[i - 1] + h[i]); A[i][i + 1] = h[i]; r[i] = 6 * (dl[i] - dl[i - 1]); }
+  if (type === 'natural') { A[0][0] = 1; A[n][n] = 1; }
+  else if (type === 'clamped') { A[0][0] = 2 * h[0]; A[0][1] = h[0]; r[0] = 6 * (dl[0] - s0); A[n][n - 1] = h[n - 1]; A[n][n] = 2 * h[n - 1]; r[n] = 6 * (sn - dl[n - 1]); }
+  else { A[0][0] = h[1]; A[0][1] = -(h[0] + h[1]); A[0][2] = h[0]; A[n][n] = h[n - 2]; A[n][n - 1] = -(h[n - 2] + h[n - 1]); A[n][n - 2] = h[n - 1]; }
+  const M = solveLinear(A, r);
+  const a = ys.slice(0, n), c = M.slice(0, n).map(m => m / 2), d = d3.range(n).map(i => (M[i + 1] - M[i]) / (6 * h[i])), b = d3.range(n).map(i => dl[i] - h[i] * (2 * M[i] + M[i + 1]) / 6);
+  const piece = x => Math.max(0, Math.min(n - 1, d3.bisectRight(xs, x) - 1));
+  const ev = (x, o = 0) => { const i = piece(x), u = x - xs[i];
+    return o === 0 ? a[i] + b[i] * u + c[i] * u * u + d[i] * u ** 3 : o === 1 ? b[i] + 2 * c[i] * u + 3 * d[i] * u * u : o === 2 ? 2 * c[i] + 6 * d[i] * u : 6 * d[i]; };
+  return {n, h, A, r, M, a, b, c, d, piece, ev};
+}
 /* ---------- 1 · Runge ---------- */
 (function () {
   const svg = d3.select('#runge'), W = 800, H = 380, m = {l: 44, r: 16, t: 12, b: 28};

@@ -1,0 +1,11 @@
+<section id="s23">
+    <h2>3 · Counting: how many numbers define a spline</h2>
+    <p>Each piece is a polynomial of degree <span data-tex="n"></span>, which has <span data-tex="n+1"></span> coefficients, so <span data-tex="k"></span> pieces start with <span data-tex="(n+1)k"></span> unknowns. Each knot where <span data-tex="r_i"></span> derivatives must match removes <span data-tex="r_i+1"></span> of them. What is left is the <b>dimension</b> of the spline space: the number of free numbers (control points) you can choose. Click a knot to change how many times it is repeated.</p>
+    <div id="e23" class="eqbox"></div>
+    <p id="e23-cap" class="note"></p>
+    <svg id="v23" viewBox="0 0 800 330"></svg>
+    <label class="ctl" id="l23k">pieces k <input id="i23k" type="range" min="2" max="8" step="1" value="5"> <b id="o23k">5</b></label>
+    <label class="ctl" id="l23n">degree n <input id="i23n" type="range" min="0" max="5" step="1" value="3"> <b id="o23n">3</b></label>
+    <button class="alt" id="b23">reset multiplicities</button>
+    <p id="e23-sub" class="readout"></p>
+  </section>

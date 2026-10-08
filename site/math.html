@@ -63,6 +63,13 @@ h3.sub{margin:20px 0 8px;font-size:1.05rem;color:var(--blue)}
 .eqbox [class*="eq-"]{cursor:pointer;border-radius:4px;transition:background .15s}
 .eqbox [class*="eq-"]:hover,.eqbox .on{background:rgba(251,191,36,.28)}
 .flash{outline:2px solid var(--yellow);outline-offset:4px;border-radius:6px}
+.tablewrap{overflow-x:auto;margin:8px 0}
+table.mt{border-collapse:collapse;font-variant-numeric:tabular-nums;font-size:.9rem}
+table.mt th,table.mt td{border:1px solid #3a3a3a;padding:4px 12px;text-align:right}
+table.mt th{color:var(--dim);font-weight:600}
+table.mt tr.hot td{background:rgba(251,191,36,.18)}
+.yes{color:#22c55e;font-weight:700}.no{color:#ef4444;font-weight:700}
+.duo{margin-bottom:12px}
 </style>
 </head>
 <body>
@@ -72,6 +79,74 @@ h3.sub{margin:20px 0 8px;font-size:1.05rem;color:var(--blue)}
     <h1>Mathematics of splines</h1>
     <p class="lede">Interactive equations: each symbol is wired to a picture, and every equation is filled in with the live numbers. First prototype: the core equation.</p>
   </header>
+
+<section id="s21">
+    <h2>1 · Definition: a function made of polynomial pieces</h2>
+    <p>A spline <span data-tex="S"></span> is a function on an interval that is cut at points <span data-tex="t_i"></span> (the <b>knots</b>) into pieces, and on each piece it equals a polynomial. Hover a symbol. Drag the yellow knots, change the number of pieces <span data-tex="k"></span> and the degree <span data-tex="n"></span>, and drag the weights to reshape it.</p>
+    <div id="e21" class="eqbox"></div>
+    <p id="e21-cap" class="note"></p>
+    <svg id="v21" viewBox="0 0 800 330"></svg>
+    <label class="ctl" id="l21t">t <input id="i21t" type="range" min="0" max="0.999" step="0.002" value="0.62"> <b id="o21t">0.62</b></label>
+    <label class="ctl" id="l21k">pieces k <input id="i21k" type="range" min="2" max="8" step="1" value="5"> <b id="o21k">5</b></label>
+    <label class="ctl" id="l21n">degree n <input id="i21n" type="range" min="0" max="5" step="1" value="3"> <b id="o21n">3</b></label>
+    <button class="alt" id="b21">reset</button>
+    <p id="e21-sub" class="readout"></p>
+  </section>
+
+<section id="s22">
+    <h2>2 · Smoothness: how many derivatives match at a knot</h2>
+    <p>Pieces are different polynomials, so at a knot they need not agree. <span data-tex="C^{r}"></span> means the pieces on both sides agree in value and in the first <span data-tex="r"></span> derivatives. For a spline of degree <span data-tex="n"></span> whose knot is repeated <span data-tex="m"></span> times, the smoothness is <span data-tex="r=n-m"></span>. Pick a knot, change <span data-tex="m"></span>, and read the table.</p>
+    <div id="e22" class="eqbox"></div>
+    <p id="e22-cap" class="note"></p>
+    <svg id="v22" viewBox="0 0 800 470"></svg>
+    <label class="ctl" id="l22n">degree n <input id="i22n" type="range" min="1" max="4" step="1" value="3"> <b id="o22n">3</b></label>
+    <label class="ctl" id="l22m">copies m of the selected knot <input id="i22m" type="range" min="1" max="5" step="1" value="1"> <b id="o22m">1</b></label>
+    <button class="alt" id="b22">reset</button>
+    <div id="t22" class="tablewrap"></div>
+    <p id="e22-sub" class="readout"></p>
+  </section>
+
+<section id="s23">
+    <h2>3 · Counting: how many numbers define a spline</h2>
+    <p>Each piece is a polynomial of degree <span data-tex="n"></span>, which has <span data-tex="n+1"></span> coefficients, so <span data-tex="k"></span> pieces start with <span data-tex="(n+1)k"></span> unknowns. Each knot where <span data-tex="r_i"></span> derivatives must match removes <span data-tex="r_i+1"></span> of them. What is left is the <b>dimension</b> of the spline space: the number of free numbers (control points) you can choose. Click a knot to change how many times it is repeated.</p>
+    <div id="e23" class="eqbox"></div>
+    <p id="e23-cap" class="note"></p>
+    <svg id="v23" viewBox="0 0 800 330"></svg>
+    <label class="ctl" id="l23k">pieces k <input id="i23k" type="range" min="2" max="8" step="1" value="5"> <b id="o23k">5</b></label>
+    <label class="ctl" id="l23n">degree n <input id="i23n" type="range" min="0" max="5" step="1" value="3"> <b id="o23n">3</b></label>
+    <button class="alt" id="b23">reset multiplicities</button>
+    <p id="e23-sub" class="readout"></p>
+  </section>
+
+<section id="s24">
+    <h2>4 · Interpolating cubic splines</h2>
+    <p>Given data points <span data-tex="(x_i,y_i)"></span>, find the cubic spline that passes through all of them. On each interval <span data-tex="S_i"></span> is a cubic with four coefficients, so <span data-tex="n"></span> intervals have <span data-tex="4n"></span> unknowns. Interpolation and smoothness supply <span data-tex="4n-2"></span> conditions, and two <b>boundary conditions</b> fill the gap. Drag the points, pick a boundary type, and hover each part of the equations.</p>
+    <div id="e24" class="eqbox"></div>
+    <p id="e24-cap" class="note"></p>
+    <svg id="v24" viewBox="0 0 800 310"></svg>
+    <div id="bc24" class="chips"><button class="chip" data-t="natural">natural</button><button class="chip" data-t="clamped">clamped</button><button class="chip" data-t="nak">not-a-knot</button></div>
+    <label class="ctl" id="l24x">cursor x (picks the interval i) <input id="i24x" type="range" min="0.06" max="0.94" step="0.002" value="0.40"> <b id="o24x">0.40</b></label>
+    <label class="ctl" id="l24s0">end slope s₀ (clamped) <input id="i24s0" type="range" min="-4" max="4" step="0.05" value="1.5"> <b id="o24s0">1.5</b></label>
+    <label class="ctl" id="l24sn">end slope sₙ (clamped) <input id="i24sn" type="range" min="-4" max="4" step="0.05" value="-1.5"> <b id="o24sn">-1.5</b></label>
+    <button class="alt" id="b24">reset points</button>
+    <p id="e24-sub" class="readout"></p>
+    <svg id="d24" viewBox="0 0 800 230"></svg>
+    <p class="note">Above: the active cubic taken apart into its four terms. The white curve is their sum.</p>
+    <svg id="m24" viewBox="0 0 800 300"></svg>
+    <p class="note">Above: the system <span data-tex="A\mathbf M=\mathbf r"></span> that is solved for the second derivatives <span data-tex="M_i=S''(x_i)"></span>. Interior rows encode "C¹ and C² at a knot"; the first and last rows come from the boundary type.</p>
+  </section>
+
+<section id="s25">
+    <h2>5 · The natural spline minimises bending energy</h2>
+    <p>The wooden strip settles into the shape with the least bending energy. Mathematically, among all twice-differentiable curves through the data points, the <b>natural cubic spline</b> <span data-tex="S"></span> has the smallest <span data-tex="E[f]=\int (f'')^2dx"></span>. To test it, add to <span data-tex="S"></span> any smooth wiggle <span data-tex="w"></span> that is zero at every data point, so the curve still interpolates, and see what happens to the energy.</p>
+    <div id="e25" class="eqbox"></div>
+    <p id="e25-cap" class="note"></p>
+    <div class="duo"><svg id="v25" viewBox="0 0 400 310"></svg><svg id="p25" viewBox="0 0 400 310"></svg></div>
+    <svg id="c25" viewBox="0 0 800 210"></svg>
+    <label class="ctl" id="l25e">wiggle amount ε <input id="i25e" type="range" min="-0.5" max="0.5" step="0.005" value="0.25"> <b id="o25e">0.25</b></label>
+    <button class="alt" id="b25">reset points</button>
+    <p id="e25-sub" class="readout"></p>
+  </section>
 
 <section id="s20">
     <h2>The core equation, wired up</h2>
@@ -144,6 +219,397 @@ function axes(g, x, y, xt, yt) {
     .call(a => a.selectAll('text,line,path').attr('fill', C.gray).attr('stroke', C.gray));
 }
 
+
+/* ---------- shared helpers for the math page ---------- */
+const PAL7 = ['#3b82f6', '#f97316', '#22c55e', '#e11d48', '#a855f7', '#06b6d4', '#eab308'], col7 = i => PAL7[i % PAL7.length];
+
+function bsD(i, pp, t, k, r) {                                   // r-th derivative of the B-spline basis function N_{i,pp}
+  if (r === 0) return bspline(i, pp, t, k);
+  if (pp === 0) return 0;
+  const d1 = k[i + pp] - k[i], d2 = k[i + pp + 1] - k[i + 1];
+  return pp * ((d1 ? bsD(i, pp - 1, t, k, r - 1) / d1 : 0) - (d2 ? bsD(i + 1, pp - 1, t, k, r - 1) / d2 : 0));
+}
+
+function solveLinear(A, b) {                                     // Gaussian elimination with partial pivoting (copies its input)
+  A = A.map(r => r.slice()); b = b.slice();
+  const n = b.length;
+  for (let c = 0; c < n; c++) {
+    let q = c; for (let r = c + 1; r < n; r++) if (Math.abs(A[r][c]) > Math.abs(A[q][c])) q = r;
+    [A[c], A[q]] = [A[q], A[c]]; [b[c], b[q]] = [b[q], b[c]];
+    for (let r = c + 1; r < n; r++) { const f = A[r][c] / A[c][c]; for (let k = c; k < n; k++) A[r][k] -= f * A[c][k]; b[r] -= f * b[c]; }
+  }
+  const s = new Array(n).fill(0);
+  for (let r = n - 1; r >= 0; r--) s[r] = (b[r] - d3.sum(d3.range(r + 1, n), k => A[r][k] * s[k])) / A[r][r];
+  return s;
+}
+
+function eqLab(id, tex, onChange) {                              // equation whose symbols (class "eq-<key>") are hoverable / tappable
+  const el = document.getElementById(id);
+  katex.render(tex, el, {displayMode: true, trust: true, throwOnError: false});
+  const keyOf = n => { const m = n && n.closest && n.closest('[class*="eq-"]'); const k = m && [...m.classList].find(x => x.startsWith('eq-')); return k ? k.slice(3) : null; };
+  const st = {hl: null, locked: null};
+  const apply = () => { el.querySelectorAll('[class*="eq-"]').forEach(e => e.classList.toggle('on', keyOf(e) === st.hl)); onChange(st.hl); };
+  el.addEventListener('mouseover', e => { st.hl = keyOf(e.target) || st.locked; apply(); });
+  el.addEventListener('mouseleave', () => { st.hl = st.locked; apply(); });
+  el.addEventListener('click', e => { const k = keyOf(e.target); st.locked = st.locked === k ? null : k; st.hl = st.locked; apply(); });
+  st.refresh = () => el.querySelectorAll('[class*="eq-"]').forEach(e => e.classList.toggle('on', keyOf(e) === st.hl));
+  return st;
+}
+
+function cubicSystem(xs, ys, type, s0, sn) {                     // interpolating cubic spline: system A M = r for M_i = S''(x_i), then coefficients
+  const n = xs.length - 1, h = d3.range(n).map(i => xs[i + 1] - xs[i]), dl = d3.range(n).map(i => (ys[i + 1] - ys[i]) / h[i]);
+  const A = d3.range(n + 1).map(() => new Array(n + 1).fill(0)), r = new Array(n + 1).fill(0);
+  for (let i = 1; i < n; i++) { A[i][i - 1] = h[i - 1]; A[i][i] = 2 * (h[i - 1] + h[i]); A[i][i + 1] = h[i]; r[i] = 6 * (dl[i] - dl[i - 1]); }
+  if (type === 'natural') { A[0][0] = 1; A[n][n] = 1; }
+  else if (type === 'clamped') { A[0][0] = 2 * h[0]; A[0][1] = h[0]; r[0] = 6 * (dl[0] - s0); A[n][n - 1] = h[n - 1]; A[n][n] = 2 * h[n - 1]; r[n] = 6 * (sn - dl[n - 1]); }
+  else { A[0][0] = h[1]; A[0][1] = -(h[0] + h[1]); A[0][2] = h[0]; A[n][n] = h[n - 2]; A[n][n - 1] = -(h[n - 2] + h[n - 1]); A[n][n - 2] = h[n - 1]; }
+  const M = solveLinear(A, r);
+  const a = ys.slice(0, n), c = M.slice(0, n).map(m => m / 2), d = d3.range(n).map(i => (M[i + 1] - M[i]) / (6 * h[i])), b = d3.range(n).map(i => dl[i] - h[i] * (2 * M[i] + M[i + 1]) / 6);
+  const piece = x => Math.max(0, Math.min(n - 1, d3.bisectRight(xs, x) - 1));
+  const ev = (x, o = 0) => { const i = piece(x), u = x - xs[i];
+    return o === 0 ? a[i] + b[i] * u + c[i] * u * u + d[i] * u ** 3 : o === 1 ? b[i] + 2 * c[i] * u + 3 * d[i] * u * u : o === 2 ? 2 * c[i] + 6 * d[i] * u : 6 * d[i]; };
+  return {n, h, A, r, M, a, b, c, d, piece, ev};
+}
+/* ---------- 21 · Definition ---------- */
+(function () {
+  const g = id => document.getElementById(id), svg = d3.select('#v21');
+  const X = d3.scaleLinear([0, 1], [50, 780]), Y = d3.scaleLinear([-0.05, 1.05], [270, 15]);
+  const dflt = m => d3.range(m).map(i => 0.5 + 0.38 * Math.sin(1.9 * i + 0.6));
+  let inner = [], c = [], lastK = 0;
+  const eq = eqLab('e21', String.raw`\begin{aligned}
+    \htmlClass{eq-S}{S}(t) &= \htmlClass{eq-P}{P_{\htmlClass{eq-i}{i}}}(t), \qquad \htmlClass{eq-ti}{t_i} \le t < \htmlClass{eq-ti1}{t_{i+1}}, \qquad i=0,\dots,\htmlClass{eq-k}{k}-1\\
+    \deg P_i &\le \htmlClass{eq-n}{n}
+  \end{aligned}`, () => draw());
+  const f = (t, k, n) => d3.sum(c, (cj, j) => cj * bspline(j, n, t, k));
+
+  function draw() {
+    const hl = eq.hl, K = +g('i21k').value, n = +g('i21n').value, t = +g('i21t').value;
+    if (K !== lastK) { inner = d3.range(1, K).map(i => i / K); lastK = K; c = []; }
+    const kv = [...new Array(n + 1).fill(0), ...inner, ...new Array(n + 1).fill(1)], nb = kv.length - n - 1;
+    if (c.length !== nb) c = dflt(nb);
+    g('o21t').textContent = t.toFixed(2); g('o21k').textContent = K; g('o21n').textContent = n;
+    ['t', 'k', 'n'].forEach(q => g('l21' + q).classList.toggle('flash', hl === q));
+    const bounds = [0, ...inner, 1], span = d3.max(d3.range(bounds.length - 1).filter(s => bounds[s] <= t)), tl = bounds[span], tr = bounds[span + 1];
+    svg.selectAll('*').remove();
+    svg.append('path').attr('d', `M50,${Y(0)}H780`).attr('stroke', '#9ca3af').attr('fill', 'none');
+    bounds.slice(0, -1).forEach((b, s) => {
+      const on = s === span, lo = b + 1e-6, hi = bounds[s + 1] - 1e-6, xs = d3.range(0, 1.0001, 0.02).map(u => lo + u * (hi - lo));
+      if (on && (hl === 'P' || hl === 'i' || hl === 'ti' || hl === 'ti1')) svg.append('rect').attr('x', X(b)).attr('y', 15).attr('width', X(bounds[s + 1]) - X(b)).attr('height', 255).attr('fill', col7(s)).attr('opacity', .15);
+      svg.append('path').attr('d', d3.line()(xs.map(x => [X(x), Y(f(x, kv, n))]))).attr('fill', 'none').attr('stroke', col7(s))
+        .attr('stroke-width', on && hl === 'P' ? 8 : hl === 'S' ? 6 : 4).attr('opacity', hl && hl !== 'S' && hl !== 'P' && !on ? .55 : 1);
+      svg.append('text').attr('x', (X(b) + X(bounds[s + 1])) / 2).attr('y', 30).attr('text-anchor', 'middle').attr('fill', col7(s)).attr('font-size', hl === 'i' && on ? 18 : 12).attr('font-weight', 700).text('P' + s);
+    });
+    bounds.forEach((b, j) => {
+      const hot = (hl === 'ti' && j === span) || (hl === 'ti1' && j === span + 1) || hl === 'k';
+      svg.append('line').attr('x1', X(b)).attr('x2', X(b)).attr('y1', 15).attr('y2', 270).attr('stroke', hot ? '#fbbf24' : '#444').attr('stroke-width', hot ? 3 : 1);
+      svg.append('text').attr('x', X(b)).attr('y', 295).attr('text-anchor', 'middle').attr('fill', hot ? '#fbbf24' : '#9ca3af').attr('font-size', 12).text('t' + j);
+    });
+    svg.append('line').attr('x1', X(t)).attr('x2', X(t)).attr('y1', 15).attr('y2', 270).attr('stroke', '#fff').attr('opacity', .8);
+    svg.append('circle').attr('cx', X(t)).attr('cy', Y(f(t, kv, n))).attr('r', 7).attr('fill', '#fff');
+    svg.selectAll('.kh').data(inner.map((_, j) => j)).join('circle').attr('cx', j => X(inner[j])).attr('cy', 313).attr('r', 7).attr('fill', '#fbbf24').attr('stroke', '#1c1c1c').attr('stroke-width', 2).style('cursor', 'ew-resize')
+      .call(d3.drag().on('drag', (ev, j) => { inner[j] = Math.max((j ? inner[j - 1] : 0) + 0.02, Math.min((j < inner.length - 1 ? inner[j + 1] : 1) - 0.02, X.invert(ev.x))); draw(); }));
+
+    // the active piece as an ordinary polynomial in (t - t_i): Taylor coefficients at the left end
+    const e = 1e-9, coef = d3.range(n + 1).map(j => d3.sum(c, (cj, q) => cj * bsD(q, n, tl + e, kv, j)) / d3.range(1, j + 1).reduce((a, b) => a * b, 1));
+    const term = (a, j) => `${a >= 0 && j ? '+ ' : a < 0 ? '− ' : ''}${Math.abs(a).toFixed(2)}${j ? `(t−t<sub>${span}</sub>)${j > 1 ? `<sup>${j}</sup>` : ''}` : ''}`;
+    g('e21-sub').innerHTML = `t = ${t.toFixed(2)} lies in piece i = <b>${span}</b>, where t<sub>${span}</sub> = ${tl.toFixed(2)} ≤ t &lt; t<sub>${span + 1}</sub> = ${tr.toFixed(2)}. ` +
+      `There S = P<sub>${span}</sub>(t) = ${coef.map(term).join(' ')} = <b>${f(t, kv, n).toFixed(3)}</b>`;
+    const CAP = {
+      S: `<b>S</b>: the whole function. It is defined everywhere on [0, 1], but only through its pieces.`,
+      P: `<b>P<sub>i</sub></b>: the polynomial that S equals on piece i. Each piece is a different polynomial: pieces ${bounds.length - 1}, each of degree at most ${n}.`,
+      i: `<b>i</b>: the index of the piece, found by asking which interval t falls in. Here i = ${span}.`,
+      ti: `<b>t<sub>i</sub></b>: the knot at the left end of piece i (here ${tl.toFixed(2)}). Drag the yellow dots to move knots.`,
+      ti1: `<b>t<sub>i+1</sub></b>: the knot at the right end of the piece (here ${tr.toFixed(2)}). The piece includes its left end and excludes its right end.`,
+      k: `<b>k</b>: the number of pieces, so k − 1 interior knots. Slide it to cut the interval into more or fewer pieces.`,
+      n: `<b>n</b>: the largest degree any piece may have. Slide it: degree 0 gives steps, 1 gives straight segments, 3 gives cubic pieces.`
+    };
+    g('e21-cap').innerHTML = hl ? CAP[hl] : 'Hover a symbol, or tap it to keep it highlighted.';
+  }
+  ['i21t', 'i21k', 'i21n'].forEach(id => g(id).addEventListener('input', draw));
+  g('b21').onclick = () => { lastK = 0; c = []; draw(); };
+  draw();
+})();
+/* ---------- 22 · Smoothness at a knot ---------- */
+(function () {
+  const g = id => document.getElementById(id), svg = d3.select('#v22');
+  const INNER0 = [1, 2, 3, 4].map(i => i / 5), X = d3.scaleLinear([0, 1], [60, 780]);
+  const dflt = m => d3.range(m).map(i => 0.5 + 0.38 * Math.sin(1.9 * i + 0.6));
+  let inner = INNER0.slice(), mult = [1, 1, 1, 1], sel = 1, c = [], lastN = -1, lastKey = '';
+  const eq = eqLab('e22', String.raw`\htmlClass{eq-S}{S}\in C^{\htmlClass{eq-r}{r}}\ \text{at}\ \htmlClass{eq-t}{t_i}\iff
+    \htmlClass{eq-Pl}{P_{i-1}}^{(\htmlClass{eq-j}{j})}(t_i)=\htmlClass{eq-Pr}{P_i}^{(\htmlClass{eq-j}{j})}(t_i),\ \ j=0,\dots,\htmlClass{eq-r}{r}
+    \qquad r=\htmlClass{eq-n}{n}-\htmlClass{eq-m}{m}`, () => draw());
+
+  function draw() {
+    const hl = eq.hl, n = +g('i22n').value, kmax = n + 1;
+    mult = mult.map(m => Math.min(m, kmax)); g('i22m').max = kmax; g('i22m').value = mult[sel];
+    const kv = [...new Array(n + 1).fill(0), ...inner.flatMap((v, j) => new Array(mult[j]).fill(v)), ...new Array(n + 1).fill(1)], nb = kv.length - n - 1;
+    const key = nb + ':' + n; if (key !== lastKey) { c = dflt(nb); lastKey = key; }
+    g('o22n').textContent = n; g('o22m').textContent = mult[sel];
+    g('l22n').classList.toggle('flash', hl === 'n'); g('l22m').classList.toggle('flash', hl === 'm');
+    const ks = inner[sel], e = 1e-7, S = (t, r) => d3.sum(c, (cj, q) => cj * bsD(q, n, t, kv, r));
+    const bounds = [0, ...inner, 1], orders = [0, 1, 2];
+    const panels = orders.map(r => {
+      const vals = []; bounds.slice(0, -1).forEach((b, s) => d3.range(0, 1.0001, 0.05).forEach(u => vals.push(S(b + e + u * (bounds[s + 1] - b - 2 * e), r))));
+      const lo = d3.min(vals), hi = d3.max(vals), pad = (hi - lo) * .12 || 1;
+      return d3.scaleLinear([lo - pad, hi + pad], [0, 100]);
+    });
+    svg.selectAll('*').remove();
+    orders.forEach(r => {
+      const y0 = 15 + r * 115, Y = v => y0 + 100 - panels[r](v), name = ['S (value)', "S′ (1st derivative)", "S″ (2nd derivative)"][r];
+      svg.append('rect').attr('x', 50).attr('y', y0).attr('width', 740).attr('height', 100).attr('fill', '#202020').attr('rx', 6);
+      svg.append('text').attr('x', 58).attr('y', y0 + 14).attr('fill', '#9ca3af').attr('font-size', 12).text(name);
+      bounds.slice(0, -1).forEach((b, s) => {
+        const left = s === sel, right = s === sel + 1;
+        svg.append('path').attr('d', d3.line()(d3.range(0, 1.0001, 0.02).map(u => { const t = b + e + u * (bounds[s + 1] - b - 2 * e); return [X(t), Y(S(t, r))]; })))
+          .attr('fill', 'none').attr('stroke', col7(s)).attr('stroke-width', ((hl === 'Pl' && left) || (hl === 'Pr' && right)) ? 6 : hl === 'S' ? 5 : 3.5).attr('opacity', (hl === 'Pl' && !left) || (hl === 'Pr' && !right) ? .35 : 1);
+      });
+      svg.append('line').attr('x1', X(ks)).attr('x2', X(ks)).attr('y1', y0).attr('y2', y0 + 100).attr('stroke', hl === 't' ? '#fbbf24' : '#555').attr('stroke-width', hl === 't' ? 3 : 1.5);
+    });
+    svg.selectAll('.kh').data(inner.map((_, j) => j)).join('g').each(function (j) {
+      const gg = d3.select(this); gg.selectAll('*').remove();
+      d3.range(mult[j]).forEach(r => gg.append('circle').attr('cx', X(inner[j])).attr('cy', 440).attr('r', 12 - r * 2).attr('fill', 'none').attr('stroke', '#fbbf24').attr('stroke-width', 2));
+      gg.append('circle').attr('cx', X(inner[j])).attr('cy', 440).attr('r', 4).attr('fill', j === sel ? '#fbbf24' : '#b0861c');
+    }).style('cursor', 'ew-resize').call(d3.drag().on('start', (ev, j) => { sel = j; draw(); })
+      .on('drag', (ev, j) => { inner[j] = Math.max((j ? inner[j - 1] : 0) + 0.03, Math.min((j < inner.length - 1 ? inner[j + 1] : 1) - 0.03, X.invert(ev.x))); draw(); }));
+
+    // table of one-sided derivatives at the selected knot
+    const rows = d3.range(n + 1).map(j => ({j, L: S(ks - e, j), R: S(ks + e, j)}));
+    rows.forEach(r => r.ok = Math.abs(r.L - r.R) < 1e-4 * (1 + Math.abs(r.L)));
+    let rr = -1; for (const r of rows) { if (r.ok) rr = r.j; else break; }
+    const rTheory = n - mult[sel];
+    g('t22').innerHTML = `<table class="mt"><tr><th>j</th><th>P<sub>i−1</sub><sup>(j)</sup>(t<sub>i</sub>)</th><th>P<sub>i</sub><sup>(j)</sup>(t<sub>i</sub>)</th><th>equal?</th></tr>` +
+      rows.map(r => `<tr class="${(hl === 'j' || (hl === 'r' && r.j <= rTheory)) ? 'hot' : ''}"><td>${r.j}</td><td>${r.L.toFixed(3)}</td><td>${r.R.toFixed(3)}</td><td class="${r.ok ? 'yes' : 'no'}">${r.ok ? '✓' : '✗'}</td></tr>`).join('') + `</table>`;
+    g('e22-sub').innerHTML = `knot t<sub>i</sub> = ${ks.toFixed(2)} with m = ${mult[sel]}: formula says r = n − m = ${n} − ${mult[sel]} = <b>${rTheory}</b>; the table shows the pieces agree up to derivative <b>${rr}</b>. ` +
+      (rr === rTheory ? '<span class="yes">They match.</span>' : '<span class="no">Mismatch.</span>');
+    const CAP = {
+      S: `<b>S</b>: the spline. The three panels show S and its first two derivatives; a gap in a panel is a jump at the knot.`,
+      r: `<b>r</b>: how many derivatives are continuous at t<sub>i</sub>. The rows of the table up to r are highlighted. Here r = ${rTheory}.`,
+      t: `<b>t<sub>i</sub></b>: the selected knot (the yellow line). Click another knot below the graphs to select it.`,
+      j: `<b>j</b>: the order of the derivative being compared: 0 is the value, 1 the slope, 2 the bend.`,
+      Pl: `<b>P<sub>i−1</sub></b>: the piece to the left of the knot, drawn thick. Its j-th derivative at t<sub>i</sub> is the left column.`,
+      Pr: `<b>P<sub>i</sub></b>: the piece to the right of the knot, drawn thick. Its j-th derivative at t<sub>i</sub> is the right column.`,
+      m: `<b>m</b>: how many times the knot is repeated. Raise it and watch the matching derivatives drop out, one per copy.`,
+      n: `<b>n</b>: the degree. A higher degree can afford more derivatives matching: r = n − m.`
+    };
+    g('e22-cap').innerHTML = hl ? CAP[hl] : 'Hover a symbol, or tap it to keep it highlighted.';
+  }
+  g('i22n').addEventListener('input', draw);
+  g('i22m').addEventListener('input', () => { mult[sel] = +g('i22m').value; draw(); });
+  g('b22').onclick = () => { inner = INNER0.slice(); mult = [1, 1, 1, 1]; sel = 1; lastKey = ''; draw(); };
+  draw();
+})();
+/* ---------- 23 · Counting the dimension ---------- */
+(function () {
+  const g = id => document.getElementById(id), svg = d3.select('#v23');
+  let mult = [];
+  const eq = eqLab('e23', String.raw`\dim=\htmlClass{eq-U}{(n+1)\,k}\;-\;\htmlClass{eq-C}{\sum_{i=1}^{k-1}\big(r_i+1\big)}
+    \;=\;\htmlClass{eq-D}{n+1+\sum_{i=1}^{k-1}\htmlClass{eq-m}{m_i}},\qquad r_i=n-m_i`, () => draw());
+
+  function draw() {
+    const hl = eq.hl, K = +g('i23k').value, n = +g('i23n').value;
+    while (mult.length < K - 1) mult.push(1); mult.length = K - 1; mult = mult.map(m => Math.min(m, n + 1));
+    g('o23k').textContent = K; g('o23n').textContent = n;
+    const unknown = (n + 1) * K, conds = mult.map(m => n - m + 1), condTotal = d3.sum(conds), dim = unknown - condTotal, formula = n + 1 + d3.sum(mult);
+    const knots = [...new Array(n + 1).fill(0), ...mult.flatMap((m, i) => new Array(m).fill((i + 1) / K)), ...new Array(n + 1).fill(1)], count = knots.length - n - 1;
+    svg.selectAll('*').remove();
+    const W = 700, sx = W / Math.max(unknown, 1), x0 = 50;
+    // bar 1: all unknown coefficients, one block per coefficient, grouped by piece
+    svg.append('text').attr('x', x0).attr('y', 22).attr('fill', '#9ca3af').attr('font-size', 13).text(`unknowns: ${K} pieces × ${n + 1} coefficients = ${unknown}`);
+    d3.range(K).forEach(p => d3.range(n + 1).forEach(q => svg.append('rect').attr('x', x0 + (p * (n + 1) + q) * sx + 1).attr('y', 30).attr('width', sx - 2).attr('height', 34)
+      .attr('fill', col7(p)).attr('opacity', hl === 'U' ? 1 : hl ? .5 : .85)));
+    // bar 2: conditions removed at each knot
+    svg.append('text').attr('x', x0).attr('y', 100).attr('fill', '#9ca3af').attr('font-size', 13).text(`conditions: at each of the ${K - 1} interior knots, r+1 of them  (total ${condTotal})`);
+    let pos = 0;
+    mult.forEach((m, i) => { d3.range(conds[i]).forEach(q => { svg.append('rect').attr('x', x0 + pos * sx + 1).attr('y', 108).attr('width', sx - 2).attr('height', 34).attr('fill', '#ef4444').attr('opacity', hl === 'C' ? 1 : hl ? .5 : .85); pos++; });
+      svg.append('text').attr('x', x0 + (pos - conds[i] / 2) * sx).attr('y', 160).attr('text-anchor', 'middle').attr('fill', '#ef4444').attr('font-size', 11).text('t' + (i + 1)); });
+    // bar 3: what is left
+    svg.append('text').attr('x', x0).attr('y', 192).attr('fill', '#9ca3af').attr('font-size', 13).text(`free numbers = dimension = ${dim}  (one control point each)`);
+    d3.range(dim).forEach(q => svg.append('rect').attr('x', x0 + q * sx + 1).attr('y', 200).attr('width', sx - 2).attr('height', 34).attr('fill', '#22c55e').attr('opacity', hl === 'D' ? 1 : hl ? .5 : .9));
+    // clickable knot multiplicities
+    svg.append('text').attr('x', x0).attr('y', 268).attr('fill', '#9ca3af').attr('font-size', 13).text('click a knot to repeat it (m copies); r = n − m derivatives then match there');
+    mult.forEach((m, i) => {
+      const gx = x0 + 60 + i * 80, gg = svg.append('g').style('cursor', 'pointer').on('click', () => { mult[i] = mult[i] % (n + 1) + 1; draw(); });
+      gg.append('rect').attr('x', gx - 30).attr('y', 276).attr('width', 60).attr('height', 40).attr('rx', 6).attr('fill', '#242424').attr('stroke', hl === 'm' ? '#fbbf24' : '#555').attr('stroke-width', hl === 'm' ? 3 : 1);
+      gg.append('text').attr('x', gx).attr('y', 292).attr('text-anchor', 'middle').attr('fill', '#fbbf24').attr('font-size', 12).text(`t${i + 1}: m=${m}`);
+      gg.append('text').attr('x', gx).attr('y', 309).attr('text-anchor', 'middle').attr('fill', '#9ca3af').attr('font-size', 11).text(`r=${n - m}`);
+    });
+    g('e23-sub').innerHTML = `dim = ${unknown} − ${condTotal} = <b>${dim}</b> · by the right-hand formula n + 1 + Σm<sub>i</sub> = ${n + 1} + ${d3.sum(mult)} = <b>${formula}</b> · ` +
+      `B-splines in the knot vector (entries − n − 1) = <b>${count}</b> ` + (dim === formula && formula === count ? '<span class="yes">✓ all three agree</span>' : '<span class="no">✗ mismatch</span>');
+    const CAP = {
+      U: `<b>(n+1)k</b>: every piece has n+1 free coefficients, so before any smoothness is demanded there are ${unknown} unknowns (the coloured blocks).`,
+      C: `<b>Σ(r<sub>i</sub>+1)</b>: matching value and r derivatives at a knot costs r+1 conditions. Here the knots remove ${condTotal} unknowns in total (red).`,
+      D: `<b>dim</b>: what is left, ${dim}, is the number of independent numbers that define the spline: the control points (green).`,
+      m: `<b>m<sub>i</sub></b>: how many times knot i is repeated. Each extra copy lowers r by one, so it removes one fewer condition and adds one free number.`
+    };
+    g('e23-cap').innerHTML = hl ? CAP[hl] : 'Hover a symbol, or tap it to keep it highlighted.';
+  }
+  ['i23k', 'i23n'].forEach(id => g(id).addEventListener('input', draw));
+  g('b23').onclick = () => { mult = []; draw(); };
+  draw();
+})();
+/* ---------- 24 · Interpolating cubic splines ---------- */
+(function () {
+  const g = id => document.getElementById(id), svg = d3.select('#v24'), dsv = d3.select('#d24'), msv = d3.select('#m24');
+  const X = d3.scaleLinear([0, 1], [50, 780]), Y = d3.scaleLinear([-0.3, 1.3], [275, 15]);
+  const P0 = [[.05, .3], [.18, .75], [.32, .45], [.5, .8], [.66, .35], [.8, .6], [.95, .5]];
+  let P = P0.map(p => p.slice()), type = 'natural';
+  const eq = eqLab('e24', String.raw`\begin{aligned}
+    S_{\htmlClass{eq-i}{i}}(x) &= \htmlClass{eq-a}{a_i}+\htmlClass{eq-b}{b_i}(x-x_i)+\htmlClass{eq-c}{c_i}(x-x_i)^2+\htmlClass{eq-d}{d_i}(x-x_i)^3\\[2pt]
+    &\htmlClass{eq-I}{S_i(x_i)=y_i,\ \ S_i(x_{i+1})=y_{i+1}}\\[2pt]
+    &\htmlClass{eq-C1}{S_i'(x_{i+1})=S_{i+1}'(x_{i+1})}\\[2pt]
+    &\htmlClass{eq-C2}{S_i''(x_{i+1})=S_{i+1}''(x_{i+1})}\\[2pt]
+    &\htmlClass{eq-bc}{\text{two boundary conditions (natural, clamped or not-a-knot)}}\\[2pt]
+    &\htmlClass{eq-A}{A}\,\htmlClass{eq-M}{\mathbf M}=\htmlClass{eq-r}{\mathbf r}
+  \end{aligned}`, () => draw());
+
+  function draw() {
+    const hl = eq.hl, xs = P.map(p => p[0]), ys = P.map(p => p[1]), s0 = +g('i24s0').value, sn = +g('i24sn').value, xc = +g('i24x').value;
+    g('o24x').textContent = xc.toFixed(2); g('o24s0').textContent = s0.toFixed(2); g('o24sn').textContent = sn.toFixed(2);
+    document.querySelectorAll('#bc24 .chip').forEach(b => b.classList.toggle('on', b.dataset.t === type));
+    g('l24s0').style.display = g('l24sn').style.display = type === 'clamped' ? '' : 'none';
+    g('l24x').classList.toggle('flash', hl === 'i');
+    const S = cubicSystem(xs, ys, type, s0, sn), n = S.n, i0 = S.piece(xc), x0 = xs[i0], u = xc - x0;
+    const grid = d3.range(xs[0], xs[n] + 1e-9, (xs[n] - xs[0]) / 300);
+    svg.selectAll('*').remove();
+    svg.append('path').attr('d', `M50,${Y(0)}H780`).attr('stroke', '#444').attr('fill', 'none');
+    if (hl === 'i' || hl === 'a' || hl === 'b' || hl === 'c' || hl === 'd') svg.append('rect').attr('x', X(xs[i0])).attr('y', 15).attr('width', X(xs[i0 + 1]) - X(xs[i0])).attr('height', 260).attr('fill', col7(i0)).attr('opacity', .16);
+    d3.range(n).forEach(i => svg.append('path').attr('d', d3.line()(d3.range(0, 1.0001, .04).map(q => { const x = xs[i] + q * S.h[i]; return [X(x), Y(S.ev(x))]; })))
+      .attr('fill', 'none').attr('stroke', col7(i)).attr('stroke-width', i === i0 && hl === 'i' ? 7 : 4));
+    // conditions overlays
+    if (hl === 'C1') d3.range(1, n).forEach(i => { const s = S.b[i], dx = .05; svg.append('line').attr('x1', X(xs[i] - dx)).attr('y1', Y(ys[i] - dx * s)).attr('x2', X(xs[i] + dx)).attr('y2', Y(ys[i] + dx * s)).attr('stroke', '#fbbf24').attr('stroke-width', 4); });
+    if (hl === 'C2') d3.range(1, n).forEach(i => { const m = S.M[i], k = Math.min(60, Math.abs(m) * 12); svg.append('line').attr('x1', X(xs[i])).attr('x2', X(xs[i])).attr('y1', Y(ys[i])).attr('y2', Y(ys[i]) - Math.sign(m) * k).attr('stroke', '#ef4444').attr('stroke-width', 4); });
+    if (hl === 'bc') [0, n].forEach(i => svg.append('circle').attr('cx', X(xs[i])).attr('cy', Y(ys[i])).attr('r', 18).attr('fill', 'none').attr('stroke', '#fbbf24').attr('stroke-width', 3));
+    if (hl === 'M') d3.range(n + 1).forEach(i => svg.append('text').attr('x', X(xs[i])).attr('y', Y(ys[i]) - 16).attr('text-anchor', 'middle').attr('fill', '#ef4444').attr('font-size', 12).attr('font-weight', 700).text('M' + i + '=' + S.M[i].toFixed(1)));
+    svg.append('line').attr('x1', X(xc)).attr('x2', X(xc)).attr('y1', 15).attr('y2', 275).attr('stroke', '#fff').attr('opacity', .5).attr('stroke-dasharray', '4 4');
+    svg.selectAll('.dp').data(d3.range(n + 1)).join('circle').attr('cx', i => X(xs[i])).attr('cy', i => Y(ys[i])).attr('r', hl === 'I' ? 11 : 8).attr('fill', '#fff').attr('stroke', hl === 'I' ? '#fbbf24' : '#1c1c1c').attr('stroke-width', hl === 'I' ? 4 : 2).style('cursor', 'grab')
+      .call(d3.drag().on('drag', (ev, i) => { const lo = (i ? P[i - 1][0] : 0) + 0.04, hi = (i < n ? P[i + 1][0] : 1) - 0.04; P[i] = [Math.max(lo, Math.min(hi, X.invert(ev.x))), Math.max(-0.25, Math.min(1.25, Y.invert(ev.y)))]; draw(); }));
+    svg.selectAll('.dl').data(d3.range(n + 1)).join('text').attr('x', i => X(xs[i])).attr('y', 298).attr('text-anchor', 'middle').attr('fill', '#9ca3af').attr('font-size', 11).text(i => 'x' + i);
+
+    // the four terms of the active cubic
+    const hh = S.h[i0], us = d3.range(0, 1.0001, .05).map(q => q * hh), T = [us.map(() => S.a[i0]), us.map(v => S.b[i0] * v), us.map(v => S.c[i0] * v * v), us.map(v => S.d[i0] * v ** 3)];
+    const tot = us.map((v, q) => d3.sum(T, t => t[q])), all = T.flat().concat(tot), DX = d3.scaleLinear([0, hh], [60, 620]), DY = d3.scaleLinear([d3.min(all) - .1, d3.max(all) + .1], [200, 20]);
+    dsv.selectAll('*').remove();
+    const names = ['a', 'b', 'c', 'd'], tcol = ['#9ca3af', '#fbbf24', '#22c55e', '#a855f7'];
+    T.forEach((t, k) => dsv.append('path').attr('d', d3.line()(us.map((v, q) => [DX(v), DY(t[q])]))).attr('fill', 'none').attr('stroke', tcol[k]).attr('stroke-width', hl === names[k] ? 7 : 2.5).attr('opacity', hl && hl !== names[k] && 'abcd'.includes(hl) ? .3 : 1));
+    dsv.append('path').attr('d', d3.line()(us.map((v, q) => [DX(v), DY(tot[q])]))).attr('fill', 'none').attr('stroke', '#fff').attr('stroke-width', 3.5).attr('opacity', hl && 'abcd'.includes(hl) ? .6 : 1);
+    dsv.append('line').attr('x1', 60).attr('x2', 620).attr('y1', DY(0)).attr('y2', DY(0)).attr('stroke', '#555').attr('stroke-dasharray', '3 4');
+    dsv.append('text').attr('x', 60).attr('y', 14).attr('fill', '#9ca3af').attr('font-size', 12).text(`interval i = ${i0}, plotted against x − x_i`);
+    names.forEach((nm, k) => dsv.append('text').attr('x', 640).attr('y', 40 + k * 22).attr('text-anchor', 'start').attr('fill', tcol[k]).attr('font-size', 12).text(['a_i (constant)', 'b_i(x−x_i)', 'c_i(x−x_i)²', 'd_i(x−x_i)³'][k]));
+
+    // the linear system
+    msv.selectAll('*').remove();
+    const N = n + 1, cs = 52, rs = 28, ox = 50, oy = 40, amax = d3.max(S.A.flat(), Math.abs), heat = v => v === 0 ? '#202020' : d3.interpolateRdBu(0.5 + 0.5 * (v / amax));
+    msv.append('text').attr('x', ox).attr('y', 22).attr('fill', '#9ca3af').attr('font-size', 12).text('A');
+    msv.append('text').attr('x', ox + N * cs + 40).attr('y', 22).attr('fill', '#9ca3af').attr('font-size', 12).text('M (solved)');
+    msv.append('text').attr('x', ox + N * cs + 130).attr('y', 22).attr('fill', '#9ca3af').attr('font-size', 12).text('r');
+    S.A.forEach((row, i) => {
+      const boundary = i === 0 || i === n, hot = (hl === 'A') || (hl === 'bc' && boundary) || ((hl === 'C1' || hl === 'C2' || hl === 'I') && !boundary);
+      row.forEach((v, j) => { msv.append('rect').attr('x', ox + j * cs).attr('y', oy + i * rs).attr('width', cs - 2).attr('height', rs - 2).attr('fill', heat(v)).attr('opacity', hl && !hot ? .35 : 1);
+        if (v !== 0) msv.append('text').attr('x', ox + j * cs + cs / 2).attr('y', oy + i * rs + rs / 2 + 3).attr('text-anchor', 'middle').attr('fill', '#111').attr('font-size', 10).text(v.toFixed(2)); });
+      msv.append('rect').attr('x', ox + N * cs + 40).attr('y', oy + i * rs).attr('width', 70).attr('height', rs - 2).attr('fill', '#242424').attr('stroke', hl === 'M' ? '#fbbf24' : '#555').attr('stroke-width', hl === 'M' ? 3 : 1);
+      msv.append('text').attr('x', ox + N * cs + 75).attr('y', oy + i * rs + rs / 2 + 3).attr('text-anchor', 'middle').attr('fill', '#ef4444').attr('font-size', 11).text(S.M[i].toFixed(3));
+      msv.append('rect').attr('x', ox + N * cs + 130).attr('y', oy + i * rs).attr('width', 70).attr('height', rs - 2).attr('fill', '#242424').attr('stroke', hl === 'r' ? '#fbbf24' : '#555').attr('stroke-width', hl === 'r' ? 3 : 1);
+      msv.append('text').attr('x', ox + N * cs + 165).attr('y', oy + i * rs + rs / 2 + 3).attr('text-anchor', 'middle').attr('fill', '#9ca3af').attr('font-size', 11).text(S.r[i].toFixed(3));
+    });
+
+    // verify the claims numerically
+    const e = 1e-9, jumps = [0, 1, 2].map(o => d3.max(d3.range(1, n), i => Math.abs(S.ev(xs[i] - e, o) - S.ev(xs[i] + e, o)))), interp = d3.max(d3.range(n + 1), i => Math.abs(S.ev(xs[i] - (i === n ? e : 0)) - ys[i]));
+    const bcOk = type === 'natural' ? Math.abs(S.ev(xs[0], 2)) + Math.abs(S.ev(xs[n] - e, 2)) : type === 'clamped' ? Math.abs(S.ev(xs[0], 1) - s0) + Math.abs(S.ev(xs[n] - e, 1) - sn) : Math.abs(S.d[0] - S.d[1]) + Math.abs(S.d[n - 2] - S.d[n - 1]);
+    const f = (v, d = 2) => (v >= 0 ? '' : '−') + Math.abs(v).toFixed(d);
+    g('e24-sub').innerHTML = `i = ${i0}: S<sub>${i0}</sub>(x) = <span style="color:#9ca3af">${f(S.a[i0], 3)}</span> + <span style="color:#fbbf24">${f(S.b[i0], 3)}</span>(x−x<sub>${i0}</sub>) + <span style="color:#22c55e">${f(S.c[i0], 3)}</span>(x−x<sub>${i0}</sub>)² + <span style="color:#a855f7">${f(S.d[i0], 3)}</span>(x−x<sub>${i0}</sub>)³ = <b>${S.ev(xc).toFixed(3)}</b><br>` +
+      `checks: passes through the points (max miss ${interp.toExponential(0)}) · jump in S, S′, S″ at knots: ${jumps.map(v => v.toExponential(0)).join(', ')} · boundary condition residual ${bcOk.toExponential(0)}`;
+    const CAP = {
+      i: `<b>i</b>: which interval x is in (here ${i0}, shaded). Move the cursor slider to change it.`,
+      a: `<b>a<sub>i</sub> = y<sub>i</sub></b>: the constant term. It is just the height of the data point at the left end of the interval.`,
+      b: `<b>b<sub>i</sub> = S′(x<sub>i</sub>)</b>: the slope at the left end. It tilts the piece.`,
+      c: `<b>c<sub>i</sub> = S″(x<sub>i</sub>)/2</b>: half the second derivative at the left end. It bends the piece.`,
+      d: `<b>d<sub>i</sub></b> = (M<sub>i+1</sub> − M<sub>i</sub>)/(6h<sub>i</sub>): how fast the bend changes across the interval. It is the only term that differs between neighbours' curvature.`,
+      I: `<b>Interpolation</b>: each cubic passes through both of its end points: 2 conditions per interval, ${2 * n} in all (the ringed dots).`,
+      C1: `<b>C¹</b>: neighbouring cubics have the same slope at the shared knot: ${n - 1} conditions (yellow tangents).`,
+      C2: `<b>C²</b>: neighbouring cubics have the same second derivative at the knot: ${n - 1} conditions (red bars show S″).`,
+      bc: `<b>Boundary</b>: ${2 * n} + ${n - 1} + ${n - 1} = ${4 * n - 2} conditions for ${4 * n} unknowns, so two more are needed. natural: S″ = 0 at both ends; clamped: the end slopes are given; not-a-knot: S‴ continuous at x₁ and x<sub>n−1</sub>.`,
+      A: `<b>A</b>: the matrix of the system for the second derivatives. Each interior row ties a knot's M to its two neighbours; with unequal spacing h<sub>i</sub> the entries change.`,
+      M: `<b>M</b>: the unknown second derivatives M<sub>i</sub> = S″(x<sub>i</sub>) at the knots. Once found, every coefficient follows.`,
+      r: `<b>r</b>: the right-hand side, built from the data's divided differences (slopes between points).`
+    };
+    g('e24-cap').innerHTML = hl ? CAP[hl] : 'Hover a symbol, or tap it to keep it highlighted.';
+  }
+  document.querySelectorAll('#bc24 .chip').forEach(b => b.addEventListener('click', () => { type = b.dataset.t; draw(); }));
+  ['i24x', 'i24s0', 'i24sn'].forEach(id => g(id).addEventListener('input', draw));
+  g('b24').onclick = () => { P = P0.map(p => p.slice()); draw(); };
+  draw();
+})();
+/* ---------- 25 · Natural spline minimises bending energy ---------- */
+(function () {
+  const g = id => document.getElementById(id), sv = d3.select('#v25'), pv = d3.select('#p25'), cv = d3.select('#c25');
+  const X = d3.scaleLinear([0, 1], [30, 380]), Y = d3.scaleLinear([-0.3, 1.3], [275, 15]);
+  const P0 = [[.06, .3], [.24, .75], [.42, .4], [.6, .8], [.78, .35], [.94, .6]];
+  let P = P0.map(p => p.slice());
+  const eq = eqLab('e25', String.raw`\htmlClass{eq-E}{E[f]}=\htmlClass{eq-int}{\int_{x_0}^{x_n}}\big(\htmlClass{eq-f2}{f''}(x)\big)^2dx,\qquad
+    f=\htmlClass{eq-S}{S}+\htmlClass{eq-eps}{\varepsilon}\,\htmlClass{eq-w}{w},\ \ w(x_i)=0
+    \ \Longrightarrow\ E[S+\varepsilon w]=E[S]+\varepsilon^2E[w]\ \ge\ E[S]\ \ \text{because}\ \htmlClass{eq-cross}{\textstyle\int S''w''\,dx=0}`, () => draw());
+
+  function draw() {
+    const hl = eq.hl, xs = P.map(p => p[0]), ys = P.map(p => p[1]), n = xs.length - 1, eps = +g('i25e').value;
+    g('o25e').textContent = eps.toFixed(2); g('l25e').classList.toggle('flash', hl === 'eps');
+    const S = cubicSystem(xs, ys, 'natural'), grid = d3.range(xs[0], xs[n] + 1e-9, (xs[n] - xs[0]) / 800);
+    const prod = (x, skip) => d3.range(n + 1).filter(j => !skip.includes(j)).reduce((a, j) => a * (x - xs[j]), 1);
+    const w0 = x => prod(x, []), wmax = d3.max(grid, x => Math.abs(w0(x))) || 1, w = x => w0(x) / wmax;
+    const w2 = x => { let s = 0; for (let a = 0; a <= n; a++) for (let b = 0; b <= n; b++) if (a !== b) s += prod(x, [a, b]); return s / wmax; };
+    const dx = grid[1] - grid[0], integ = f => d3.sum(grid, x => f(x) * dx);
+    const E0 = integ(x => S.ev(x, 2) ** 2), Ew = integ(x => w2(x) ** 2), cross = integ(x => S.ev(x, 2) * w2(x));
+    const Eof = e => integ(x => (S.ev(x, 2) + e * w2(x)) ** 2), Ecur = Eof(eps);
+
+    sv.selectAll('*').remove();
+    sv.append('path').attr('d', `M30,${Y(0)}H380`).attr('stroke', '#444').attr('fill', 'none');
+    sv.append('text').attr('x', 34).attr('y', 14).attr('fill', '#9ca3af').attr('font-size', 12).text('curves through the same points');
+    if (hl === 'w' || hl === 'eps') sv.append('path').attr('d', d3.line()(grid.map(x => [X(x), Y(eps * w(x))]))).attr('fill', 'none').attr('stroke', '#22c55e').attr('stroke-width', 3).attr('stroke-dasharray', '5 3');
+    sv.append('path').attr('d', d3.line()(grid.map(x => [X(x), Y(S.ev(x))]))).attr('fill', 'none').attr('stroke', '#3b82f6').attr('stroke-width', hl === 'S' ? 7 : 4);
+    sv.append('path').attr('d', d3.line()(grid.map(x => [X(x), Y(S.ev(x) + eps * w(x))]))).attr('fill', 'none').attr('stroke', '#f97316').attr('stroke-width', 3.5);
+    sv.selectAll('.dp').data(d3.range(n + 1)).join('circle').attr('cx', i => X(xs[i])).attr('cy', i => Y(ys[i])).attr('r', 7).attr('fill', '#fff').attr('stroke', '#1c1c1c').attr('stroke-width', 2).style('cursor', 'ns-resize')
+      .call(d3.drag().on('drag', (ev, i) => { P[i] = [xs[i], Math.max(-0.25, Math.min(1.25, Y.invert(ev.y)))]; draw(); }));
+    sv.append('text').attr('x', 34).attr('y', 292).attr('fill', '#3b82f6').attr('font-size', 12).text('natural spline S');
+    sv.append('text').attr('x', 380).attr('y', 292).attr('text-anchor', 'end').attr('fill', '#f97316').attr('font-size', 12).text('S + ε w');
+
+    // energy as a function of epsilon
+    const es = d3.range(-0.5, 0.5001, 0.02), ev = es.map(Eof), PX = d3.scaleLinear([-0.5, 0.5], [40, 380]), PY = d3.scaleLinear([0, d3.max(ev) * 1.05], [265, 20]);
+    pv.selectAll('*').remove();
+    pv.append('text').attr('x', 44).attr('y', 14).attr('fill', '#9ca3af').attr('font-size', 12).text('energy E against ε');
+    pv.append('path').attr('d', 'M40,265H380M' + PX(0) + ',20V265').attr('stroke', '#555').attr('fill', 'none');
+    pv.append('path').attr('d', d3.line()(es.map((e, i) => [PX(e), PY(ev[i])]))).attr('fill', 'none').attr('stroke', '#f97316').attr('stroke-width', hl === 'E' ? 6 : 3.5);
+    pv.append('circle').attr('cx', PX(0)).attr('cy', PY(E0)).attr('r', 6).attr('fill', '#3b82f6');
+    pv.append('text').attr('x', PX(0) + 8).attr('y', PY(E0) - 8).attr('fill', '#3b82f6').attr('font-size', 11).text('S itself: the minimum');
+    pv.append('circle').attr('cx', PX(eps)).attr('cy', PY(Ecur)).attr('r', 7).attr('fill', '#fff');
+    pv.append('text').attr('x', 380).attr('y', 285).attr('text-anchor', 'end').attr('fill', '#9ca3af').attr('font-size', 11).text('ε →');
+
+    // squared curvature
+    const CX = d3.scaleLinear([xs[0], xs[n]], [50, 780]), cmax = d3.max(grid, x => Math.max(S.ev(x, 2) ** 2, (S.ev(x, 2) + eps * w2(x)) ** 2)) || 1, CY = d3.scaleLinear([0, cmax * 1.05], [190, 20]);
+    cv.selectAll('*').remove();
+    cv.append('text').attr('x', 54).attr('y', 14).attr('fill', '#9ca3af').attr('font-size', 12).text('(f″)² : the area under each curve is the energy' + (hl === 'f2' || hl === 'int' ? '   ← this' : ''));
+    const area = (f, color, op) => cv.append('path').attr('d', d3.area().x(d => CX(d)).y0(CY(0)).y1(d => CY(f(d)))(grid)).attr('fill', color).attr('opacity', op);
+    area(x => S.ev(x, 2) ** 2, '#3b82f6', hl === 'int' ? .55 : .3);
+    area(x => (S.ev(x, 2) + eps * w2(x)) ** 2, '#f97316', hl === 'int' ? .5 : .25);
+    cv.append('path').attr('d', d3.line()(grid.map(x => [CX(x), CY(S.ev(x, 2) ** 2)]))).attr('fill', 'none').attr('stroke', '#3b82f6').attr('stroke-width', hl === 'f2' ? 5 : 2.5);
+    cv.append('path').attr('d', d3.line()(grid.map(x => [CX(x), CY((S.ev(x, 2) + eps * w2(x)) ** 2)]))).attr('fill', 'none').attr('stroke', '#f97316').attr('stroke-width', hl === 'f2' ? 5 : 2.5);
+    xs.forEach(x => cv.append('line').attr('x1', CX(x)).attr('x2', CX(x)).attr('y1', 20).attr('y2', 190).attr('stroke', '#444'));
+
+    g('e25-sub').innerHTML = `E[S] = <span style="color:#3b82f6">${E0.toFixed(3)}</span> · E[S + εw] at ε = ${eps.toFixed(2)} is <span style="color:#f97316"><b>${Ecur.toFixed(3)}</b></span> · ` +
+      `E[S] + ε²E[w] = ${E0.toFixed(3)} + ${(eps * eps).toFixed(3)} × ${Ew.toFixed(3)} = ${(E0 + eps * eps * Ew).toFixed(3)} · cross term ∫S″w″ = <b>${Math.abs(cross) < 5e-4 ? '0.000' : cross.toFixed(4)}</b> ` +
+      (Ecur >= E0 - 1e-6 ? '<span class="yes">✓ energy never goes below E[S]</span>' : '<span class="no">✗</span>');
+    const CAP = {
+      E: `<b>E[f]</b>: the bending energy of f. The orange curve on the right shows it for S + εw as ε changes: a parabola whose lowest point is at ε = 0, which is S itself.`,
+      int: `<b>∫</b>: the energy is the area under the squared curvature (shaded in the lower panel).`,
+      f2: `<b>f″</b>: the second derivative, how sharply the curve bends. The lower panel plots (f″)². Natural-spline S has f″ piecewise straight, with f″ = 0 at the ends.`,
+      S: `<b>S</b>: the natural cubic spline through the data (blue). Drag the white points to change the data.`,
+      eps: `<b>ε</b>: how much of the wiggle w to add. Slide it and watch the orange energy rise whichever way you go.`,
+      w: `<b>w</b>: a smooth wiggle that is zero at every data point (the green dashed shape), so S + εw still passes through every point.`,
+      cross: `<b>∫S″w″ = 0</b>: the cross term vanishes. Integrating by parts, it reduces to terms that contain w at the data points (zero) and S″ at the ends (zero for the natural spline). That is why the energy has no linear term in ε, only ε², and the minimum sits exactly at ε = 0.`
+    };
+    g('e25-cap').innerHTML = hl ? CAP[hl] : 'Hover a symbol, or tap it to keep it highlighted.';
+  }
+  g('i25e').addEventListener('input', draw); g('b25').onclick = () => { P = P0.map(p => p.slice()); draw(); };
+  draw();
+})();
 /* ---------- 20 · The core equation, wired up ---------- */
 (function () {
   const g = id => document.getElementById(id), svg = d3.select('#eqv'), tIn = g('eq-t'), pIn = g('eq-p'), eq = g('eq');
