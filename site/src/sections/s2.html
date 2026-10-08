@@ -1,0 +1,11 @@
+<section id="s2">
+    <h2>2 · A curve is a sum of bumps</h2>
+    <p>Twelve fixed bump functions, each with its own weight. Drag a weight. Only the curve near that bump moves; the dashed grey line is the original.</p>
+    <svg id="bumps" viewBox="0 0 800 340"></svg>
+    <div id="bump-sliders" class="sliders"></div>
+    <p id="bump-readout" class="readout"></p>
+    <button id="bump-reset">reset weights</button>
+    <p class="name">Now the name for it:</p>
+    <div data-tex="f(x)=\sum_{i=0}^{11} c_i\,B_i(x)" data-display="1"></div>
+    <p class="note"><span data-tex="B_i"></span> is the <b>basis function</b> (a cubic B-spline bump, nonzero over only 4 knot spans), <span data-tex="c_i"></span> its weight. Same shape as a sparse code <span data-tex="x\approx\sum_i a_i\varphi_i"></span>, but with a fixed local dictionary.</p>
+  </section>

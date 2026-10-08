@@ -9,3 +9,6 @@ python tools/ingest.py && python tools/search.py "knot vector"   # local retriev
 ```
 
 See `CLAUDE.md` for conventions and `corpus/README.md` for the retrieval layer.
+
+## Pages
+`site/index.html` links to **Spline Lab** (`site/learn.html`, learning) and the **bouncing-ball project** (`site/project.html`). Rebuild with `python tools/build_site.py`. See `ROADMAP.md` for what to learn next.

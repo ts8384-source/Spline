@@ -1,0 +1,8 @@
+<section id="s1">
+    <h2>1 · Why not one big polynomial?</h2>
+    <p>Pass a curve through evenly spaced points on <span data-tex="f(x)=\tfrac{1}{1+25x^2}"></span>. Add more points and the single polynomial gets <em>worse</em> near the ends. The spline just gets better.</p>
+    <svg id="runge" viewBox="0 0 800 380"></svg>
+    <label class="ctl">points <input id="runge-n" type="range" min="4" max="24" value="11"> <b id="runge-nv">11</b></label>
+    <p id="runge-err" class="readout"></p>
+    <p class="note">Blue dots are the data. <span class="red">Red</span> is the degree-(n−1) polynomial, <span class="green">green</span> is a natural cubic spline, grey is the true curve.</p>
+  </section>

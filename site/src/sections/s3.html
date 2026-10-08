@@ -1,0 +1,9 @@
+<section id="s3">
+    <h2>3 · de Casteljau: building a point by repeated averaging</h2>
+    <p>Drag the four control points. At parameter <span data-tex="t"></span>, take the point <span data-tex="t"></span> of the way along each segment, then repeat on the new polygon until one point is left. That point lies on the Bézier curve.</p>
+    <svg id="dc" viewBox="0 0 800 380"></svg>
+    <label class="ctl">t <input id="dc-t" type="range" min="0" max="1" step="0.005" value="0.35"> <b id="dc-tv">0.35</b></label>
+    <button id="dc-play">▶ play</button> <button id="dc-reset" class="alt">reset points</button>
+    <p class="name">Formalization:</p>
+    <div data-tex="P_i^{(k)}=(1-t)\,P_i^{(k-1)}+t\,P_{i+1}^{(k-1)},\qquad B(t)=P_0^{(3)}" data-display="1"></div>
+  </section>

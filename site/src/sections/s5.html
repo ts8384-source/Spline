@@ -1,0 +1,9 @@
+<section id="s5">
+    <h2>5 · What is t? A clock</h2>
+    <p>Think of the red dot as a car on a road and <span data-tex="t"></span> as the clock on the dashboard, 0 to 1. The curve is just the recording of where the car was at each tick. The coloured dots are ticks every <b>0.1</b> of the clock. On the right, the same trip is drawn as two ordinary graphs against <span data-tex="t"></span>: one for the x position and one for the height.</p>
+    <div class="duo"><svg id="clk" viewBox="0 0 400 400"></svg><div class="stack"><svg id="clkx" viewBox="0 0 400 150"></svg><svg id="clky" viewBox="0 0 400 150"></svg></div></div>
+    <label class="ctl">t <input id="clk-t" type="range" min="0" max="1" step="0.005" value="0.5"> <b id="clk-tv">0.50</b></label>
+    <button id="clk-play">▶ play</button> <button id="clk-reset" class="alt">reset points</button>
+    <p id="clk-read" class="readout"></p>
+    <p class="note">The ticks are equally spaced in time but not on the road: the clock is steady, the car is not. The yellow line is the car's velocity arrow: speed = 3 × its length. Drag P1 far from P0 and watch the first ticks spread out.</p>
+  </section>

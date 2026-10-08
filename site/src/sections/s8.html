@@ -1,0 +1,12 @@
+<section id="s8">
+    <h2>2 · A spline as the network's output</h2>
+    <p>Your idea: instead of one position per frame, the network outputs a handful of <b>control points</b>, and a fixed matrix <span data-tex="M"></span> turns them into the next <i>W</i> frames: <span data-tex="\text{positions}=M\,\text{control points}"></span>. Here the "network" is an oracle: I fit the best spline to the true future, so you see the <b>best the readout could ever do</b>. Slide "now" along the ball's path.</p>
+    <svg id="sw" viewBox="0 0 800 250"></svg>
+    <div class="duo"><svg id="swm" viewBox="0 0 400 260"></svg><svg id="swe" viewBox="0 0 400 260"></svg></div>
+    <label class="ctl">now (frame) <input id="sw-now" type="range" min="0" max="160" step="1" value="40"> <b id="sw-nowv">40</b></label>
+    <label class="ctl">window length W <input id="sw-w" type="range" min="10" max="80" step="1" value="40"> <b id="sw-wv">40</b></label>
+    <label class="ctl">control points k <input id="sw-k" type="range" min="4" max="12" step="1" value="6"> <b id="sw-kv">6</b></label>
+    <label class="ctl"><input id="sw-kink" type="checkbox"> oracle: add a corner knot (×3) at every bounce in the window</label>
+    <p id="sw-read" class="readout"></p>
+    <p class="note"><b>Top:</b> true path (grey), the window (shaded), the fitted spline (yellow) and its control points (dots, joined by the control polygon). <b>Lower left:</b> the readout matrix <span data-tex="M"></span>: each row is a future frame, each column a control point, brightness is that point's weight (the bump functions of a B-spline, as a table). <b>Lower right:</b> best-possible error for every "now", with bands where the window contains a bounce. Turn on the corner knot to see what it costs (3 extra control points per bounce) and what it needs (knowing when the bounce happens).</p>
+  </section>
