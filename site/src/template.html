@@ -11,7 +11,7 @@
 <main>
   <header>
     <h1>Spline Lab</h1>
-    <p class="lede">Six interactive demos, ordered the 3Blue1Brown way: a hook, then intuition, then the formula.</p>
+    <p class="lede">Seven interactive demos, ordered the 3Blue1Brown way: a hook, then intuition, then the formula.</p>
   </header>
 
   <section id="s1">
@@ -84,6 +84,18 @@
     <p id="rg-right" class="readout"></p>
     <p id="rg-note" class="note"></p>
     <p class="note"><b>Takeaway:</b> when a curve doubles back, one x belongs to several points on it, so no function of x can draw it, whatever the degree. Adding <span data-tex="t"></span> gives every point its own label, so "same x" stops being a clash. For a ball bouncing off a wall the path turns back exactly like this.</p>
+  </section>
+
+  <section id="s7">
+    <h2>7 · Knots on a bouncing ball</h2>
+    <p>A ball bounces between two walls, so its position over time is a zigzag with a sharp corner at every bounce. The dots are noisy measurements. <b class="blue">Blue</b>: a cubic spline fitted with evenly spaced knots only. <b class="yellow">Yellow</b>: the same plus knots placed at the bounces. Slide <i>copies of each bounce knot</i> from 1 to 3 and watch the corner appear.</p>
+    <svg id="kn" viewBox="0 0 800 330"></svg>
+    <svg id="knb" viewBox="0 0 800 120"></svg>
+    <label class="ctl">measurement noise <input id="kn-noise" type="range" min="0" max="0.12" step="0.005" value="0.03"> <b id="kn-noisev">0.030</b></label>
+    <label class="ctl">evenly spaced knots <input id="kn-u" type="range" min="0" max="20" step="1" value="6"> <b id="kn-uv">6</b></label>
+    <label class="ctl">copies of each bounce knot <input id="kn-m" type="range" min="1" max="3" step="1" value="3"> <b id="kn-mv">3</b></label>
+    <p id="kn-read" class="readout"></p>
+    <p class="note">A cubic is smooth to order 3 − m at a knot repeated m times: m = 1 keeps curvature continuous, m = 2 allows a kink in curvature, m = 3 allows a <b>corner</b> in the path itself. The lower plot shows the bump functions for the yellow knot vector: at a triple knot they pinch to a point, which is what lets the curve turn sharply there. Knots at the bounces cost you knowing when the bounces happen.</p>
   </section>
 
   <footer>
