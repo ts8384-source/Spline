@@ -55,7 +55,7 @@
 
     const CAP = {
       S: `<b>S(t)</b>: where the curve is at clock time t. Right now S(${t.toFixed(2)}) = ${S.toFixed(3)} (the white dot).`,
-      sum: `<b>Σ</b>: add up the contributions of all ${n} bumps. At this t only ${act.length} are non-zero: ${act.join(', ')}.`,
+      sum: `<b>Σ</b>: add up the contributions of all ${n} bumps. The index runs i = 0, …, n − 1 because n things counted from 0 end at n − 1. At this t only ${act.length} are non-zero: ${act.join(', ')}.`,
       c: `<b>c<sub>i</sub></b>: the weight of bump i (a control point). You set these. Drag the numbered dots.`,
       B: `<b>B<sub>i,p</sub>(t)</b>: how much bump i counts at time t, between 0 and 1. The non-zero ones add to ${d3.sum(bt).toFixed(3)}.`,
       p: `<b>p</b>: the degree. Slide it: boxes (0), triangles (1), rounded hats (2), smooth cubic bumps (3).`,
