@@ -1,0 +1,56 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Spline Lab</title>
+<style>{{KATEX_CSS}}</style>
+<style>{{CSS}}</style>
+</head>
+<body>
+<main>
+  <header>
+    <h1>Spline Lab</h1>
+    <p class="lede">Three interactive demos, ordered the 3Blue1Brown way: a hook, then intuition, then the formula.</p>
+  </header>
+
+  <section id="s1">
+    <h2>1 · Why not one big polynomial?</h2>
+    <p>Pass a curve through evenly spaced points on <span data-tex="f(x)=\tfrac{1}{1+25x^2}"></span>. Add more points and the single polynomial gets <em>worse</em> near the ends. The spline just gets better.</p>
+    <svg id="runge" viewBox="0 0 800 380"></svg>
+    <label class="ctl">points <input id="runge-n" type="range" min="4" max="24" value="11"> <b id="runge-nv">11</b></label>
+    <p id="runge-err" class="readout"></p>
+    <p class="note">Blue dots are the data. <span class="red">Red</span> is the degree-(n−1) polynomial, <span class="green">green</span> is a natural cubic spline, grey is the true curve.</p>
+  </section>
+
+  <section id="s2">
+    <h2>2 · A curve is a sum of bumps</h2>
+    <p>Twelve fixed bump functions, each with its own weight. Drag a weight. Only the curve near that bump moves; the dashed grey line is the original.</p>
+    <svg id="bumps" viewBox="0 0 800 340"></svg>
+    <div id="bump-sliders" class="sliders"></div>
+    <p id="bump-readout" class="readout"></p>
+    <button id="bump-reset">reset weights</button>
+    <p class="name">Now the name for it:</p>
+    <div data-tex="f(x)=\sum_{i=0}^{11} c_i\,B_i(x)" data-display="1"></div>
+    <p class="note"><span data-tex="B_i"></span> is the <b>basis function</b> (a cubic B-spline bump, nonzero over only 4 knot spans), <span data-tex="c_i"></span> its weight. Same shape as a sparse code <span data-tex="x\approx\sum_i a_i\varphi_i"></span>, but with a fixed local dictionary.</p>
+  </section>
+
+  <section id="s3">
+    <h2>3 · de Casteljau: building a point by repeated averaging</h2>
+    <p>Drag the four control points. At parameter <span data-tex="t"></span>, take the point <span data-tex="t"></span> of the way along each segment, then repeat on the new polygon until one point is left. That point lies on the Bézier curve.</p>
+    <svg id="dc" viewBox="0 0 800 380"></svg>
+    <label class="ctl">t <input id="dc-t" type="range" min="0" max="1" step="0.005" value="0.35"> <b id="dc-tv">0.35</b></label>
+    <button id="dc-play">▶ play</button>
+    <p class="name">Formalization:</p>
+    <div data-tex="P_i^{(k)}=(1-t)\,P_i^{(k-1)}+t\,P_{i+1}^{(k-1)},\qquad B(t)=P_0^{(3)}" data-display="1"></div>
+  </section>
+
+  <footer>
+    <p>Palette and teaching order follow the vendored <code>3b1b-style-animation</code> skill; chart mechanics (scales, joins, drag, clip-paths) follow <code>d3-viz</code>. Everything here is generated: edit <code>site/src/</code>, then run <code>python tools/build_site.py</code>.</p>
+  </footer>
+</main>
+<script>{{D3}}</script>
+<script>{{KATEX_JS}}</script>
+<script>{{JS}}</script>
+</body>
+</html>

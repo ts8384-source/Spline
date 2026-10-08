@@ -3,3 +3,4 @@ __pycache__/
 .venv/
 corpus/index.db
 __marimo__/
+site/node_modules/
