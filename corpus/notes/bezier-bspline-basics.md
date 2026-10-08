@@ -24,3 +24,8 @@ N_{i,p}(t) = (t-t_i)/(t_{i+p}-t_i) N_{i,p-1}(t) + (t_{i+p+1}-t)/(t_{i+p+1}-t_{i+
 
 ## Where the Bézier weights come from (route counting)
 In de Casteljau each node is built from a left parent (weight 1-t) and a right parent (weight t). Pour one unit of weight from the final point down the tree: it splits (1-t)/t at every node. The share reaching control point P_i is (number of routes to P_i) * (1-t)^(n-i) * t^i, and the route counts are binomial coefficients C(n,i) (Pascal's triangle). So the weights are Bernstein polynomials = Binomial(n, t) probabilities, and B(t) is the expected control point. At t=0.5 every route weighs the same, so weights are C(n,i)/2^n (cubic: 1,3,3,1 over 8; quartic: 1,4,6,4,1 over 16).
+
+## How one point of a cubic B-spline is computed (checked with exact fractions)
+Given t: (1) find the knot span containing t; (2) only 4 bumps (degree + 1) are non-zero there; (3) evaluate those 4 bumps (Cox-de Boor: each is a blend of two lower-degree bumps); (4) the point is the sum of (bump value x control point) over those 4.
+Uniform knots, cubic: in the middle of a span the four bump values are 1/48, 23/48, 23/48, 1/48; exactly at a knot only three are non-zero: 1/6, 2/3, 1/6. Both sets sum to 1. Compare the single Bézier at t = 0.5: 1/8, 3/8, 3/8, 1/8.
+The list of control points is the spline's coordinate vector in the basis of bumps (like Fourier coefficients in a basis of sine waves, but the bumps are local).

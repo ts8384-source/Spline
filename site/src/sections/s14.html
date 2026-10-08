@@ -1,0 +1,16 @@
+<section id="s14">
+    <h2>11 · Knots are the seams of a curve</h2>
+    <p>A spline curve is several pieces joined end to end. Each colour below is one piece. The strip underneath is the clock <span data-tex="t"></span>, cut into the same colours. A <b>knot</b> is the moment on the clock when the curve switches from one piece to the next, so on the curve it shows up as a <b>seam</b>. Drag a knot on the clock and watch its seam slide along the curve. Drag the grey control points to reshape it.</p>
+    <svg id="ks" viewBox="0 0 800 430"></svg>
+    <svg id="kst" viewBox="0 0 800 120"></svg>
+    <label class="ctl">copies of the selected knot <input id="ks-m" type="range" min="1" max="4" step="1" value="1"> <b id="ks-mv">1</b></label>
+    <button class="alt" id="ks-reset">reset</button>
+    <p id="ks-read" class="readout"></p>
+    <div class="note">
+      <p>At the selected (yellow) seam, the <b>wide</b> arrows show how the piece on the left <i>arrives</i> and the <b>narrow</b> arrows show how the piece on the right <i>leaves</i>. <b class="yellow">Yellow</b> is velocity and <b class="red">red</b> is acceleration. Step the copies from 1 to 4:</p>
+      <p><b>1 copy (C²):</b> both pairs of arrows coincide, so the seam is invisible.</p>
+      <p><b>2 copies (C¹):</b> the yellow arrows still coincide but the red ones split: the path is smooth, the bend changes abruptly.</p>
+      <p><b>3 copies (C⁰):</b> the yellow arrows split too: a corner. Notice the curve now passes exactly through a control point.</p>
+      <p><b>4 copies:</b> the curve can jump: two seam dots appear, one for each side.</p>
+    </div>
+  </section>
