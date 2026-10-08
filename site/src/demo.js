@@ -169,12 +169,13 @@ function axes(g, x, y, xt, yt) {
 (function () {
   const svg = d3.select('#pour'), W = 800, rowH = 50, top = 34, dx = 88, R = 18;
   const tIn = document.getElementById('pour-t'), nIn = document.getElementById('pour-n');
-  let sel = 1;
+  let sel = 1, node = null;
   function draw() {
     const t = +tIn.value, n = +nIn.value;
     document.getElementById('pour-tv').textContent = t.toFixed(2);
     document.getElementById('pour-nv').textContent = n;
     sel = Math.min(sel, n - 1);
+    if (node && node[0] >= n) node = null;
     const H = top + (n - 1) * rowH + 150;
     svg.attr('viewBox', `0 0 ${W} ${H}`).selectAll('*').remove();
     const share = [[1]], routes = [[1]];                      // row r has r+1 nodes
@@ -188,12 +189,17 @@ function axes(g, x, y, xt, yt) {
     const edges = svg.append('g');
     for (let r = 0; r < n - 1; r++) for (let j = 0; j <= r; j++) [[j, C.blue], [j + 1, C.yellow]].forEach(([jj, col]) => {
       const hot = onPath(r, jj);
+      if (node && r + 1 === node[0] && jj === node[1])
+        edges.append('line').attr('x1', X(r, j)).attr('y1', Y(r)).attr('x2', X(r + 1, jj)).attr('y2', Y(r + 1))
+          .attr('stroke', '#fff').attr('stroke-width', 9).attr('opacity', .55);
       edges.append('line').attr('x1', X(r, j)).attr('y1', Y(r)).attr('x2', X(r + 1, jj)).attr('y2', Y(r + 1))
         .attr('stroke', col).attr('stroke-width', hot ? 3.5 : 1.5).attr('opacity', hot ? 1 : .22);
     });
     const nodes = svg.append('g');
     share.forEach((row, r) => row.forEach((v, j) => {
-      const g = nodes.append('g').attr('transform', `translate(${X(r, j)},${Y(r)})`);
+      const g = nodes.append('g').attr('transform', `translate(${X(r, j)},${Y(r)})`).style('cursor', 'pointer')
+        .on('click', () => { node = [r, j]; if (r === n - 1) sel = j; draw(); });
+      if (node && node[0] === r && node[1] === j) g.append('circle').attr('r', R + 4).attr('fill', 'none').attr('stroke', '#fff').attr('stroke-width', 3);
       g.append('circle').attr('r', R).attr('fill', C.bg).attr('stroke', C.gray).attr('stroke-width', 1);
       g.append('circle').attr('r', R).attr('fill', C.green).attr('opacity', .12 + .78 * v);
       g.append('text').attr('text-anchor', 'middle').attr('dy', '0.35em').attr('fill', '#fff').attr('font-size', 11)
@@ -202,7 +208,7 @@ function axes(g, x, y, xt, yt) {
     const last = n - 1, by = Y(last) + 108;
     share[last].forEach((v, i) => {
       const x = X(last, i), isSel = i === sel, h = v * 80;
-      const hit = svg.append('g').style('cursor', 'pointer').on('click', () => { sel = i; draw(); });
+      const hit = svg.append('g').style('cursor', 'pointer').on('click', () => { sel = i; node = [n - 1, i]; draw(); });
       hit.append('rect').attr('x', x - dx / 2).attr('y', Y(last) - R - 2).attr('width', dx).attr('height', by - Y(last) + R + 22).attr('fill', 'transparent');
       hit.append('circle').attr('cx', x).attr('cy', Y(last)).attr('r', R + 4).attr('fill', 'none').attr('stroke', isSel ? C.red : 'none').attr('stroke-width', 3);
       hit.append('rect').attr('x', x - 18).attr('y', by - h).attr('width', 36).attr('height', Math.max(h, 1)).attr('fill', isSel ? C.red : C.green).attr('opacity', isSel ? 1 : .6);
@@ -213,8 +219,20 @@ function axes(g, x, y, xt, yt) {
     svg.append('text').attr('x', 14).attr('y', 20).attr('fill', C.blue).attr('font-size', 12).text('← left: × (1 − t)');
     svg.append('text').attr('x', W - 14).attr('y', 20).attr('text-anchor', 'end').attr('fill', C.yellow).attr('font-size', 12).text('right: × t →');
     const each = (1 - t) ** (n - 1 - sel) * t ** sel;
-    document.getElementById('pour-readout').textContent =
-      `P${sel}: ${routes[last][sel]} route${routes[last][sel] > 1 ? 's' : ''} × ${each.toFixed(4)} per route = ${share[last][sel].toFixed(4)}`;
+    const f = v => v.toFixed(3);
+    let msg = `<b>P${sel}</b>: ${routes[last][sel]} route${routes[last][sel] > 1 ? 's' : ''} × ${each.toFixed(4)} per route = ${share[last][sel].toFixed(4)}`;
+    if (node) {
+      const [r, j] = node, v = share[r][j];
+      if (r === 0) msg = 'Top: the whole 1 unit starts here. Nothing flows into it.';
+      else {
+        const fromL = j >= 1 ? t * share[r - 1][j - 1] : null, fromR = j <= r - 1 ? (1 - t) * share[r - 1][j] : null;
+        const parts = [];
+        if (fromL !== null) parts.push(`${f(fromL)} (t × ${f(share[r - 1][j - 1])} sent right by the parent above-left)`);
+        if (fromR !== null) parts.push(`${f(fromR)} ((1−t) × ${f(share[r - 1][j])} sent left by the parent above-right)`);
+        msg = `<b>This circle</b> = ${f(v)} = ${parts.join(' + ')}` + (r === n - 1 ? '<br>' + msg : '');
+      }
+    }
+    document.getElementById('pour-readout').innerHTML = msg;
   }
   tIn.addEventListener('input', draw); nIn.addEventListener('input', draw);
   draw();
