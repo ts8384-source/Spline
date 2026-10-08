@@ -24,9 +24,13 @@ PAGES = {
         footer="Palette and teaching order follow the vendored <code>3b1b-style-animation</code> skill; chart mechanics (scales, joins, drag, clip-paths) follow <code>d3-viz</code>."),
     "math.html": dict(
         title="Spline Math", artifact_title="Spline Math", h1="Mathematics of splines",
-        lede="Interactive equations: each symbol is wired to a picture, and every equation is filled in with the live numbers. First prototype: the core equation.",
-        sections=[21, 22, 23, 24, 25, 20],
-        footer="Reuses the visual ideas from the Spline Lab."),
+        lede=("Every equation here is interactive: hover or tap a symbol and the picture shows what it is, and each equation is filled in with live numbers. "
+              "Contents: <a href=\"#s21\">1 Definition</a> · <a href=\"#s22\">2 Smoothness</a> · <a href=\"#s23\">3 Counting</a> · <a href=\"#s24\">4 Interpolating cubic splines</a> · "
+              "<a href=\"#s25\">5 Bending energy</a> · <a href=\"#s26\">6 Cox–de Boor recursion</a> · <a href=\"#s20\">7 The core equation</a> · <a href=\"#s27\">8 Basis properties</a> · <a href=\"#s28\">9 The matrix form</a>"),
+        sections=[21, 22, 23, 24, 25, 26, 20, 27, 28],
+        footer=("Source: the mathematics covered by Wikipedia's <i>Spline (mathematics)</i> article, with <i>Spline interpolation</i> and <i>B-spline</i> for the interpolation and basis parts. "
+                "The article text could not be fetched from this environment, so the outline comes from search summaries of those articles plus standard theory; check coverage against the article when access is open. "
+                "Every numerical claim on the page is checked live by the page itself.")),
     "project.html": dict(
         title="Bouncing-ball project", artifact_title="Bouncing Ball Splines", h1="Project: spline readout for a bouncing ball",
         lede="How splines might be used as the output of a recurrent spiking network that predicts a bouncing ball. Kept separate from the learning demos; these pages assume the ideas in the Spline Lab.",

@@ -1,0 +1,14 @@
+<section id="s28">
+    <h2>8 · Putting it together: the curve as a matrix product</h2>
+    <p>For a curve in the plane, each control point <span data-tex="\mathbf P_i"></span> has an x and a y, and the same bumps are used for both. Sample the clock at <span data-tex="m"></span> moments. Then the whole curve is one multiplication: the matrix <span data-tex="\mathbf B"></span> of bump values (one row per moment) times the matrix <span data-tex="\mathbf P"></span> of control points. Drag a point on the plane, or drag a number in the <span data-tex="\mathbf P"></span> table up and down.</p>
+    <div id="e28" class="eqbox"></div>
+    <p id="e28-cap" class="note"></p>
+    <svg id="v28" viewBox="0 0 800 340"></svg>
+    <div id="md28" class="chips"><button class="chip" data-m="pos">positions: X = B P</button><button class="chip" data-m="vel">velocities: X′ = B′ P</button></div>
+    <label class="ctl" id="l28t">t <input id="i28t" type="range" min="0" max="1" step="0.002" value="0.45"> <b id="o28t">0.45</b></label>
+    <label class="ctl" id="l28n">control points n <input id="i28n" type="range" min="4" max="10" step="1" value="7"> <b id="o28n">7</b></label>
+    <label class="ctl" id="l28p">degree p <input id="i28p" type="range" min="1" max="3" step="1" value="3"> <b id="o28p">3</b></label>
+    <button class="alt" id="b28">reset points</button>
+    <svg id="m28" viewBox="0 0 800 400"></svg>
+    <p id="e28-sub" class="readout"></p>
+  </section>

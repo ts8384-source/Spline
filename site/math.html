@@ -77,7 +77,7 @@ table.mt tr.hot td{background:rgba(251,191,36,.18)}
   <nav><a href="index.html">home</a> · <a href="learn.html">Spline Lab (learning)</a> · <a href="project.html">Bouncing-ball project</a></nav>
   <header>
     <h1>Mathematics of splines</h1>
-    <p class="lede">Interactive equations: each symbol is wired to a picture, and every equation is filled in with the live numbers. First prototype: the core equation.</p>
+    <p class="lede">Every equation here is interactive: hover or tap a symbol and the picture shows what it is, and each equation is filled in with live numbers. Contents: <a href="#s21">1 Definition</a> · <a href="#s22">2 Smoothness</a> · <a href="#s23">3 Counting</a> · <a href="#s24">4 Interpolating cubic splines</a> · <a href="#s25">5 Bending energy</a> · <a href="#s26">6 Cox–de Boor recursion</a> · <a href="#s20">7 The core equation</a> · <a href="#s27">8 Basis properties</a> · <a href="#s28">9 The matrix form</a></p>
   </header>
 
 <section id="s21">
@@ -148,8 +148,21 @@ table.mt tr.hot td{background:rgba(251,191,36,.18)}
     <p id="e25-sub" class="readout"></p>
   </section>
 
+<section id="s26">
+    <h2>6 · Where a B-spline bump comes from: the Cox–de Boor recursion</h2>
+    <p>A B-spline basis function <span data-tex="N_{i,p}"></span> is built from two of degree <span data-tex="p-1"></span>. Each is multiplied by a ramp that rises from 0 to 1 (or falls from 1 to 0) across its own stretch of the knots, and the two products are added. Start from boxes (degree 0) and you climb to the smooth cubic bump. Choose a degree and a bump, drag the knots, and hover each term.</p>
+    <div id="e26" class="eqbox"></div>
+    <p id="e26-cap" class="note"></p>
+    <svg id="v26" viewBox="0 0 800 330"></svg>
+    <div id="dg26" class="chips"></div>
+    <div id="bi26" class="chips"></div>
+    <label class="ctl" id="l26t">t <input id="i26t" type="range" min="0.05" max="0.97" step="0.002" value="0.40"> <b id="o26t">0.40</b></label>
+    <button class="alt" id="b26">reset knots</button>
+    <p id="e26-sub" class="readout"></p>
+  </section>
+
 <section id="s20">
-    <h2>The core equation, wired up</h2>
+    <h2>7 · The core equation: a spline as a weighted sum of bumps</h2>
     <p>Hover over (or tap) any symbol in the equation. The picture highlights what that symbol is, and the line below the picture fills the equation in with the current numbers. Change the sliders or drag the weights and watch the numbers follow.</p>
     <div id="eq" class="eqbox"></div>
     <p id="eq-cap" class="note"></p>
@@ -160,8 +173,37 @@ table.mt tr.hot td{background:rgba(251,191,36,.18)}
     <p id="eq-sub" class="readout"></p>
   </section>
 
+<section id="s27">
+    <h2>7 · Properties of the basis</h2>
+    <p>The B-spline bumps have a handful of properties that make splines easy to compute with and hard to break. Each line below is a property; hover it and the picture shows it, while the readout checks it numerically for the current curve. Slide <span data-tex="t"></span>, change the degree, and drag the weights.</p>
+    <div id="e27" class="eqbox"></div>
+    <p id="e27-cap" class="note"></p>
+    <svg id="v27" viewBox="0 0 800 300"></svg>
+    <svg id="s27a" viewBox="0 0 800 120"></svg>
+    <svg id="g27" viewBox="0 0 800 150"></svg>
+    <label class="ctl" id="l27t">t <input id="i27t" type="range" min="0" max="1" step="0.002" value="0.46"> <b id="o27t">0.46</b></label>
+    <label class="ctl" id="l27p">degree p <input id="i27p" type="range" min="0" max="3" step="1" value="3"> <b id="o27p">3</b></label>
+    <button class="alt" id="b27">reset weights</button>
+    <div id="t27" class="tablewrap"></div>
+  </section>
+
+<section id="s28">
+    <h2>8 · Putting it together: the curve as a matrix product</h2>
+    <p>For a curve in the plane, each control point <span data-tex="\mathbf P_i"></span> has an x and a y, and the same bumps are used for both. Sample the clock at <span data-tex="m"></span> moments. Then the whole curve is one multiplication: the matrix <span data-tex="\mathbf B"></span> of bump values (one row per moment) times the matrix <span data-tex="\mathbf P"></span> of control points. Drag a point on the plane, or drag a number in the <span data-tex="\mathbf P"></span> table up and down.</p>
+    <div id="e28" class="eqbox"></div>
+    <p id="e28-cap" class="note"></p>
+    <svg id="v28" viewBox="0 0 800 340"></svg>
+    <div id="md28" class="chips"><button class="chip" data-m="pos">positions: X = B P</button><button class="chip" data-m="vel">velocities: X′ = B′ P</button></div>
+    <label class="ctl" id="l28t">t <input id="i28t" type="range" min="0" max="1" step="0.002" value="0.45"> <b id="o28t">0.45</b></label>
+    <label class="ctl" id="l28n">control points n <input id="i28n" type="range" min="4" max="10" step="1" value="7"> <b id="o28n">7</b></label>
+    <label class="ctl" id="l28p">degree p <input id="i28p" type="range" min="1" max="3" step="1" value="3"> <b id="o28p">3</b></label>
+    <button class="alt" id="b28">reset points</button>
+    <svg id="m28" viewBox="0 0 800 400"></svg>
+    <p id="e28-sub" class="readout"></p>
+  </section>
+
   <footer>
-    <p>Reuses the visual ideas from the Spline Lab. Everything here is generated: edit <code>site/src/</code>, then run <code>python tools/build_site.py</code>.</p>
+    <p>Source: the mathematics covered by Wikipedia's <i>Spline (mathematics)</i> article, with <i>Spline interpolation</i> and <i>B-spline</i> for the interpolation and basis parts. The article text could not be fetched from this environment, so the outline comes from search summaries of those articles plus standard theory; check coverage against the article when access is open. Every numerical claim on the page is checked live by the page itself. Everything here is generated: edit <code>site/src/</code>, then run <code>python tools/build_site.py</code>.</p>
   </footer>
 </main>
 <script>// https://d3js.org v7.9.0 Copyright 2010-2023 Mike Bostock
@@ -610,6 +652,53 @@ function cubicSystem(xs, ys, type, s0, sn) {                     // interpolatin
   g('i25e').addEventListener('input', draw); g('b25').onclick = () => { P = P0.map(p => p.slice()); draw(); };
   draw();
 })();
+/* ---------- 26 · Cox-de Boor recursion ---------- */
+(function () {
+  const g = id => document.getElementById(id), svg = d3.select('#v26');
+  const T0 = [0.05, 0.14, 0.26, 0.42, 0.55, 0.68, 0.81, 0.9, 0.97], X = d3.scaleLinear([0, 1], [40, 780]), Y = d3.scaleLinear([-0.05, 1.1], [270, 15]);
+  let T = T0.slice(), p = 3, bi = 1;
+  const eq = eqLab('e26', String.raw`\begin{aligned}
+    N_{i,0}(t)&=\begin{cases}1&t_i\le t<t_{i+1}\\0&\text{otherwise}\end{cases}\\[4pt]
+    \htmlClass{eq-N}{N_{i,p}(t)}&=\htmlClass{eq-w1}{\frac{t-t_i}{t_{i+p}-t_i}}\;\htmlClass{eq-N1}{N_{i,p-1}(t)}\;+\;\htmlClass{eq-w2}{\frac{t_{i+p+1}-t}{t_{i+p+1}-t_{i+1}}}\;\htmlClass{eq-N2}{N_{i+1,p-1}(t)}
+  \end{aligned}`, () => draw());
+  const N = (i, q, t) => bspline(i, q, t, T);
+
+  function draw() {
+    const hl = eq.hl, nmax = T.length - p - 1; bi = Math.min(bi, nmax - 1); const t = +g('i26t').value; g('o26t').textContent = t.toFixed(2); g('l26t').classList.toggle('flash', hl === 't');
+    const chips = (id, items, cur, fn) => { const el = d3.select(id); el.selectAll('*').remove(); items.forEach(v => el.append('button').attr('class', 'chip' + (v === cur ? ' on' : '')).text(id === '#dg26' ? 'degree ' + v : 'bump i = ' + v).on('click', () => fn(v))); };
+    chips('#dg26', [1, 2, 3], p, v => { p = v; draw(); }); chips('#bi26', d3.range(T.length - p - 1), bi, v => { bi = v; draw(); });
+    const ts = d3.range(0.02, 1.0001, 0.004), i = bi, ti = T[i], tip = T[i + p], ti1 = T[i + 1], tip1 = T[i + p + 1];
+    const r1 = x => (x >= ti && x < tip) ? (x - ti) / (tip - ti) : 0, r2 = x => (x >= ti1 && x < tip1) ? (tip1 - x) / (tip1 - ti1) : 0;
+    const A = x => N(i, p - 1, x), B = x => N(i + 1, p - 1, x), R = x => N(i, p, x);
+    const dim = k => hl && hl !== k ? .35 : 1, line = (f, col, w, dash, op) => svg.append('path').attr('d', d3.line()(ts.map(x => [X(x), Y(f(x))]))).attr('fill', 'none').attr('stroke', col).attr('stroke-width', w).attr('stroke-dasharray', dash).attr('opacity', op);
+    const area = (f, col, op) => svg.append('path').attr('d', d3.area().x(d => X(d)).y0(Y(0)).y1(d => Y(f(d)))(ts)).attr('fill', col).attr('opacity', op);
+    svg.selectAll('*').remove();
+    svg.append('path').attr('d', `M40,${Y(0)}H780`).attr('stroke', '#9ca3af').attr('fill', 'none');
+    area(x => r1(x) * A(x), '#3b82f6', hl === 'N1' || hl === 'w1' ? .45 : .22); area(x => r2(x) * B(x), '#f97316', hl === 'N2' || hl === 'w2' ? .45 : .22);
+    line(A, '#3b82f6', hl === 'N1' ? 5 : 2.5, null, dim('N1') * (hl === 'N' || hl === 'w1' ? .6 : 1)); line(B, '#f97316', hl === 'N2' ? 5 : 2.5, null, dim('N2') * (hl === 'N' || hl === 'w2' ? .6 : 1));
+    line(r1, '#3b82f6', hl === 'w1' ? 5 : 1.6, '6 4', hl && hl !== 'w1' ? .25 : .85); line(r2, '#f97316', hl === 'w2' ? 5 : 1.6, '6 4', hl && hl !== 'w2' ? .25 : .85);
+    line(R, '#fff', hl === 'N' ? 8 : 4, null, hl && hl !== 'N' ? .6 : 1);
+    T.forEach((k, j) => { const inside = j >= i && j <= i + p + 1; svg.append('line').attr('x1', X(k)).attr('x2', X(k)).attr('y1', 15).attr('y2', 270).attr('stroke', inside ? '#555' : '#2c2c2c'); });
+    svg.selectAll('.kh').data(T.map((_, j) => j)).join('circle').attr('cx', j => X(T[j])).attr('cy', 295).attr('r', 7).attr('fill', j => (j >= i && j <= i + p + 1) ? '#fbbf24' : '#6b5a24').attr('stroke', '#1c1c1c').attr('stroke-width', 2).style('cursor', 'ew-resize')
+      .call(d3.drag().on('drag', (ev, j) => { T[j] = Math.max((j ? T[j - 1] : 0) + 0.02, Math.min((j < T.length - 1 ? T[j + 1] : 1) - 0.02, X.invert(ev.x))); draw(); }));
+    svg.selectAll('.kl').data(T.map((_, j) => j)).join('text').attr('x', j => X(T[j])).attr('y', 320).attr('text-anchor', 'middle').attr('fill', '#9ca3af').attr('font-size', 11).text(j => 't' + j);
+    svg.append('line').attr('x1', X(t)).attr('x2', X(t)).attr('y1', 15).attr('y2', 270).attr('stroke', hl === 't' ? '#fbbf24' : '#fff').attr('stroke-width', hl === 't' ? 3 : 1).attr('opacity', .7);
+    [[A(t) * r1(t), '#3b82f6'], [B(t) * r2(t), '#f97316'], [R(t), '#fff']].forEach(([v, c]) => svg.append('circle').attr('cx', X(t)).attr('cy', Y(v)).attr('r', 5).attr('fill', c));
+    const w1 = r1(t), w2 = r2(t), a = A(t), b = B(t), direct = R(t), viaRec = w1 * a + w2 * b;
+    g('e26-sub').innerHTML = `at t = ${t.toFixed(2)}: N<sub>${i},${p}</sub> = <span style="color:#3b82f6">${w1.toFixed(3)} × ${a.toFixed(3)}</span> + <span style="color:#f97316">${w2.toFixed(3)} × ${b.toFixed(3)}</span> = <b>${viaRec.toFixed(4)}</b> · computed directly: ${direct.toFixed(4)} ` + (Math.abs(viaRec - direct) < 1e-9 ? '<span class="yes">✓ same</span>' : '<span class="no">✗</span>') +
+      ` · non-zero only between t<sub>${i}</sub> = ${ti.toFixed(2)} and t<sub>${i + p + 1}</sub> = ${tip1.toFixed(2)}`;
+    const CAP = {
+      N: `<b>N<sub>i,p</sub></b>: the bump we are building (thick white). It is zero outside [t<sub>${i}</sub>, t<sub>${i + p + 1}</sub>] and covers p + 1 = ${p + 1} knot spans.`,
+      w1: `<b>(t − t<sub>i</sub>)/(t<sub>i+p</sub> − t<sub>i</sub>)</b>: a ramp rising from 0 to 1 across [t<sub>${i}</sub>, t<sub>${i + p}</sub>] (blue dashed). It fades the left lower bump in.`,
+      N1: `<b>N<sub>i,p−1</sub></b>: the lower-degree bump on the left (blue). Its product with the rising ramp is the shaded blue area.`,
+      w2: `<b>(t<sub>i+p+1</sub> − t)/(t<sub>i+p+1</sub> − t<sub>i+1</sub>)</b>: a ramp falling from 1 to 0 across [t<sub>${i + 1}</sub>, t<sub>${i + p + 1}</sub>] (orange dashed). It fades the right lower bump out.`,
+      N2: `<b>N<sub>i+1,p−1</sub></b>: the lower-degree bump on the right (orange). Its product with the falling ramp is the shaded orange area.`
+    };
+    g('e26-cap').innerHTML = hl ? CAP[hl] : 'Hover a symbol, or tap it to keep it highlighted. Blue and orange are the two lower-degree bumps; the white curve is their ramp-weighted sum.';
+  }
+  g('i26t').addEventListener('input', draw); g('b26').onclick = () => { T = T0.slice(); draw(); };
+  draw();
+})();
 /* ---------- 20 · The core equation, wired up ---------- */
 (function () {
   const g = id => document.getElementById(id), svg = d3.select('#eqv'), tIn = g('eq-t'), pIn = g('eq-p'), eq = g('eq');
@@ -679,6 +768,157 @@ function cubicSystem(xs, ys, type, s0, sn) {                     // interpolatin
   }
   tIn.addEventListener('input', draw); pIn.addEventListener('input', draw);
   g('eq-reset').onclick = () => { c = []; draw(); };
+  draw();
+})();
+/* ---------- 27 · Properties of the basis ---------- */
+(function () {
+  const g = id => document.getElementById(id), svg = d3.select('#v27'), sa = d3.select('#s27a'), gv = d3.select('#g27');
+  const INNER = [1, 2, 3, 4, 5].map(i => i / 6), X = d3.scaleLinear([0, 1], [50, 780]), Y = d3.scaleLinear([-0.05, 1.05], [265, 15]);
+  const dflt = n => d3.range(n).map(i => 0.5 + 0.38 * Math.sin(1.9 * i + 0.6));
+  let c = [];
+  const ts = d3.range(401).map(i => i / 400);
+  const eq = eqLab('e27', String.raw`\begin{aligned}
+    &\htmlClass{eq-pos}{N_{i,p}(t)\ \ge\ 0}\\[2pt]
+    &\htmlClass{eq-sum}{\textstyle\sum_i N_{i,p}(t)=1}\\[2pt]
+    &\htmlClass{eq-loc}{N_{i,p}(t)=0\ \text{unless}\ t_i\le t<t_{i+p+1}}\\[2pt]
+    &\htmlClass{eq-hull}{\min_{\text{active }j}c_j\ \le\ S(t)\ \le\ \max_{\text{active }j}c_j}\\[2pt]
+    &\htmlClass{eq-end}{S(0)=c_0,\qquad S(1)=c_{n-1}}
+  \end{aligned}`, () => draw());
+
+  function draw() {
+    const hl = eq.hl, p = +g('i27p').value, t = +g('i27t').value; g('o27t').textContent = t.toFixed(2); g('o27p').textContent = p; g('l27t').classList.toggle('flash', false);
+    const k = [...new Array(p + 1).fill(0), ...INNER, ...new Array(p + 1).fill(1)], n = k.length - p - 1; if (c.length !== n) c = dflt(n);
+    const B = ts.map(s => d3.range(n).map(i => bspline(i, p, s, k))), f = B.map(r => d3.sum(r, (b, i) => b * c[i]));
+    const bt = d3.range(n).map(i => bspline(i, p, t, k)), S = d3.sum(bt, (b, i) => b * c[i]), act = d3.range(n).filter(i => bt[i] > 1e-9);
+    const grev = c.map((_, i) => p === 0 ? (k[i] + k[i + 1]) / 2 : d3.sum(k.slice(i + 1, i + p + 1)) / p), jt = Math.round(t * 400);
+    svg.selectAll('*').remove();
+    svg.append('path').attr('d', `M50,${Y(0)}H780`).attr('stroke', '#9ca3af').attr('fill', 'none');
+    d3.range(n).forEach(i => {
+      const on = act.includes(i), vals = ts.map((s, j) => [X(s), Y(B[j][i])]);
+      svg.append('path').attr('d', d3.area().x(d => d[0]).y0(Y(0)).y1(d => d[1])(vals)).attr('fill', col7(i)).attr('opacity', hl === 'pos' ? .4 : hl === 'loc' && on ? .45 : .12);
+      svg.append('path').attr('d', d3.line()(vals)).attr('fill', 'none').attr('stroke', col7(i)).attr('stroke-width', (hl === 'loc' && on) ? 4 : 2).attr('opacity', hl === 'loc' && !on ? .25 : .9).attr('stroke-dasharray', i >= 7 ? '6 3' : null);
+    });
+    if (hl === 'hull') svg.append('rect').attr('x', X(t) - 12).attr('width', 24).attr('y', Y(d3.max(act, i => c[i]))).attr('height', Y(d3.min(act, i => c[i])) - Y(d3.max(act, i => c[i]))).attr('fill', '#fbbf24').attr('opacity', .3);
+    svg.append('path').attr('d', d3.line()(ts.map((s, j) => [X(s), Y(f[j])]))).attr('fill', 'none').attr('stroke', '#fff').attr('stroke-width', 3.5).attr('opacity', hl === 'pos' || hl === 'loc' ? .5 : 1);
+    svg.append('line').attr('x1', X(t)).attr('x2', X(t)).attr('y1', 15).attr('y2', 265).attr('stroke', '#fff').attr('opacity', .6);
+    svg.append('circle').attr('cx', X(t)).attr('cy', Y(S)).attr('r', 7).attr('fill', '#fff');
+    svg.selectAll('.w').data(d3.range(n)).join('circle').attr('cx', i => X(grev[i])).attr('cy', i => Y(c[i])).attr('r', (i) => (hl === 'hull' && act.includes(i)) || (hl === 'end' && (i === 0 || i === n - 1)) ? 13 : 9)
+      .attr('fill', i => col7(i)).attr('stroke', i => (hl === 'hull' && act.includes(i)) || (hl === 'end' && (i === 0 || i === n - 1)) ? '#fbbf24' : '#1c1c1c').attr('stroke-width', 3).style('cursor', 'ns-resize')
+      .call(d3.drag().on('drag', (ev, i) => { c[i] = Math.max(0, Math.min(1, Y.invert(ev.y))); draw(); }));
+    if (hl === 'end') [0, 1].forEach(s => svg.append('circle').attr('cx', X(s)).attr('cy', Y(s ? f[400] : f[0])).attr('r', 12).attr('fill', 'none').attr('stroke', '#fbbf24').attr('stroke-width', 3));
+
+    // stacked bumps add up to one
+    sa.selectAll('*').remove();
+    sa.append('text').attr('x', 54).attr('y', 14).attr('fill', '#9ca3af').attr('font-size', 12).text('the bumps stacked: always exactly 1' + (hl === 'sum' ? '   ← this' : ''));
+    const SY = d3.scaleLinear([0, 1.05], [110, 22]);
+    d3.range(n).forEach(i => sa.append('path').attr('d', d3.area().x((d, j) => X(ts[j])).y0((d, j) => SY(d3.sum(B[j].slice(0, i)))).y1((d, j) => SY(d3.sum(B[j].slice(0, i + 1))))(ts)).attr('fill', col7(i)).attr('opacity', hl === 'sum' ? .95 : .45));
+    sa.append('line').attr('x1', 50).attr('x2', 780).attr('y1', SY(1)).attr('y2', SY(1)).attr('stroke', '#fff').attr('stroke-dasharray', '3 3');
+    sa.append('line').attr('x1', X(t)).attr('x2', X(t)).attr('y1', 22).attr('y2', 110).attr('stroke', '#fff').attr('opacity', .8);
+    // support bars
+    gv.selectAll('*').remove();
+    gv.append('text').attr('x', 54).attr('y', 14).attr('fill', '#9ca3af').attr('font-size', 12).text('where each bump is non-zero: at most p + 1 = ' + (p + 1) + ' bars cross the cursor' + (hl === 'loc' ? '   ← this' : ''));
+    const rh = Math.min(11, 120 / n);
+    d3.range(n).forEach(i => {
+      const lo = k[i], hi = k[i + p + 1], on = act.includes(i);
+      gv.append('rect').attr('x', X(lo)).attr('y', 24 + i * (rh + 2)).attr('width', Math.max(2, X(hi) - X(lo))).attr('height', rh).attr('fill', col7(i)).attr('opacity', on ? 1 : hl === 'loc' ? .25 : .5).attr('rx', 2);
+    });
+    gv.append('line').attr('x1', X(t)).attr('x2', X(t)).attr('y1', 20).attr('y2', 145).attr('stroke', '#fff').attr('opacity', .8);
+
+    const minB = d3.min(B.flat()), sums = B.map(r => d3.sum(r)), cmin = d3.min(act, i => c[i]), cmax = d3.max(act, i => c[i]);
+    const row = (name, ok, text) => `<tr><td>${name}</td><td>${text}</td><td class="${ok ? 'yes' : 'no'}">${ok ? '✓' : '✗'}</td></tr>`;
+    g('t27').innerHTML = `<table class="mt" style="text-align:left"><tr><th>property</th><th>measured for the current curve</th><th></th></tr>` +
+      row('non-negative', minB >= -1e-12, `smallest value of any bump anywhere: ${Math.max(minB, 0).toFixed(3)}`) +
+      row('add to 1', Math.abs(d3.min(sums) - 1) < 1e-9 && Math.abs(d3.max(sums) - 1) < 1e-9, `sum over all t ranges from ${d3.min(sums).toFixed(4)} to ${d3.max(sums).toFixed(4)}`) +
+      row('local support', act.length <= p + 1, `at t = ${t.toFixed(2)} only ${act.length} bump${act.length === 1 ? '' : 's'} (${act.join(', ')}) are non-zero; limit p + 1 = ${p + 1}`) +
+      row('convex hull', S >= cmin - 1e-9 && S <= cmax + 1e-9, `S(t) = ${S.toFixed(3)} lies between the active weights ${cmin.toFixed(3)} and ${cmax.toFixed(3)}`) +
+      row('end points', Math.abs(f[0] - c[0]) < 1e-9 && Math.abs(f[400] - c[n - 1]) < 1e-9, `S(0) = ${f[0].toFixed(3)} = c₀ = ${c[0].toFixed(3)} and S(1) = ${f[400].toFixed(3)} = c<sub>${n - 1}</sub> = ${c[n - 1].toFixed(3)}`) + `</table>`;
+    const CAP = {
+      pos: `<b>N ≥ 0</b>: no bump ever goes negative, so a weight never pushes the curve the wrong way. (Every bump is filled above the axis.)`,
+      sum: `<b>Σ N = 1</b>: stacked, the bumps fill up to exactly 1 at every t (middle panel). So S(t) is a <i>weighted average</i> of the weights.`,
+      loc: `<b>local support</b>: bump i is non-zero only between t<sub>i</sub> and t<sub>i+p+1</sub> (p + 1 knot spans). At the cursor only ${act.length} bump${act.length === 1 ? ' counts' : 's count'} (bars in the lower panel).`,
+      hull: `<b>convex hull</b>: an average of numbers cannot leave their range, so S(t) stays between the smallest and largest active weights (the shaded strip and ringed dots).`,
+      end: `<b>end points</b>: with the end knots repeated p + 1 times, one bump equals 1 at each end, so the curve starts at c₀ and ends at c<sub>n−1</sub>.`
+    };
+    g('e27-cap').innerHTML = hl ? CAP[hl] : 'Hover a property, or tap it to keep it highlighted.';
+  }
+  ['i27t', 'i27p'].forEach(id => g(id).addEventListener('input', draw)); g('b27').onclick = () => { c = []; draw(); };
+  draw();
+})();
+/* ---------- 28 · Parametric curve as a matrix product ---------- */
+(function () {
+  const g = id => document.getElementById(id), svg = d3.select('#v28'), ms = d3.select('#m28'), W = 800, H = 340, M = 24;
+  const base = n => d3.range(n).map(i => [60 + i * (680 / (n - 1)), 170 + 110 * Math.sin(i * 1.3 + 0.4)]);
+  let P = [], lastN = 0, mode = 'pos';
+  const eq = eqLab('e28', String.raw`\begin{aligned}
+    \htmlClass{eq-C}{\mathbf C(t)}&=\sum_{i=0}^{n-1}\htmlClass{eq-P}{\mathbf P_i}\,\htmlClass{eq-N}{N_{i,p}(t)}\\[4pt]
+    \htmlClass{eq-X}{\mathbf X}&=\htmlClass{eq-B}{\mathbf B}\,\htmlClass{eq-Pm}{\mathbf P},\qquad
+    \mathbf B_{k,i}=N_{i,p}(t_k),\quad \mathbf X_k=\mathbf C(t_k)
+  \end{aligned}`, () => draw());
+
+  function draw() {
+    const hl = eq.hl, n = +g('i28n').value, p = Math.min(+g('i28p').value, n - 1), t = +g('i28t').value;
+    if (n !== lastN) { P = base(n); lastN = n; }
+    g('o28t').textContent = t.toFixed(2); g('o28n').textContent = n; g('o28p').textContent = p;
+    document.querySelectorAll('#md28 .chip').forEach(b => b.classList.toggle('on', b.dataset.m === mode));
+    const order = mode === 'vel' ? 1 : 0, inner = d3.range(1, n - p).map(i => i / (n - p)), k = [...new Array(p + 1).fill(0), ...inner, ...new Array(p + 1).fill(1)];
+    const tk = d3.range(M).map(i => i / (M - 1)), Bm = tk.map(s => d3.range(n).map(i => order ? bsD(i, p, Math.min(s, 1 - 1e-9), k, 1) : bspline(i, p, s, k)));
+    const Xm = Bm.map(r => [0, 1].map(c => d3.sum(r, (b, i) => b * P[i][c])));
+    const kc = Math.round(t * (M - 1)), curveT = d3.range(0, 1.0001, .005), cp = s => [0, 1].map(c => d3.sum(d3.range(n), i => P[i][c] * bspline(i, p, s, k)));
+    svg.selectAll('*').remove();
+    svg.append('path').attr('d', d3.line()(P)).attr('fill', 'none').attr('stroke', '#555').attr('stroke-dasharray', '4 4').attr('opacity', hl === 'Pm' ? 1 : .6);
+    svg.append('path').attr('d', d3.line()(curveT.map(cp))).attr('fill', 'none').attr('stroke', '#fff').attr('stroke-width', hl === 'C' ? 7 : 3.5);
+    const bt = d3.range(n).map(i => bspline(i, p, t, k)), here = cp(t);
+    d3.range(n).filter(i => bt[i] > 1e-9).forEach(i => svg.append('line').attr('x1', here[0]).attr('y1', here[1]).attr('x2', P[i][0]).attr('y2', P[i][1]).attr('stroke', col7(i)).attr('stroke-width', 1 + 9 * bt[i]).attr('opacity', hl === 'N' ? .95 : .5));
+    if (mode === 'vel') Xm.forEach((v, r) => { const q = cp(tk[r]), s = 0.045; svg.append('line').attr('x1', q[0]).attr('y1', q[1]).attr('x2', q[0] + v[0] * s).attr('y2', q[1] + v[1] * s).attr('stroke', '#fbbf24').attr('stroke-width', 2); });
+    tk.forEach((s, r) => { const q = cp(s); svg.append('circle').attr('cx', q[0]).attr('cy', q[1]).attr('r', r === kc ? 7 : 3.5).attr('fill', r === kc ? '#fff' : hl === 'X' ? '#fbbf24' : '#9ca3af'); });
+    svg.append('circle').attr('cx', here[0]).attr('cy', here[1]).attr('r', 6).attr('fill', 'none').attr('stroke', '#fff');
+    svg.selectAll('.cp').data(d3.range(n)).join('circle').attr('cx', i => P[i][0]).attr('cy', i => P[i][1]).attr('r', hl === 'Pm' || hl === 'P' ? 12 : 9).attr('fill', i => col7(i)).attr('stroke', hl === 'Pm' || hl === 'P' ? '#fff' : '#1c1c1c').attr('stroke-width', 3).style('cursor', 'grab')
+      .call(d3.drag().on('drag', (ev, i) => { P[i] = [Math.max(10, Math.min(W - 10, ev.x)), Math.max(10, Math.min(H - 10, ev.y))]; draw(); }));
+    svg.selectAll('.cl').data(d3.range(n)).join('text').attr('x', i => P[i][0]).attr('y', i => P[i][1] + 4).attr('text-anchor', 'middle').attr('fill', '#111').attr('font-size', 11).attr('font-weight', 700).attr('pointer-events', 'none').text(i => i);
+
+    // matrices
+    ms.selectAll('*').remove();
+    const rh = 14, oy = 40, bw = Math.min(46, 330 / n), xX = 20, xB = 210, xP = xB + n * bw + 60, bmax = d3.max(Bm.flat(), Math.abs) || 1;
+    const heat = v => v === 0 ? '#202020' : order ? d3.interpolateRdBu(0.5 + 0.5 * v / bmax) : d3.interpolateBlues(Math.min(1, v * 1.1) * 0.9 + 0.05);
+    const label = (x, y, s, h) => ms.append('text').attr('x', x).attr('y', y).attr('fill', h ? '#fbbf24' : '#9ca3af').attr('font-size', 13).attr('font-weight', h ? 700 : 400).text(s);
+    label(xX, 24, mode === 'vel' ? "X′ (m × 2)" : 'X (m × 2)', hl === 'X'); label(xB, 24, mode === 'vel' ? "B′ (m × n)" : 'B (m × n)', hl === 'B'); label(xP, 24, 'P (n × 2)', hl === 'Pm');
+    ms.append('text').attr('x', xX + 140).attr('y', oy + M * rh / 2).attr('fill', '#9ca3af').attr('font-size', 22).text('=');
+    ms.append('text').attr('x', xB + n * bw + 22).attr('y', oy + M * rh / 2).attr('fill', '#9ca3af').attr('font-size', 22).text('×');
+    tk.forEach((s, r) => {
+      const hot = r === kc, op = hl && !(hl === 'N' && hot) && !['X', 'B', 'Pm'].includes(hl) ? .6 : 1;
+      Xm[r].forEach((v, c) => { ms.append('rect').attr('x', xX + c * 64).attr('y', oy + r * rh).attr('width', 62).attr('height', rh - 1).attr('fill', hot ? '#3a3a3a' : '#242424').attr('stroke', hl === 'X' ? '#fbbf24' : 'none');
+        ms.append('text').attr('x', xX + c * 64 + 58).attr('y', oy + r * rh + 11).attr('text-anchor', 'end').attr('fill', hot ? '#fff' : '#9ca3af').attr('font-size', 10).text(v.toFixed(1)); });
+      Bm[r].forEach((v, i) => { ms.append('rect').attr('x', xB + i * bw).attr('y', oy + r * rh).attr('width', bw - 1).attr('height', rh - 1).attr('fill', heat(v)).attr('stroke', hl === 'B' ? '#fbbf24' : hot && hl === 'N' ? '#fbbf24' : 'none').attr('stroke-width', hot && hl === 'N' ? 1.5 : 1).attr('opacity', op);
+        if (Math.abs(v) > 0.005) ms.append('text').attr('x', xB + i * bw + bw / 2).attr('y', oy + r * rh + 11).attr('text-anchor', 'middle').attr('fill', order ? '#111' : v > 0.55 ? '#fff' : '#111').attr('font-size', 8.5).text(v.toFixed(2).replace(/^0\./, '.')); });
+    });
+    ms.append('rect').attr('x', xX - 3).attr('y', oy + kc * rh - 1).attr('width', 134).attr('height', rh + 1).attr('fill', 'none').attr('stroke', '#fff').attr('stroke-width', 1.5);
+    ms.append('rect').attr('x', xB - 3).attr('y', oy + kc * rh - 1).attr('width', n * bw + 4).attr('height', rh + 1).attr('fill', 'none').attr('stroke', '#fff').attr('stroke-width', 1.5);
+    const ph = Math.min(rh * M / n, 26);
+    d3.range(n).forEach(i => [0, 1].forEach(c => {
+      const gx = xP + c * 70, gy = oy + i * ph, gg = ms.append('g').style('cursor', 'ns-resize');
+      gg.append('rect').attr('x', gx).attr('y', gy).attr('width', 68).attr('height', ph - 2).attr('fill', col7(i)).attr('opacity', hl === 'Pm' ? .9 : .45).attr('stroke', hl === 'Pm' ? '#fbbf24' : 'none');
+      gg.append('text').attr('x', gx + 34).attr('y', gy + ph / 2 + 3).attr('text-anchor', 'middle').attr('fill', '#fff').attr('font-size', 11).attr('font-weight', 700).text(P[i][c].toFixed(0));
+      gg.call(d3.drag().on('drag', ev => { P[i][c] = Math.max(10, Math.min(c ? H - 10 : W - 10, P[i][c] - ev.dy * 1.5)); draw(); }));
+    }));
+    ms.append('text').attr('x', xP).attr('y', oy + n * ph + 16).attr('fill', '#9ca3af').attr('font-size', 11).text('drag a number up or down');
+    ms.append('text').attr('x', xP).attr('y', oy + n * ph + 32).attr('fill', '#9ca3af').attr('font-size', 11).text('columns: x, y');
+
+    const act = d3.range(n).filter(i => Math.abs(Bm[kc][i]) > 1e-9), parts = act.map(i => `<span style="color:${col7(i)}">${Bm[kc][i].toFixed(2)}·P<sub>${i}</sub></span>`).join(' + ');
+    g('e28-sub').innerHTML = `row ${kc} of the matrices (t<sub>${kc}</sub> = ${tk[kc].toFixed(2)}, outlined): ${mode === 'vel' ? 'velocity' : 'point'} = ${parts} = <b>(${Xm[kc][0].toFixed(1)}, ${Xm[kc][1].toFixed(1)})</b>. ` +
+      `B has ${M} × ${n} entries but only ${act.length} are non-zero in this row, because only ${act.length} bumps are alive at that moment.`;
+    const CAP = {
+      C: `<b>C(t)</b>: the curve, a point in the plane for each clock time t (the thick white line).`,
+      P: `<b>P<sub>i</sub></b>: control point i, a pair (x, y). Each is also the weight on bump i, separately for x and for y.`,
+      N: `<b>N<sub>i,p</sub>(t)</b>: how much control point i counts at time t. The lines from the curve point to the control points have thickness equal to those weights; the outlined row of B holds the same numbers.`,
+      X: `<b>X</b>: the curve sampled at m = ${M} moments, one row per moment: the grey dots on the curve are the rows of X.`,
+      B: `<b>B</b>: the table of bump values. Row k lists N<sub>0,p</sub>(t<sub>k</sub>) … N<sub>n−1,p</sub>(t<sub>k</sub>); most entries are zero because each bump is local.`,
+      Pm: `<b>P</b>: the control points as a matrix, one row per point, columns x and y. Drag a number to move that coordinate.`
+    };
+    g('e28-cap').innerHTML = hl ? CAP[hl] : 'Hover a symbol, or tap it to keep it highlighted.';
+  }
+  document.querySelectorAll('#md28 .chip').forEach(b => b.addEventListener('click', () => { mode = b.dataset.m; draw(); }));
+  ['i28t', 'i28n', 'i28p'].forEach(id => g(id).addEventListener('input', draw));
+  g('b28').onclick = () => { lastN = 0; draw(); };
   draw();
 })();
 </script>

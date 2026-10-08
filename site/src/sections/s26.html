@@ -1,0 +1,12 @@
+<section id="s26">
+    <h2>6 · Where a B-spline bump comes from: the Cox–de Boor recursion</h2>
+    <p>A B-spline basis function <span data-tex="N_{i,p}"></span> is built from two of degree <span data-tex="p-1"></span>. Each is multiplied by a ramp that rises from 0 to 1 (or falls from 1 to 0) across its own stretch of the knots, and the two products are added. Start from boxes (degree 0) and you climb to the smooth cubic bump. Choose a degree and a bump, drag the knots, and hover each term.</p>
+    <div id="e26" class="eqbox"></div>
+    <p id="e26-cap" class="note"></p>
+    <svg id="v26" viewBox="0 0 800 330"></svg>
+    <div id="dg26" class="chips"></div>
+    <div id="bi26" class="chips"></div>
+    <label class="ctl" id="l26t">t <input id="i26t" type="range" min="0.05" max="0.97" step="0.002" value="0.40"> <b id="o26t">0.40</b></label>
+    <button class="alt" id="b26">reset knots</button>
+    <p id="e26-sub" class="readout"></p>
+  </section>
