@@ -154,6 +154,8 @@ table.mt[style*="text-align:left"] td,table.mt[style*="text-align:left"] th{text
     <p id="e24-sub" class="readout"></p>
     <svg id="d24" viewBox="0 0 800 230"></svg>
     <p class="note">Above: the active cubic taken apart into its four terms. The white curve is their sum.</p>
+    <svg id="bb24" viewBox="0 0 800 250"></svg>
+    <p id="b24-note" class="note"></p>
     <svg id="m24" viewBox="0 0 800 300"></svg>
     <p class="note">Above: the system <span data-tex="A\mathbf M=\mathbf r"></span> that is solved for the second derivatives <span data-tex="M_i=S''(x_i)"></span>. Interior rows encode "C¹ and C² at a knot"; the first and last rows come from the boundary type.</p>
   </section>
@@ -670,7 +672,7 @@ function cubicSystem(xs, ys, type, s0, sn) {                     // interpolatin
 })();
 /* ---------- 24 · Interpolating cubic splines ---------- */
 (function () {
-  const g = id => document.getElementById(id), svg = d3.select('#v24'), dsv = d3.select('#d24'), msv = d3.select('#m24');
+  const g = id => document.getElementById(id), svg = d3.select('#v24'), dsv = d3.select('#d24'), msv = d3.select('#m24'), bsv = d3.select('#bb24');
   const X = d3.scaleLinear([0, 1], [50, 780]), Y = d3.scaleLinear([-0.3, 1.3], [275, 15]);
   const P0 = [[.05, .3], [.18, .75], [.32, .45], [.5, .8], [.66, .35], [.8, .6], [.95, .5]];
   let P = P0.map(p => p.slice()), type = 'natural';
@@ -717,6 +719,25 @@ function cubicSystem(xs, ys, type, s0, sn) {                     // interpolatin
     dsv.append('text').attr('x', 60).attr('y', 14).attr('fill', '#9ca3af').attr('font-size', 12).text(`interval i = ${i0}, plotted against x − x_i`);
     names.forEach((nm, k) => dsv.append('text').attr('x', 640).attr('y', 40 + k * 22).attr('text-anchor', 'start').attr('fill', tcol[k]).attr('font-size', 12).text(['a_i (constant)', 'b_i(x−x_i)', 'c_i(x−x_i)²', 'd_i(x−x_i)³'][k]));
 
+    // the same curve written as weighted bumps (clamped cubic B-splines on the data x-values as knots)
+    {
+      const kk = [xs[0], xs[0], xs[0], xs[0], ...xs.slice(1, n), xs[n], xs[n], xs[n], xs[n]], nb = kk.length - 4;
+      const xg = d3.range(241).map(q => q === 240 ? xs[n] : xs[0] + q / 240 * (xs[n] - xs[0])), Bm = xg.map(x => d3.range(nb).map(i => bspline(i, 3, x, kk)));
+      const AtA = d3.range(nb).map(r => d3.range(nb).map(q => d3.sum(Bm, row => row[r] * row[q]))), Atb = d3.range(nb).map(r => d3.sum(Bm, (row, k) => row[r] * S.ev(xg[k]))), cw = solveLinear(AtA, Atb);
+      const fit = Bm.map(row => d3.sum(row, (b, i) => b * cw[i])), err = d3.max(xg, (x, k) => Math.abs(fit[k] - S.ev(x)));
+      const BX = d3.scaleLinear([xs[0], xs[n]], [50, 780]), lo = Math.min(d3.min(cw), d3.min(fit), 0) - .1, hi = Math.max(d3.max(cw), d3.max(fit)) + .1, BY = d3.scaleLinear([lo, hi], [215, 20]);
+      const grev = cw.map((_, i) => (kk[i + 1] + kk[i + 2] + kk[i + 3]) / 3);
+      bsv.selectAll('*').remove();
+      bsv.append('path').attr('d', `M50,${BY(0)}H780`).attr('stroke', '#444').attr('fill', 'none');
+      d3.range(nb).forEach(i => { const vals = xg.map((x, k) => [BX(x), BY(Bm[k][i] * cw[i])]);
+        bsv.append('path').attr('d', d3.area().x(d => d[0]).y0(BY(0)).y1(d => d[1])(vals)).attr('fill', col7(i)).attr('opacity', .22);
+        bsv.append('path').attr('d', d3.line()(vals)).attr('fill', 'none').attr('stroke', col7(i)).attr('stroke-width', 1.6).attr('opacity', .8); });
+      bsv.append('path').attr('d', d3.line()(xg.map((x, k) => [BX(x), BY(fit[k])]))).attr('fill', 'none').attr('stroke', '#fff').attr('stroke-width', 3.5);
+      bsv.selectAll('.bw').data(d3.range(nb)).join('circle').attr('cx', i => BX(grev[i])).attr('cy', i => BY(cw[i])).attr('r', 9).attr('fill', i => col7(i)).attr('stroke', '#1c1c1c').attr('stroke-width', 2);
+      bsv.selectAll('.bl').data(d3.range(nb)).join('text').attr('x', i => BX(grev[i])).attr('y', i => BY(cw[i]) + 4).attr('text-anchor', 'middle').attr('fill', '#111').attr('font-size', 11).attr('font-weight', 700).text(i => i);
+      bsv.append('text').attr('x', 54).attr('y', 14).attr('fill', '#9ca3af').attr('font-size', 12).text('the SAME curve as one sum of weighted bumps (white = the sum; numbered dots = the weights)');
+      g('b24-note').innerHTML = `One spline, two descriptions. Above: <b>${nb}</b> weights on ${nb} bumps (= k + 3, with k = ${n}); the sum differs from the curve at the top by at most <b>${err.toExponential(0)}</b>. Pieces form: ${n} cubics × 4 = ${4 * n} coefficients tied by ${4 * n - 2} + 2 conditions. Bump form: just ${nb} numbers, because each bump is already smooth, so the smoothness conditions are built in. Same function, fewer numbers to keep track of.`;
+    }
     // the linear system
     msv.selectAll('*').remove();
     const N = n + 1, cs = 52, rs = 28, ox = 50, oy = 40, amax = d3.max(S.A.flat(), Math.abs), heat = v => v === 0 ? '#202020' : d3.interpolateRdBu(0.5 + 0.5 * (v / amax));
