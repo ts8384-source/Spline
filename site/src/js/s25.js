@@ -4,7 +4,7 @@
   const X = d3.scaleLinear([0, 1], [30, 380]), Y = d3.scaleLinear([-0.3, 1.3], [275, 15]);
   const P0 = [[.06, .3], [.24, .75], [.42, .4], [.6, .8], [.78, .35], [.94, .6]];
   let P = P0.map(p => p.slice());
-  const eq = eqLab('e25', String.raw`\htmlClass{eq-E}{E[f]}=\htmlClass{eq-int}{\int_{x_0}^{x_n}}\big(\htmlClass{eq-f2}{f''}(x)\big)^2dx,\qquad
+  const eq = eqLab('e25', String.raw`\htmlClass{eq-E}{E[f]}=\htmlClass{eq-int}{\int_{x_0}^{x_k}}\big(\htmlClass{eq-f2}{f''}(x)\big)^2dx,\qquad
     f=\htmlClass{eq-S}{S}+\htmlClass{eq-eps}{\varepsilon}\,\htmlClass{eq-w}{w},\ \ w(x_i)=0
     \ \Longrightarrow\ E[S+\varepsilon w]=E[S]+\varepsilon^2E[w]\ \ge\ E[S]\ \ \text{because}\ \htmlClass{eq-cross}{\textstyle\int S''w''\,dx=0}`, () => draw());
 

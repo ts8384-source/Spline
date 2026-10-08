@@ -78,7 +78,7 @@
       I: `<b>Interpolation</b>: each cubic passes through both of its end points: 2 conditions per interval, ${2 * n} in all (the ringed dots).`,
       C1: `<b>C¹</b>: neighbouring cubics have the same slope at the shared knot: ${n - 1} conditions (yellow tangents).`,
       C2: `<b>C²</b>: neighbouring cubics have the same second derivative at the knot: ${n - 1} conditions (red bars show S″).`,
-      bc: `<b>Boundary</b>: ${2 * n} + ${n - 1} + ${n - 1} = ${4 * n - 2} conditions for ${4 * n} unknowns, so two more are needed. natural: S″ = 0 at both ends; clamped: the end slopes are given; not-a-knot: S‴ continuous at x₁ and x<sub>n−1</sub>.`,
+      bc: `<b>Boundary</b>: ${2 * n} + ${n - 1} + ${n - 1} = ${4 * n - 2} conditions for ${4 * n} unknowns, so two more are needed (k = ${n} intervals, so 4k − (4k − 2) = 2). natural: S″ = 0 at both ends; clamped: the end slopes are given; not-a-knot: S‴ continuous at x₁ and x<sub>k−1</sub>.`,
       A: `<b>A</b>: the matrix of the system for the second derivatives. Each interior row ties a knot's M to its two neighbours; with unequal spacing h<sub>i</sub> the entries change.`,
       M: `<b>M</b>: the unknown second derivatives M<sub>i</sub> = S″(x<sub>i</sub>) at the knots. Once found, every coefficient follows.`,
       r: `<b>r</b>: the right-hand side, built from the data's divided differences (slopes between points).`
