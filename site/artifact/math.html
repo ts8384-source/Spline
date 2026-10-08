@@ -445,9 +445,9 @@ function cubicSystem(xs, ys, type, s0, sn) {                     // interpolatin
       (rr === rTheory ? '<span class="yes">They match.</span>' : '<span class="no">Mismatch.</span>');
     const CAP = {
       S: `<b>S</b>: the spline. The three panels show S and its first two derivatives; a gap in a panel is a jump at the knot.`,
-      r: `<b>r</b>: how many derivatives are continuous at t<sub>i</sub>. The rows of the table up to r are highlighted. Here r = ${rTheory}.`,
-      t: `<b>t<sub>i</sub></b>: the selected knot (the yellow line). Click another knot below the graphs to select it.`,
-      j: `<b>j</b>: the order of the derivative being compared: 0 is the value, 1 the slope, 2 the bend.`,
+      r: `<b>r</b>: the smoothness level at t<sub>i</sub>: derivatives 0 up to r all match (C<sup>r</sup>). The rows of the table up to r are highlighted. Here r = n − m = ${rTheory}.`,
+      t: `<b>t<sub>i</sub></b>: the i-th knot (the yellow line); i just numbers the knots. Knot i sits between piece P<sub>i−1</sub> on its left and piece P<sub>i</sub> on its right. Click another knot below the graphs to select it.`,
+      j: `<b>j</b>: the order of the derivative being compared: 0 is the value, 1 the slope, 2 the bend. The (j) in P<sup>(j)</sup> means "j-th derivative" and is not a power. The conditions run j = 0 … r, so r + 1 of them.`,
       Pl: `<b>P<sub>i−1</sub></b>: the piece to the left of the knot, drawn thick. Its j-th derivative at t<sub>i</sub> is the left column.`,
       Pr: `<b>P<sub>i</sub></b>: the piece to the right of the knot, drawn thick. Its j-th derivative at t<sub>i</sub> is the right column.`,
       m: `<b>m</b>: how many times the knot is repeated. Raise it and watch the matching derivatives drop out, one per copy.`,
