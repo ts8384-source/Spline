@@ -55,7 +55,7 @@ nav a:hover{text-decoration:underline}
   <nav><a href="index.html">home</a> · <a href="learn.html">Spline Lab (learning)</a> · <a href="project.html">Bouncing-ball project</a></nav>
   <header>
     <h1>Spline Lab</h1>
-    <p class="lede">Six interactive demos for learning splines, ordered the 3Blue1Brown way: a hook, then intuition, then the formula.</p>
+    <p class="lede">Seven interactive demos for learning splines, ordered the 3Blue1Brown way: a hook, then intuition, then the formula.</p>
   </header>
 
 <section id="s1">
@@ -128,6 +128,19 @@ nav a:hover{text-decoration:underline}
     <p id="rg-right" class="readout"></p>
     <p id="rg-note" class="note"></p>
     <p class="note"><b>Takeaway:</b> when a curve doubles back, one x belongs to several points on it, so no function of x can draw it, whatever the degree. Adding <span data-tex="t"></span> gives every point its own label, so "same x" stops being a clash. For a ball bouncing off a wall the path turns back exactly like this.</p>
+  </section>
+
+<section id="s9">
+    <h2>7 · Joining two pieces: continuity</h2>
+    <p>A spline is several pieces joined end to end. At the join, how much must the two pieces agree? Two cubic pieces share the white join point. The <b class="yellow">yellow</b> and <b class="blue">blue</b> arrows are the velocity each piece has at the join. The short lines along the curves are a <b>curvature comb</b>: the longer the line, the tighter the bend there. Drag the points, then try the locks.</p>
+    <div id="ct-modes" class="chips">
+      <button class="chip" data-m="0">free: only touching (C⁰)</button><button class="chip" data-m="1">lock C¹</button><button class="chip" data-m="2">lock C²</button>
+      <button class="chip" id="ct-reset">reset points</button>
+    </div>
+    <svg id="ct" viewBox="0 0 800 420"></svg>
+    <p id="ct-read" class="readout"></p>
+    <p class="note"><span data-tex="C^0"></span>: the pieces touch, but the path can have a corner, so the two arrows point different ways. <span data-tex="C^1"></span>: the arrows coincide, meaning same direction <i>and the same speed</i>, so the clock <span data-tex="t"></span> matters here too. With a shared join this forces Q1 to be the mirror image of P2 across J, so Q1 stops being free. <span data-tex="C^2"></span>: the comb is continuous across the join, which also ties down Q2. Each lock removes one free control point: 7, then 6, then 5. Five is exactly what a cubic B-spline with two pieces uses (number of pieces + 3).</p>
+    <p class="note">Matching only the direction of the tangent, not the speed, is a weaker condition (usually written G¹). It looks smooth but isn't C¹.</p>
   </section>
 
   <footer>
@@ -591,6 +604,70 @@ function axes(g, x, y, xt, yt) {
   draw();
 })();
 
+/* ---------- 9 · Continuity at a join ---------- */
+(function () {
+  const W = 800, H = 420, svg = d3.select('#ct');
+  const P0 = [[60, 340], [150, 60], [350, 150], [400, 230], [560, 265], [640, 370], [745, 90]];   // P0 P1 P2 J Q1 Q2 Q3
+  const NAMES = ['P0', 'P1', 'P2', 'J', 'Q1', 'Q2', 'Q3'];
+  let pts = P0.map(p => p.slice()), mode = 0;
+  const sub = (a, b) => [a[0] - b[0], a[1] - b[1]], add = (a, b) => [a[0] + b[0], a[1] + b[1]], mul = (a, k) => [a[0] * k, a[1] * k];
+  const len = a => Math.hypot(a[0], a[1]);
+  const bez = (P, t) => { const u = 1 - t, w = [u * u * u, 3 * u * u * t, 3 * u * t * t, t * t * t]; return [0, 1].map(k => w.reduce((s, wi, i) => s + wi * P[i][k], 0)); };
+  const d1 = (P, t) => { const u = 1 - t; return [0, 1].map(k => 3 * (u * u * (P[1][k] - P[0][k]) + 2 * u * t * (P[2][k] - P[1][k]) + t * t * (P[3][k] - P[2][k]))); };
+  const d2 = (P, t) => [0, 1].map(k => 6 * ((1 - t) * (P[2][k] - 2 * P[1][k] + P[0][k]) + t * (P[3][k] - 2 * P[2][k] + P[1][k])));
+  const clamp = (v, a, b) => Math.max(a, Math.min(b, v));
+  const layer = svg.append('g'), handles = svg.append('g');
+
+  function enforce() {
+    if (mode >= 1) pts[4] = sub(mul(pts[3], 2), pts[2]);                                            // Q1 = 2J - P2
+    if (mode >= 2) pts[5] = add(sub(pts[1], mul(pts[2], 4)), mul(pts[3], 4));                      // Q2 = P1 - 4 P2 + 4 J
+  }
+  function arrow(from, v, col, w) {
+    const to = add(from, mul(v, 0.45)), a = Math.atan2(v[1], v[0]), h = 11;
+    layer.append('line').attr('x1', from[0]).attr('y1', from[1]).attr('x2', to[0]).attr('y2', to[1]).attr('stroke', col).attr('stroke-width', w);
+    layer.append('path').attr('d', `M${to[0]},${to[1]}L${to[0] - h * Math.cos(a - .4)},${to[1] - h * Math.sin(a - .4)}L${to[0] - h * Math.cos(a + .4)},${to[1] - h * Math.sin(a + .4)}Z`).attr('fill', col);
+  }
+
+  function draw() {
+    enforce();
+    document.querySelectorAll('#ct-modes [data-m]').forEach(b => b.classList.toggle('on', +b.dataset.m === mode));
+    layer.selectAll('*').remove();
+    const A = pts.slice(0, 4), B = pts.slice(3, 7), J = pts[3];
+    [[A, C.blue], [B, C.green]].forEach(([P, col]) => {
+      layer.append('path').attr('d', d3.line()(P)).attr('fill', 'none').attr('stroke', '#555').attr('stroke-dasharray', '4 4');
+      const tips = [];
+      d3.range(0, 1.0001, 1 / 40).forEach(t => {
+        const p = bez(P, t), v = d1(P, t), a = d2(P, t), sp = len(v) || 1e-9;
+        const k = (v[0] * a[1] - v[1] * a[0]) / sp ** 3, L = clamp(k * 2500, -85, 85), n = [-v[1] / sp, v[0] / sp], tip = add(p, mul(n, L));
+        tips.push(tip);
+        layer.append('line').attr('x1', p[0]).attr('y1', p[1]).attr('x2', tip[0]).attr('y2', tip[1]).attr('stroke', col).attr('opacity', .35);
+      });
+      layer.append('path').attr('d', d3.line()(tips)).attr('fill', 'none').attr('stroke', col).attr('opacity', .8);
+      layer.append('path').attr('d', d3.line()(d3.range(0, 1.0001, .01).map(t => bez(P, t)))).attr('fill', 'none').attr('stroke', col).attr('stroke-width', 3.5);
+    });
+    const vA = d1(A, 1), vB = d1(B, 0);
+    arrow(J, vA, C.blue, 6); arrow(J, vB, C.yellow, 3);
+    layer.append('circle').attr('cx', J[0]).attr('cy', J[1]).attr('r', 7).attr('fill', '#fff');
+    layer.selectAll('.lb').data(pts).join('text').attr('x', d => d[0] + 11).attr('y', d => d[1] - 11).attr('fill', C.gray).attr('font-size', 12)
+      .attr('pointer-events', 'none').text((d, i) => NAMES[i]);
+
+    const derived = i => (mode >= 1 && i === 4) || (mode >= 2 && i === 5);
+    handles.selectAll('circle').data(pts).join('circle').attr('cx', d => d[0]).attr('cy', d => d[1]).attr('r', 8)
+      .attr('fill', (d, i) => derived(i) ? C.bg : i < 3 ? C.blue : i === 3 ? '#fff' : C.green)
+      .attr('stroke', (d, i) => i < 3 ? C.blue : i === 3 ? '#fff' : C.green).attr('stroke-width', 2.5)
+      .attr('opacity', (d, i) => derived(i) ? .8 : 1).style('cursor', (d, i) => derived(i) ? 'not-allowed' : 'grab').attr('pointer-events', (d, i) => derived(i) ? 'none' : 'all')
+      .call(d3.drag().on('drag', (ev, d) => { d[0] = clamp(ev.x, 10, W - 10); d[1] = clamp(ev.y, 10, H - 10); draw(); }));
+
+    const vJ = len(sub(vA, vB)), aJ = len(sub(d2(A, 1), d2(B, 0)));
+    const level = vJ >= .5 ? 'C⁰' : aJ >= .5 ? 'C¹' : 'C²', free = 7 - Math.min(mode, 2);
+    document.getElementById('ct-read').innerHTML =
+      `Continuity at the join: <b>${level}</b> · velocity jump ${vJ.toFixed(1)} px per unit of t · acceleration jump ${aJ.toFixed(1)} · free control points: <b>${free} of 7</b>` +
+      (mode ? ' (hollow dots are determined by the lock)' : '');
+  }
+  document.querySelectorAll('#ct-modes [data-m]').forEach(b => b.addEventListener('click', () => { mode = +b.dataset.m; draw(); }));
+  document.getElementById('ct-reset').addEventListener('click', () => { pts = P0.map(p => p.slice()); draw(); });
+  draw();
+})();
 </script>
 </body>
 </html>

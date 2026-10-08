@@ -7,9 +7,10 @@
 4. Where the weights come from (the tree) and how it maps to the plane
 5. What `t` is: a clock, not a length
 6. Why we need `t`: regression `y=f(x)` cannot draw curves that double back
+7. Continuity at a join (C0, C1, C2): two cubic pieces, locks, curvature comb
 
 ## Suggested next (in this order)
-1. **Joining two pieces: continuity (C0, C1, C2).** What "smooth" means at a join, tangent and curvature matching, why cubic is the usual choice. This is what knots control, so it makes knots click.
+1. ~~Joining two pieces: continuity~~ (done, learn.html section 7).
 2. **Knots and the B-spline basis.** Knot vectors, multiplicity (m copies lowers continuity by m), the Cox-de Boor recursion, clamped vs uniform. The project page already uses these without teaching them.
 3. **Fitting: interpolation vs least squares vs smoothing splines.** Penalty on the bending energy, choosing the number of knots, overfitting. Links to regression and regularisation.
 4. **Derivatives: velocity and acceleration from control points.** Needed for the sliding-window idea (successive windows should join with matching velocity).

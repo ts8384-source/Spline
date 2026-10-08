@@ -3,7 +3,7 @@
 Setup once: (cd site && npm install).  Run: python tools/build_site.py
 
 Pages (edit PAGES to add or move sections):
-  learn.html    Spline Lab: general spline demos (sections 1-6)
+  learn.html    Spline Lab: general spline demos (sections 1-6, 9)
   project.html  Bouncing-ball project: how splines might be used as a network readout (sections 7-8)
   index.html    Landing page linking to both
 Sources: site/src/sections/sN.html (markup), site/src/js/sN.js (behaviour), site/src/js/common.js (shared helpers),
@@ -18,8 +18,8 @@ read = lambda p: p.read_text()
 PAGES = {
     "learn.html": dict(
         title="Spline Lab", h1="Spline Lab",
-        lede="Six interactive demos for learning splines, ordered the 3Blue1Brown way: a hook, then intuition, then the formula.",
-        sections=[1, 2, 3, 4, 5, 6],
+        lede="Seven interactive demos for learning splines, ordered the 3Blue1Brown way: a hook, then intuition, then the formula.",
+        sections=[1, 2, 3, 4, 5, 6, 9],
         footer="Palette and teaching order follow the vendored <code>3b1b-style-animation</code> skill; chart mechanics (scales, joins, drag, clip-paths) follow <code>d3-viz</code>."),
     "project.html": dict(
         title="Bouncing-ball project", h1="Project: spline readout for a bouncing ball",

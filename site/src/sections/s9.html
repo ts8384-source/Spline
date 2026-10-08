@@ -1,0 +1,12 @@
+<section id="s9">
+    <h2>7 · Joining two pieces: continuity</h2>
+    <p>A spline is several pieces joined end to end. At the join, how much must the two pieces agree? Two cubic pieces share the white join point. The <b class="yellow">yellow</b> and <b class="blue">blue</b> arrows are the velocity each piece has at the join. The short lines along the curves are a <b>curvature comb</b>: the longer the line, the tighter the bend there. Drag the points, then try the locks.</p>
+    <div id="ct-modes" class="chips">
+      <button class="chip" data-m="0">free: only touching (C⁰)</button><button class="chip" data-m="1">lock C¹</button><button class="chip" data-m="2">lock C²</button>
+      <button class="chip" id="ct-reset">reset points</button>
+    </div>
+    <svg id="ct" viewBox="0 0 800 420"></svg>
+    <p id="ct-read" class="readout"></p>
+    <p class="note"><span data-tex="C^0"></span>: the pieces touch, but the path can have a corner, so the two arrows point different ways. <span data-tex="C^1"></span>: the arrows coincide, meaning same direction <i>and the same speed</i>, so the clock <span data-tex="t"></span> matters here too. With a shared join this forces Q1 to be the mirror image of P2 across J, so Q1 stops being free. <span data-tex="C^2"></span>: the comb is continuous across the join, which also ties down Q2. Each lock removes one free control point: 7, then 6, then 5. Five is exactly what a cubic B-spline with two pieces uses (number of pieces + 3).</p>
+    <p class="note">Matching only the direction of the tangent, not the speed, is a weaker condition (usually written G¹). It looks smooth but isn't C¹.</p>
+  </section>
