@@ -40,3 +40,9 @@ nav a:hover{text-decoration:underline}
 .cards a:hover{outline:1px solid var(--blue)}
 .cards h2{margin-top:0}
 @media (max-width:640px){.cards{grid-template-columns:1fr}}
+.trio{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin:12px 0}
+.trio figure{margin:0}
+.trio figcaption{font-size:.85rem;margin:6px 0 2px}
+.trio .readout{font-size:.8rem;min-height:2.6em}
+@media (max-width:720px){.trio{grid-template-columns:1fr}}
+.note p{margin:6px 0}

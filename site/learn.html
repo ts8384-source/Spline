@@ -48,6 +48,12 @@ nav a:hover{text-decoration:underline}
 .cards a:hover{outline:1px solid var(--blue)}
 .cards h2{margin-top:0}
 @media (max-width:640px){.cards{grid-template-columns:1fr}}
+.trio{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin:12px 0}
+.trio figure{margin:0}
+.trio figcaption{font-size:.85rem;margin:6px 0 2px}
+.trio .readout{font-size:.8rem;min-height:2.6em}
+@media (max-width:720px){.trio{grid-template-columns:1fr}}
+.note p{margin:6px 0}
 </style>
 </head>
 <body>
@@ -55,7 +61,7 @@ nav a:hover{text-decoration:underline}
   <nav><a href="index.html">home</a> · <a href="learn.html">Spline Lab (learning)</a> · <a href="project.html">Bouncing-ball project</a></nav>
   <header>
     <h1>Spline Lab</h1>
-    <p class="lede">Seven interactive demos for learning splines, ordered the 3Blue1Brown way: a hook, then intuition, then the formula.</p>
+    <p class="lede">Eight interactive demos for learning splines, ordered the 3Blue1Brown way: a hook, then intuition, then the formula.</p>
   </header>
 
 <section id="s1">
@@ -141,6 +147,23 @@ nav a:hover{text-decoration:underline}
     <p id="ct-read" class="readout"></p>
     <p class="note"><span data-tex="C^0"></span>: the pieces touch, but the path can have a corner, so the two arrows point different ways. <span data-tex="C^1"></span>: the arrows coincide, meaning same direction <i>and the same speed</i>, so the clock <span data-tex="t"></span> matters here too. With a shared join this forces Q1 to be the mirror image of P2 across J, so Q1 stops being free. <span data-tex="C^2"></span>: the comb is continuous across the join, which also ties down Q2. Each lock removes one free control point: 7, then 6, then 5. Five is exactly what a cubic B-spline with two pieces uses (number of pieces + 3).</p>
     <p class="note">Matching only the direction of the tangent, not the speed, is a weaker condition (usually written G¹). It looks smooth but isn't C¹.</p>
+  </section>
+
+<section id="s10">
+    <h2>8 · What C⁰, C¹ and C² feel like</h2>
+    <p>Three joins, same left piece. A ball rides the whole curve on the clock <span data-tex="t"></span> (0 to 1 on the blue piece, 1 to 2 on the green one). The <b class="yellow">yellow arrow</b> is its velocity. The <b class="red">red arrow</b> is its acceleration: the push you would feel. The dashed circles at the join are the circles that each side is bending along. A smaller circle means a tighter bend.</p>
+    <div class="trio">
+      <figure><svg id="tr0" viewBox="0 0 300 300"></svg><figcaption><b>C⁰</b>: only position matches</figcaption><p id="tr0-r" class="readout"></p></figure>
+      <figure><svg id="tr1" viewBox="0 0 300 300"></svg><figcaption><b>C¹</b>: position and velocity match</figcaption><p id="tr1-r" class="readout"></p></figure>
+      <figure><svg id="tr2" viewBox="0 0 300 300"></svg><figcaption><b>C²</b>: position, velocity and acceleration match</figcaption><p id="tr2-r" class="readout"></p></figure>
+    </div>
+    <label class="ctl">clock <input id="tr-t" type="range" min="0" max="2" step="0.005" value="0.8"> <b id="tr-tv">0.80</b></label>
+    <button id="tr-play">▶ play</button> <button class="alt" id="tr-before">just before the join</button> <button class="alt" id="tr-after">just after the join</button>
+    <div class="note">
+      <p><b>C⁰:</b> the yellow arrow flips direction as the ball passes the join: the ball turns on the spot, so it is a corner.</p>
+      <p><b>C¹:</b> the yellow arrow carries on smoothly, but the red arrow suddenly changes, and the two circles have different sizes. It is like holding the steering wheel at one angle and then snapping it to another: no corner, but a jolt.</p>
+      <p><b>C²:</b> the red arrow also carries on smoothly, and both sides share the <b>same circle</b>. The bend changes gradually, so the ride is smooth.</p>
+    </div>
   </section>
 
   <footer>
@@ -666,6 +689,65 @@ function axes(g, x, y, xt, yt) {
   }
   document.querySelectorAll('#ct-modes [data-m]').forEach(b => b.addEventListener('click', () => { mode = +b.dataset.m; draw(); }));
   document.getElementById('ct-reset').addEventListener('click', () => { pts = P0.map(p => p.slice()); draw(); });
+  draw();
+})();
+/* ---------- 10 · Three scenarios: C0, C1, C2 ---------- */
+(function () {
+  const P0 = [20, 270], P1 = [30, 80], P2 = [105, 45], J = [150, 95], Q3 = [285, 200];
+  const sub = (a, b) => [a[0] - b[0], a[1] - b[1]], add = (a, b) => [a[0] + b[0], a[1] + b[1]], mul = (a, k) => [a[0] * k, a[1] * k], len = a => Math.hypot(a[0], a[1]);
+  const Q1_lock = sub(mul(J, 2), P2), Q2_c2 = add(sub(P1, mul(P2, 4)), mul(J, 4));
+  const SC = [
+    {id: 'tr0', Q1: [230, 70], Q2: [270, 120]},
+    {id: 'tr1', Q1: Q1_lock, Q2: [270, 150]},
+    {id: 'tr2', Q1: Q1_lock, Q2: Q2_c2}
+  ];
+  const bez = (P, t) => { const u = 1 - t, w = [u * u * u, 3 * u * u * t, 3 * u * t * t, t * t * t]; return [0, 1].map(k => w.reduce((s, wi, i) => s + wi * P[i][k], 0)); };
+  const d1 = (P, t) => { const u = 1 - t; return [0, 1].map(k => 3 * (u * u * (P[1][k] - P[0][k]) + 2 * u * t * (P[2][k] - P[1][k]) + t * t * (P[3][k] - P[2][k]))); };
+  const d2 = (P, t) => [0, 1].map(k => 6 * ((1 - t) * (P[2][k] - 2 * P[1][k] + P[0][k]) + t * (P[3][k] - 2 * P[2][k] + P[1][k])));
+  const kappa = (P, t) => { const v = d1(P, t), a = d2(P, t); return (v[0] * a[1] - v[1] * a[0]) / len(v) ** 3; };
+  const circle = (P, t) => {                                   // osculating circle: centre p + n/k, radius 1/|k|
+    const k = kappa(P, t), v = d1(P, t), s = len(v), p = bez(P, t);
+    if (Math.abs(k) < 1e-5) return null;
+    return {c: add(p, mul([-v[1] / s, v[0] / s], 1 / k)), r: 1 / Math.abs(k)};
+  };
+  const arrow = (g, from, v, col, w) => {
+    const to = add(from, v), a = Math.atan2(v[1], v[0]), h = 7;
+    g.append('line').attr('x1', from[0]).attr('y1', from[1]).attr('x2', to[0]).attr('y2', to[1]).attr('stroke', col).attr('stroke-width', w);
+    g.append('path').attr('d', `M${to[0]},${to[1]}L${to[0] - h * Math.cos(a - .45)},${to[1] - h * Math.sin(a - .45)}L${to[0] - h * Math.cos(a + .45)},${to[1] - h * Math.sin(a + .45)}Z`).attr('fill', col);
+  };
+  const tIn = document.getElementById('tr-t');
+
+  function draw() {
+    const tau = +tIn.value; document.getElementById('tr-tv').textContent = tau.toFixed(2);
+    SC.forEach(s => {
+      const svg = d3.select('#' + s.id), A = [P0, P1, P2, J], B = [J, s.Q1, s.Q2, Q3];
+      svg.selectAll('*').remove();
+      [[A, C.blue], [B, C.green]].forEach(([P, col]) => svg.append('path').attr('d', d3.line()(d3.range(0, 1.0001, .01).map(t => bez(P, t))))
+        .attr('fill', 'none').attr('stroke', col).attr('stroke-width', 3.5));
+      [[A, C.blue, 1], [B, C.green, 0]].forEach(([P, col, t]) => {
+        const c = circle(P, t); if (c) svg.append('circle').attr('cx', c.c[0]).attr('cy', c.c[1]).attr('r', c.r).attr('fill', 'none').attr('stroke', col).attr('stroke-dasharray', '5 4').attr('opacity', .85);
+      });
+      svg.append('circle').attr('cx', J[0]).attr('cy', J[1]).attr('r', 5).attr('fill', '#fff');
+      const onA = tau < 1, P = onA ? A : B, t = onA ? tau : tau - 1, p = bez(P, t);
+      arrow(svg, p, mul(d1(P, t), .3), C.yellow, 3);
+      arrow(svg, p, mul(d2(P, t), .08), C.red, 3);
+      svg.append('circle').attr('cx', p[0]).attr('cy', p[1]).attr('r', 6).attr('fill', '#fff').attr('stroke', C.bg);
+      const dv = len(sub(d1(A, 1), d1(B, 0))), da = len(sub(d2(A, 1), d2(B, 0)));
+      const cA = circle(A, 1), cB = circle(B, 0), rr = c => c ? Math.round(c.r) + ' px' : 'straight';
+      document.getElementById(s.id + '-r').innerHTML =
+        `velocity jump ${dv.toFixed(0)} · acceleration jump ${da.toFixed(0)}<br>bend radius before ${rr(cA)} · after ${rr(cB)}`;
+    });
+  }
+  tIn.addEventListener('input', draw);
+  document.getElementById('tr-before').onclick = () => { tIn.value = 0.97; draw(); };
+  document.getElementById('tr-after').onclick = () => { tIn.value = 1.03; draw(); };
+  let raf = null; const btn = document.getElementById('tr-play');
+  btn.onclick = () => {
+    if (raf) { cancelAnimationFrame(raf); raf = null; btn.textContent = '▶ play'; return; }
+    btn.textContent = '❚❚ pause'; const t0 = performance.now() - (+tIn.value) * 3500;
+    const step = now => { tIn.value = (((now - t0) / 3500) % 2); draw(); raf = requestAnimationFrame(step); };
+    raf = requestAnimationFrame(step);
+  };
   draw();
 })();
 </script>

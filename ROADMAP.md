@@ -8,6 +8,7 @@
 5. What `t` is: a clock, not a length
 6. Why we need `t`: regression `y=f(x)` cannot draw curves that double back
 7. Continuity at a join (C0, C1, C2): two cubic pieces, locks, curvature comb
+8. What C0, C1, C2 feel like: three joins side by side, velocity and acceleration arrows, osculating circles
 
 ## Suggested next (in this order)
 1. ~~Joining two pieces: continuity~~ (done, learn.html section 7).

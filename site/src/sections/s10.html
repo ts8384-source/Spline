@@ -1,0 +1,16 @@
+<section id="s10">
+    <h2>8 · What C⁰, C¹ and C² feel like</h2>
+    <p>Three joins, same left piece. A ball rides the whole curve on the clock <span data-tex="t"></span> (0 to 1 on the blue piece, 1 to 2 on the green one). The <b class="yellow">yellow arrow</b> is its velocity. The <b class="red">red arrow</b> is its acceleration: the push you would feel. The dashed circles at the join are the circles that each side is bending along. A smaller circle means a tighter bend.</p>
+    <div class="trio">
+      <figure><svg id="tr0" viewBox="0 0 300 300"></svg><figcaption><b>C⁰</b>: only position matches</figcaption><p id="tr0-r" class="readout"></p></figure>
+      <figure><svg id="tr1" viewBox="0 0 300 300"></svg><figcaption><b>C¹</b>: position and velocity match</figcaption><p id="tr1-r" class="readout"></p></figure>
+      <figure><svg id="tr2" viewBox="0 0 300 300"></svg><figcaption><b>C²</b>: position, velocity and acceleration match</figcaption><p id="tr2-r" class="readout"></p></figure>
+    </div>
+    <label class="ctl">clock <input id="tr-t" type="range" min="0" max="2" step="0.005" value="0.8"> <b id="tr-tv">0.80</b></label>
+    <button id="tr-play">▶ play</button> <button class="alt" id="tr-before">just before the join</button> <button class="alt" id="tr-after">just after the join</button>
+    <div class="note">
+      <p><b>C⁰:</b> the yellow arrow flips direction as the ball passes the join: the ball turns on the spot, so it is a corner.</p>
+      <p><b>C¹:</b> the yellow arrow carries on smoothly, but the red arrow suddenly changes, and the two circles have different sizes. It is like holding the steering wheel at one angle and then snapping it to another: no corner, but a jolt.</p>
+      <p><b>C²:</b> the red arrow also carries on smoothly, and both sides share the <b>same circle</b>. The bend changes gradually, so the ride is smooth.</p>
+    </div>
+  </section>
