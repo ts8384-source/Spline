@@ -31,3 +31,4 @@ code{background:#111;padding:1px 5px;border-radius:4px}
 #pour-readout{min-height:3.2em}
 button.alt{background:#3a3a3a;border:1px solid #555}
 .stack{display:grid;gap:8px}
+.ctl input[type=checkbox]{flex:none;width:18px;height:18px}
