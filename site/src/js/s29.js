@@ -1,83 +1,117 @@
-/* ---------- 29 · Why C^(n-1): the truncated power form ---------- */
+/* ---------- 29 · Why C^(n-1): a five-step argument ---------- */
 (function () {
   const g = id => document.getElementById(id), svg = d3.select('#v29'), sb = d3.select('#s29b'), sc = d3.select('#s29c');
   const KN = [1, 2, 3, 4].map(i => i / 5), X = d3.scaleLinear([0, 1], [50, 780]), A0 = [0.25, 0.9, -1.4, 1.2, -0.5], CB = [0.12, -0.2, 0.18, -0.15];
   const fact = m => d3.range(1, m + 1).reduce((a, b) => a * b, 1);
-  let n = 3, c = [], sel = 1, ymax = 10, lastN = 0, collapsed = false;
-  const eq = eqLab('e29', String.raw`\begin{aligned}
-    S(t)&=\htmlClass{eq-poly}{\sum_{j=0}^{n}a_jt^j}\;+\;\htmlClass{eq-trunc}{\sum_{i=1}^{k-1}\htmlClass{eq-c}{c_i}\,(t-t_i)_+^{\,n}}\\[2pt]
-    &\text{where}\ (t-t_i)_+^{\,n}=(t-t_i)^n\ \text{if}\ t\ge t_i,\ \text{and}\ 0\ \text{otherwise}\\[4pt]
-    &\htmlClass{eq-D}{P_i(t)-P_{i-1}(t)=c_i\,(t-t_i)^n}\\[4pt]
-    &\htmlClass{eq-C}{S\in C^{\,n-1}}\ \ \text{and}\ \ \htmlClass{eq-jump}{S^{(n)}\ \text{jumps by}\ n!\,c_i\ \text{at}\ t_i}\\[4pt]
-    &\htmlClass{eq-Cn}{S\in C^{\,n}\ \Rightarrow\ \text{every}\ c_i=0\ \Rightarrow\ S\ \text{is one polynomial}}
-  \end{aligned}`, () => draw());
+  let n = 3, c = [], sel = 1, ymax = 10, lastN = 0, collapsed = false, step = 1;
+  const T = {
+    1: String.raw`\htmlClass{eq-Pl}{P_{i-1}}(t)\ \text{and}\ \htmlClass{eq-Pr}{P_i}(t)\ \text{are polynomials of degree}\ \le n,\ \text{meeting at the knot}\ t_i`,
+    2: String.raw`\htmlClass{eq-C}{P_{i-1}^{(j)}(t_i)=P_i^{(j)}(t_i)\quad\text{for}\ j=0,1,\dots,n-1}`,
+    3: String.raw`\htmlClass{eq-D}{P_i(t)-P_{i-1}(t)=c_i\,(t-t_i)^n}`,
+    4: String.raw`S(t)=\htmlClass{eq-poly}{\sum_{j=0}^{n}a_jt^j}+\htmlClass{eq-trunc}{\sum_{i}\htmlClass{eq-c}{c_i}(t-t_i)_+^{\,n}}\qquad \htmlClass{eq-jump}{S^{(n)}\ \text{jumps by}\ n!\,c_i\ \text{at}\ t_i}`,
+    5: String.raw`\htmlClass{eq-Cn}{P_{i-1}^{(n)}(t_i)=P_i^{(n)}(t_i)\ \Longrightarrow\ c_i=0\ \Longrightarrow\ \text{both pieces are the same polynomial}}`
+  };
+  const STEPS = [
+    ['1 · Two pieces meet', 'Look at the yellow knot. Each piece is its own polynomial of degree at most n. The question is how many derivatives (value, slope, bend, ...) the two can share there.'],
+    ['2 · Match as many as possible', 'Ask for the pieces to agree in value, slope, bend, and so on up to derivative n − 1 (the ✓ rows in the table). Look at the two pieces drawn past the knot: they run together.'],
+    ['3 · What is left is one power', 'Because they agree that well, the only difference between the two polynomials is a single power: c·(t − t_i)^n. In the lower graph it is flat for a stretch and then grows. Slide c to scale the gap, or change n to change how flat it is.'],
+    ['4 · One free number per knot', 'So each knot has exactly one free number, c: everything else about the next piece is inherited. Drag a step in the staircase (that is c, scaled by n!) and watch the curve above respond.'],
+    ['5 · Why not smoother?', 'Suppose we also demand that the n-th derivative matches. Then c must be 0 at every knot, and the spline collapses to one polynomial (red). Press the button. So n − 1 is the smoothest a real spline of degree n can be.'],
+    ['show everything', 'All the pictures at once, for exploring.']
+  ];
+  const eqEl = g('e29'), eq = eqLab('e29', T[1], () => draw());
   const a = () => A0.slice(0, n + 1);
   const tp = (t, ti, m) => t >= ti ? (m === 0 ? 1 : (t - ti) ** m) : 0;
   const S = (t, r = 0) => d3.sum(a(), (aj, j) => j >= r ? aj * fact(j) / fact(j - r) * t ** (j - r) : 0) + (r > n ? 0 : d3.sum(KN, (ti, i) => c[i] * fact(n) / fact(n - r) * tp(t, ti, n - r)));
+  function setStep(s) {
+    step = s; eq.hl = null; eq.locked = null;
+    katex.render(s === 5 ? T[5] : s === 6 ? String.raw`\htmlClass{eq-D}{P_i(t)-P_{i-1}(t)=c_i\,(t-t_i)^n}\qquad \htmlClass{eq-C}{S\in C^{\,n-1}}\qquad \htmlClass{eq-jump}{S^{(n)}\ \text{jumps by}\ n!\,c_i}\qquad \htmlClass{eq-Cn}{S\in C^{\,n}\Rightarrow c_i=0}` : T[s], eqEl, {displayMode: true, trust: true, throwOnError: false});
+    eq.refresh(); draw();
+  }
+  const show = (el, on) => { el.style.display = on ? '' : 'none'; };
 
   function draw() {
     const hl = eq.hl; n = +g('i29n').value; g('o29n').textContent = n;
     if (n !== lastN) { c = CB.map(v => v / 0.5 ** n); const lv = [fact(n) * A0[n]]; c.forEach(ci => lv.push(lv[lv.length - 1] + fact(n) * ci)); ymax = Math.max(4, 1.5 * d3.max(lv, Math.abs)); lastN = n; collapsed = false; }
-    const chips = d3.select('#kn29'); chips.selectAll('*').remove();
-    KN.forEach((k, i) => chips.append('button').attr('class', 'chip' + (i === sel ? ' on' : '')).text('knot t' + (i + 1) + ' = ' + k.toFixed(1)).on('click', () => { sel = i; draw(); }));
+    g('i29c').value = Math.max(-2, Math.min(2, c[sel] * 0.5 ** n)); g('o29c').textContent = (c[sel] * 0.5 ** n).toFixed(2);
+    const all = step === 6;
+    show(g('v29'), [1, 4, 5].includes(step) || all); show(g('s29b'), step === 4 || all); show(g('s29c'), [2, 3].includes(step) || all);
+    show(g('t29'), step === 2 || all); show(g('kn29'), [1, 2, 3].includes(step) || all); show(g('l29c'), step === 3 || all); show(g('z29'), step === 5 || all); show(g('e29-sub'), step >= 4);
+    g('st29-cap').innerHTML = '<b>' + STEPS[step - 1][0] + '.</b> ' + STEPS[step - 1][1];
+    const chips = d3.select('#st29'); chips.selectAll('*').remove();
+    STEPS.forEach((st, i) => chips.append('button').attr('class', 'chip' + (i + 1 === step ? ' on' : '')).text(st[0]).on('click', () => setStep(i + 1)));
+    const kc = d3.select('#kn29'); kc.selectAll('*').remove();
+    KN.forEach((k, i) => kc.append('button').attr('class', 'chip' + (i === sel ? ' on' : '')).text('knot t' + (i + 1) + ' = ' + k.toFixed(1)).on('click', () => { sel = i; draw(); }));
+
+    // main curve
     const ts = d3.range(0, 1.00001, 0.004), vals = ts.map(t => S(t)), lo = d3.min(vals), hi = d3.max(vals), pad = (hi - lo) * .15 || .2, Y = d3.scaleLinear([lo - pad, hi + pad], [270, 20]);
     svg.selectAll('*').remove();
-    KN.forEach((k, i) => svg.append('line').attr('x1', X(k)).attr('x2', X(k)).attr('y1', 20).attr('y2', 270).attr('stroke', i === sel ? '#fbbf24' : '#444').attr('stroke-width', i === sel ? 2.5 : 1));
-    const dim = k => hl && hl !== k ? .3 : 1;
-    svg.append('path').attr('d', d3.line()(ts.map(t => [X(t), Y(d3.sum(a(), (aj, j) => aj * t ** j))]))).attr('fill', 'none').attr('stroke', '#9ca3af').attr('stroke-width', hl === 'poly' ? 6 : 2).attr('stroke-dasharray', '6 4').attr('opacity', hl && hl !== 'poly' ? .4 : .9);
-    KN.forEach((k, i) => svg.append('path').attr('d', d3.line()(ts.map(t => [X(t), Y(c[i] * tp(t, k, n))]))).attr('fill', 'none').attr('stroke', col7(i + 1)).attr('stroke-width', (hl === 'trunc' || hl === 'c') ? 4 : 2).attr('opacity', hl === 'trunc' || hl === 'c' ? 1 : hl ? .3 : .75));
-    svg.append('path').attr('d', d3.line()(ts.map((t, j) => [X(t), Y(vals[j])]))).attr('fill', 'none').attr('stroke', '#fff').attr('stroke-width', 4);
-    svg.append('text').attr('x', 54).attr('y', 16).attr('fill', '#9ca3af').attr('font-size', 12).text('S (white) = polynomial part (grey dashed) + one hinge-like term per knot (coloured)');
-    if (hl === 'Cn' || collapsed) svg.append('path').attr('d', d3.line()(ts.map(t => [X(t), Y(d3.sum(a(), (aj, j) => aj * t ** j))]))).attr('fill', 'none').attr('stroke', '#ef4444').attr('stroke-width', 5).attr('opacity', .85);
+    KN.forEach((k, i) => svg.append('line').attr('x1', X(k)).attr('x2', X(k)).attr('y1', 20).attr('y2', 270).attr('stroke', i === sel ? '#fbbf24' : '#444').attr('stroke-width', i === sel ? 3 : 1));
+    if (step === 1 || all) { const edges = [0, ...KN, 1]; [sel, sel + 1].forEach(s => svg.append('rect').attr('x', X(edges[s])).attr('y', 20).attr('width', X(edges[s + 1]) - X(edges[s])).attr('height', 250).attr('fill', col7(s)).attr('opacity', .15)); }
+    const showParts = step === 4 || all;
+    if (showParts) {
+      svg.append('path').attr('d', d3.line()(ts.map(t => [X(t), Y(d3.sum(a(), (aj, j) => aj * t ** j))]))).attr('fill', 'none').attr('stroke', '#9ca3af').attr('stroke-width', hl === 'poly' ? 6 : 2).attr('stroke-dasharray', '6 4').attr('opacity', hl && hl !== 'poly' ? .4 : .9);
+      KN.forEach((k, i) => svg.append('path').attr('d', d3.line()(ts.map(t => [X(t), Y(c[i] * tp(t, k, n))]))).attr('fill', 'none').attr('stroke', col7(i + 1)).attr('stroke-width', (hl === 'trunc' || hl === 'c') ? 4 : 2).attr('opacity', hl === 'trunc' || hl === 'c' ? 1 : hl ? .3 : .75));
+    }
+    const edges2 = [0, ...KN, 1];
+    edges2.slice(0, -1).forEach((b, s) => { const lo2 = b + 1e-6, hi2 = edges2[s + 1] - 1e-6, xs = d3.range(0, 1.0001, 0.02).map(u => lo2 + u * (hi2 - lo2));
+      svg.append('path').attr('d', d3.line()(xs.map(x => [X(x), Y(S(x))]))).attr('fill', 'none').attr('stroke', step === 1 || step === 5 ? col7(s) : '#fff').attr('stroke-width', 4).attr('opacity', step === 1 && s !== sel && s !== sel + 1 ? .45 : 1); });
+    if (step === 5 || collapsed) svg.append('path').attr('d', d3.line()(ts.map(t => [X(t), Y(d3.sum(a(), (aj, j) => aj * t ** j))]))).attr('fill', 'none').attr('stroke', '#ef4444').attr('stroke-width', 5).attr('opacity', .9);
+    svg.append('text').attr('x', 54).attr('y', 16).attr('fill', '#9ca3af').attr('font-size', 12).text(showParts ? 'S (white) = one polynomial (grey dashed) + one hinge-like term per knot (coloured)' : step === 5 ? 'S, and in red the single polynomial it collapses to when c = 0' : 'the spline; the shaded pieces meet at the yellow knot');
 
-    // staircase of the n-th derivative, draggable
+    // staircase
     sb.selectAll('*').remove();
     const SY = d3.scaleLinear([-ymax, ymax], [170, 20]), levels = [fact(n) * A0[n]]; c.forEach(ci => levels.push(levels[levels.length - 1] + fact(n) * ci));
-    sb.append('text').attr('x', 54).attr('y', 14).attr('fill', '#9ca3af').attr('font-size', 12).text(`S^(${n}) (the ${n}-th derivative) is a staircase. Drag a step: its height change is n!·c_i`);
+    sb.append('text').attr('x', 54).attr('y', 14).attr('fill', '#9ca3af').attr('font-size', 12).text(`S^(${n}) (the ${n}-th derivative) is a staircase. Drag a dot: the step height is n!·c at that knot`);
     sb.append('line').attr('x1', 50).attr('x2', 780).attr('y1', SY(0)).attr('y2', SY(0)).attr('stroke', '#555').attr('stroke-dasharray', '3 4');
-    const edges = [0, ...KN, 1];
-    levels.forEach((L, s) => sb.append('line').attr('x1', X(edges[s])).attr('x2', X(edges[s + 1])).attr('y1', SY(L)).attr('y2', SY(L)).attr('stroke', hl === 'jump' ? '#fbbf24' : '#fff').attr('stroke-width', hl === 'jump' ? 5 : 3.5));
+    levels.forEach((L, s) => sb.append('line').attr('x1', X(edges2[s])).attr('x2', X(edges2[s + 1])).attr('y1', SY(L)).attr('y2', SY(L)).attr('stroke', hl === 'jump' ? '#fbbf24' : '#fff').attr('stroke-width', hl === 'jump' ? 5 : 3.5));
     KN.forEach((k, i) => sb.append('line').attr('x1', X(k)).attr('x2', X(k)).attr('y1', SY(levels[i])).attr('y2', SY(levels[i + 1])).attr('stroke', col7(i + 1)).attr('stroke-width', 3).attr('stroke-dasharray', '4 3'));
     sb.selectAll('.st').data(KN.map((_, i) => i)).join('circle').attr('cx', i => X(KN[i])).attr('cy', i => SY(levels[i + 1])).attr('r', hl === 'jump' || hl === 'c' ? 10 : 8).attr('fill', i => col7(i + 1)).attr('stroke', i => i === sel ? '#fff' : '#1c1c1c').attr('stroke-width', 3).style('cursor', 'ns-resize')
       .call(d3.drag().on('start', (ev, i) => { sel = i; }).on('drag', (ev, i) => { const target = Math.max(-ymax, Math.min(ymax, SY.invert(ev.y))); c[i] = (target - levels[i]) / fact(n); collapsed = false; draw(); }));
     KN.forEach((k, i) => sb.append('text').attr('x', X(k) + 12).attr('y', SY(levels[i + 1]) - 10).attr('fill', col7(i + 1)).attr('font-size', 11).attr('font-weight', 700).text((c[i] >= 0 ? '+' : '−') + Math.abs(fact(n) * c[i]).toFixed(1)));
 
-    // the two neighbouring pieces, extended past the knot
+    // the two pieces past the knot, and their difference
     const ks = KN[sel], pl = t => d3.sum(a(), (aj, j) => aj * t ** j) + d3.sum(KN.slice(0, sel), (ti, i) => c[i] * (t - ti) ** n), pr = t => pl(t) + c[sel] * (t - ks) ** n;
-    const w = d3.range(ks - 0.2, ks + 0.2001, 0.004), pv = w.map(t => [pl(t), pr(t)]).flat(), CX = d3.scaleLinear([ks - 0.2, ks + 0.2], [50, 780]), CY = d3.scaleLinear([d3.min(pv) - .05, d3.max(pv) + .05], [170, 25]);
+    const w = d3.range(ks - 0.2, ks + 0.2001, 0.004), pv = w.map(t => [pl(t), pr(t)]).flat(), CX = d3.scaleLinear([ks - 0.2, ks + 0.2], [50, 780]), CY = d3.scaleLinear([d3.min(pv) - .05, d3.max(pv) + .05], [125, 25]);
+    const dv = w.map(t => pr(t) - pl(t)), DYs = d3.scaleLinear([Math.min(d3.min(dv), 0) - 1e-9, Math.max(d3.max(dv), 0) + 1e-9], [258, 180]);
     sc.selectAll('*').remove();
-    sc.append('text').attr('x', 54).attr('y', 14).attr('fill', '#9ca3af').attr('font-size', 12).text(`the two pieces next to knot t${sel + 1}, each extended past the knot: they hug each other to order ${n - 1}, then separate like (t − t${sel + 1})^${n}` + (hl === 'D' ? '   ← this' : ''));
-    sc.append('path').attr('d', d3.area().x(t => CX(t)).y0(t => CY(pl(t))).y1(t => CY(pr(t)))(w)).attr('fill', '#fbbf24').attr('opacity', hl === 'D' ? .5 : .22);
-    sc.append('path').attr('d', d3.line()(w.map(t => [CX(t), CY(pl(t))]))).attr('fill', 'none').attr('stroke', col7(sel)).attr('stroke-width', hl === 'D' ? 5 : 3).attr('stroke-dasharray', t => null);
-    sc.append('path').attr('d', d3.line()(w.map(t => [CX(t), CY(pr(t))]))).attr('fill', 'none').attr('stroke', col7(sel + 1)).attr('stroke-width', hl === 'D' ? 5 : 3);
-    sc.append('line').attr('x1', CX(ks)).attr('x2', CX(ks)).attr('y1', 25).attr('y2', 170).attr('stroke', '#fbbf24').attr('stroke-width', 2);
-    sc.append('text').attr('x', 54).attr('y', 184).attr('fill', col7(sel)).attr('font-size', 12).text(`left piece P${sel} (extended)`);
-    sc.append('text').attr('x', 780).attr('y', 184).attr('text-anchor', 'end').attr('fill', col7(sel + 1)).attr('font-size', 12).text(`right piece P${sel + 1}`);
+    sc.append('text').attr('x', 54).attr('y', 14).attr('fill', '#9ca3af').attr('font-size', 12).text(`top: the two pieces at knot t${sel + 1}, each extended past the knot`);
+    sc.append('path').attr('d', d3.area().x(t => CX(t)).y0(t => CY(pl(t))).y1(t => CY(pr(t)))(w)).attr('fill', '#fbbf24').attr('opacity', .3);
+    sc.append('path').attr('d', d3.line()(w.map(t => [CX(t), CY(pl(t))]))).attr('fill', 'none').attr('stroke', col7(sel)).attr('stroke-width', 3);
+    sc.append('path').attr('d', d3.line()(w.map(t => [CX(t), CY(pr(t))]))).attr('fill', 'none').attr('stroke', col7(sel + 1)).attr('stroke-width', 3);
+    sc.append('text').attr('x', 54).attr('y', 140).attr('fill', col7(sel)).attr('font-size', 12).text(`left piece P${sel} (extended)`);
+    sc.append('text').attr('x', 780).attr('y', 140).attr('text-anchor', 'end').attr('fill', col7(sel + 1)).attr('font-size', 12).text(`right piece P${sel + 1}`);
+    sc.append('text').attr('x', 54).attr('y', 164).attr('fill', '#fbbf24').attr('font-size', 12).text(`bottom: the gap between them, magnified (it is c·(t − t${sel + 1})^${n}${hl === 'D' ? '   ← this' : ''})`);
+    sc.append('line').attr('x1', 50).attr('x2', 780).attr('y1', DYs(0)).attr('y2', DYs(0)).attr('stroke', '#555').attr('stroke-dasharray', '3 4');
+    sc.append('path').attr('d', d3.line()(w.map((t, j) => [CX(t), DYs(dv[j])]))).attr('fill', 'none').attr('stroke', '#fbbf24').attr('stroke-width', hl === 'D' ? 6 : 3.5);
+    sc.append('path').attr('d', d3.line()(w.map(t => [CX(t), DYs(c[sel] * (t - ks) ** n)]))).attr('fill', 'none').attr('stroke', '#fff').attr('stroke-width', 1.5).attr('stroke-dasharray', '4 3');
+    [25, 250].forEach((y0, q) => sc.append('line').attr('x1', CX(ks)).attr('x2', CX(ks)).attr('y1', q ? 180 : 25).attr('y2', q ? 262 : 130).attr('stroke', '#fbbf24').attr('stroke-width', 2));
 
-    // derivative table at the selected knot
+    // table
     const e = 1e-9, rows = d3.range(n + 1).map(r => ({r, L: S(ks - e, r), R: S(ks + e, r)})); rows.forEach(q => q.eq = Math.abs(q.L - q.R) < 1e-6 * (1 + Math.abs(q.L)));
-    g('t29').innerHTML = `<table class="mt"><tr><th>derivative r</th><th>left of t<sub>${sel + 1}</sub></th><th>right of t<sub>${sel + 1}</sub></th><th>equal?</th></tr>` +
+    g('t29').innerHTML = `<table class="mt"><tr><th>derivative j</th><th>left of t<sub>${sel + 1}</sub></th><th>right of t<sub>${sel + 1}</sub></th><th>equal?</th></tr>` +
       rows.map(q => `<tr class="${hl === 'C' && q.r < n || hl === 'jump' && q.r === n ? 'hot' : ''}"><td>${q.r}${q.r === n ? ' (= n)' : ''}</td><td>${q.L.toFixed(3)}</td><td>${q.R.toFixed(3)}</td><td class="${q.eq ? 'yes' : 'no'}">${q.eq ? '✓' : '✗ jump ' + (q.R - q.L).toFixed(3)}</td></tr>`).join('') + '</table>';
-    // independent check: the same function written with B-spline bumps on the same knots
+    // independent check against the B-spline form
     const kv = [...new Array(n + 1).fill(0), ...KN, ...new Array(n + 1).fill(1)], nb = kv.length - n - 1, xs = d3.range(0, 1.0001, 1 / 200), Bm = xs.map(t => d3.range(nb).map(i => bspline(i, n, Math.min(t, 1), kv)));
     const AtA = d3.range(nb).map(r => d3.range(nb).map(q => d3.sum(Bm, row => row[r] * row[q]))), Atb = d3.range(nb).map(r => d3.sum(Bm, (row, k) => row[r] * S(xs[k]))), cf = solveLinear(AtA, Atb);
-    const res = d3.max(xs, (t, k) => Math.abs(d3.sum(cf, (v, i) => v * Bm[k][i]) - S(t)));
-    const jumpOk = rows[n] && !rows[n].eq === (Math.abs(c[sel]) > 1e-12);
-    g('e29-sub').innerHTML = `free numbers: ${n + 1} polynomial coefficients + ${KN.length} jumps = <b>${n + 1 + KN.length}</b> = ${nb} B-splines · the same function written with B-spline bumps differs by at most <b>${res.toExponential(0)}</b> ` +
-      (res < 1e-7 ? '<span class="yes">✓ it is a spline in the B-spline sense too</span>' : '<span class="no">✗</span>') + ` · jump of S<sup>(${n})</sup> at t${sel + 1}: n!·c = ${(fact(n) * c[sel]).toFixed(3)}`;
+    const res = d3.max(xs, (t, k) => Math.abs(d3.sum(cf, (v, i) => v * Bm[k][i]) - S(t))), gapErr = d3.max(w, t => Math.abs(pr(t) - pl(t) - c[sel] * (t - ks) ** n));
+    g('e29-sub').innerHTML = `free numbers: ${n + 1} polynomial coefficients + ${KN.length} jumps = <b>${n + 1 + KN.length}</b> = ${nb} B-splines · the same function in B-spline form differs by at most <b>${res.toExponential(0)}</b> ` +
+      (res < 1e-7 ? '<span class="yes">✓</span>' : '<span class="no">✗</span>') + ` · gap between the pieces vs c(t − t<sub>${sel + 1}</sub>)<sup>${n}</sup>: ${gapErr.toExponential(0)} · jump of S<sup>(${n})</sup> at t${sel + 1}: n!·c = ${(fact(n) * c[sel]).toFixed(3)}`;
     const CAP = {
+      Pl: `<b>P<sub>i−1</sub></b>: the piece to the left of the knot.`, Pr: `<b>P<sub>i</sub></b>: the piece to the right of the knot.`,
       poly: `<b>Σ a<sub>j</sub>t<sup>j</sup></b>: one ordinary polynomial of degree ${n}, the grey dashed curve. It is the spline's shape before any knot is felt.`,
-      trunc: `<b>Σ c<sub>i</sub>(t − t<sub>i</sub>)<sub>+</sub><sup>n</sup></b>: one term per knot, zero to the left of its knot and a power ${n} to the right (the coloured curves). For n = 1 these are hinges, exactly the shape of a ReLU. They are smooth to order ${n - 1} at the knot, so adding them cannot break C<sup>${n - 1}</sup>.`,
-      c: `<b>c<sub>i</sub></b>: the one free number at knot i, the size of its hinge term. Drag the coloured dots in the middle graph to change it.`,
-      D: `<b>P<sub>i</sub> − P<sub>i−1</sub> = c<sub>i</sub>(t − t<sub>i</sub>)<sup>n</sup></b>: because the two pieces agree to order ${n - 1}, their difference is flat to order ${n - 1} at the knot, so it can only be a multiple of (t − t<sub>i</sub>)<sup>${n}</sup>. The shaded gap shows it.`,
-      C: `<b>C<sup>n−1</sup></b>: every derivative below the n-th has no jump at a knot (✓ rows in the table). The n-th derivative is the first that can jump.`,
-      jump: `<b>S<sup>(n)</sup> jumps by n!·c<sub>i</sub></b>: the n-th derivative of each piece is a constant, so S<sup>(n)</sup> is a staircase and each knot's step height is n!·c<sub>i</sub>.`,
-      Cn: `<b>Why not C<sup>n</sup>?</b> Demanding the n-th derivative match too forces every c<sub>i</sub> = 0, leaving only the grey polynomial (red): the knots no longer do anything. C<sup>n−1</sup> is the smoothest a genuine spline of degree n can be. Press the button below to see it.`
+      trunc: `<b>Σ c<sub>i</sub>(t − t<sub>i</sub>)<sub>+</sub><sup>n</sup></b>: one term per knot: zero to the left of its knot and a power ${n} to the right (coloured). For n = 1 these are hinges, the shape of a ReLU. Each is smooth to order ${n - 1} at its knot, so adding them cannot break C<sup>${n - 1}</sup>.`,
+      c: `<b>c<sub>i</sub></b>: the one free number at knot i, the size of its hinge term.`,
+      D: `<b>P<sub>i</sub> − P<sub>i−1</sub> = c<sub>i</sub>(t − t<sub>i</sub>)<sup>n</sup></b>: since the two pieces agree to order ${n - 1}, their difference is flat to order ${n - 1} at the knot, so it can only be a multiple of (t − t<sub>i</sub>)<sup>${n}</sup>. The lower graph shows it (the dashed white line is the formula, the yellow line is measured).`,
+      C: `<b>j = 0 … n − 1</b>: every derivative below the n-th has no jump at the knot (✓ rows). That is C<sup>n−1</sup>.`,
+      jump: `<b>S<sup>(n)</sup> jumps by n!·c<sub>i</sub></b>: each piece's n-th derivative is a constant, so S<sup>(n)</sup> is a staircase; each knot's step height is n!·c<sub>i</sub>.`,
+      Cn: `<b>Why not C<sup>n</sup>?</b> Matching the n-th derivative too forces c<sub>i</sub> = 0 at every knot, leaving one polynomial (red). The knots would no longer do anything.`
     };
     g('e29-cap').innerHTML = hl ? CAP[hl] : 'Hover a symbol, or tap it to keep it highlighted.';
   }
   g('i29n').addEventListener('input', draw);
+  g('i29c').addEventListener('input', () => { c[sel] = +g('i29c').value / 0.5 ** n; collapsed = false; draw(); });
   g('z29').onclick = () => { c = c.map(() => 0); collapsed = true; draw(); };
   g('b29').onclick = () => { lastN = 0; draw(); };
-  draw();
+  setStep(1);
 })();
