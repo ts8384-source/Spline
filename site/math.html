@@ -129,6 +129,7 @@ table.mt tr.hot td{background:rgba(251,191,36,.18)}
     <svg id="v29" viewBox="0 0 800 300"></svg>
     <svg id="s29b" viewBox="0 0 800 190"></svg>
     <svg id="s29c" viewBox="0 0 800 280"></svg>
+    <div id="a29w"><p class="note">The polynomial part is not fixed either: its n + 1 coefficients are free numbers too. Change them and the whole curve moves (the knots' hinge terms stay as they are).</p><div id="a29" class="sliders"></div></div>
     <div id="kn29" class="chips"></div>
     <label class="ctl" id="l29n">degree n <input id="i29n" type="range" min="1" max="4" step="1" value="3"> <b id="o29n">3</b></label>
     <label class="ctl" id="l29c">size of the gap c at this knot <input id="i29c" type="range" min="-2" max="2" step="0.02" value="1"> <b id="o29c">1.00</b></label>
@@ -534,7 +535,7 @@ function cubicSystem(xs, ys, type, s0, sn) {                     // interpolatin
 /* ---------- 29 · Why C^(n-1): a five-step argument ---------- */
 (function () {
   const g = id => document.getElementById(id), svg = d3.select('#v29'), sb = d3.select('#s29b'), sc = d3.select('#s29c');
-  const KN = [1, 2, 3, 4].map(i => i / 5), X = d3.scaleLinear([0, 1], [50, 780]), A0 = [0.25, 0.9, -1.4, 1.2, -0.5], CB = [0.12, -0.2, 0.18, -0.15];
+  const KN = [1, 2, 3, 4].map(i => i / 5), X = d3.scaleLinear([0, 1], [50, 780]), A0D = [0.25, 0.9, -1.4, 1.2, -0.5], A0 = A0D.slice(), CB = [0.12, -0.2, 0.18, -0.15];
   const fact = m => d3.range(1, m + 1).reduce((a, b) => a * b, 1);
   let n = 3, c = [], sel = 1, ymax = 10, lastN = 0, collapsed = false, step = 1;
   const T = {
@@ -553,6 +554,15 @@ function cubicSystem(xs, ys, type, s0, sn) {                     // interpolatin
     ['show everything', 'All the pictures at once, for exploring.']
   ];
   const eqEl = g('e29'), eq = eqLab('e29', T[1], () => draw());
+  function calcYmax() { const lv = [fact(n) * A0[n]]; c.forEach(ci => lv.push(lv[lv.length - 1] + fact(n) * ci)); ymax = Math.max(4, 1.5 * d3.max(lv, Math.abs)); }
+  function buildA() {                                          // one slider per polynomial coefficient a_0 .. a_n
+    const box = g('a29'); box.innerHTML = '';
+    d3.range(n + 1).forEach(j => {
+      const lab = document.createElement('label'); lab.innerHTML = `a<sub>${j}</sub><input type="range" min="-2" max="2" step="0.01" value="${A0[j]}">`;
+      lab.querySelector('input').addEventListener('input', ev => { A0[j] = +ev.target.value; collapsed = false; calcYmax(); draw(); });
+      box.appendChild(lab);
+    });
+  }
   const a = () => A0.slice(0, n + 1);
   const tp = (t, ti, m) => t >= ti ? (m === 0 ? 1 : (t - ti) ** m) : 0;
   const S = (t, r = 0) => d3.sum(a(), (aj, j) => j >= r ? aj * fact(j) / fact(j - r) * t ** (j - r) : 0) + (r > n ? 0 : d3.sum(KN, (ti, i) => c[i] * fact(n) / fact(n - r) * tp(t, ti, n - r)));
@@ -565,11 +575,11 @@ function cubicSystem(xs, ys, type, s0, sn) {                     // interpolatin
 
   function draw() {
     const hl = eq.hl; n = +g('i29n').value; g('o29n').textContent = n;
-    if (n !== lastN) { c = CB.map(v => v / 0.5 ** n); const lv = [fact(n) * A0[n]]; c.forEach(ci => lv.push(lv[lv.length - 1] + fact(n) * ci)); ymax = Math.max(4, 1.5 * d3.max(lv, Math.abs)); lastN = n; collapsed = false; }
+    if (n !== lastN) { c = CB.map(v => v / 0.5 ** n); calcYmax(); buildA(); lastN = n; collapsed = false; }
     g('i29c').value = Math.max(-2, Math.min(2, c[sel] * 0.5 ** n)); g('o29c').textContent = (c[sel] * 0.5 ** n).toFixed(2);
     const all = step === 6;
     show(g('v29'), [1, 4, 5].includes(step) || all); show(g('s29b'), step === 4 || all); show(g('s29c'), [2, 3].includes(step) || all);
-    show(g('t29'), step === 2 || step === 3 || all); show(g('kn29'), [1, 2, 3].includes(step) || all); show(g('l29c'), step === 3 || all); show(g('z29'), step === 5 || all); show(g('e29-sub'), step >= 4);
+    show(g('t29'), step === 2 || step === 3 || all); show(g('a29w'), step === 4 || all); show(g('kn29'), [1, 2, 3].includes(step) || all); show(g('l29c'), step === 3 || all); show(g('z29'), step === 5 || all); show(g('e29-sub'), step >= 4);
     g('st29-cap').innerHTML = '<b>' + STEPS[step - 1][0] + '.</b> ' + STEPS[step - 1][1];
     const chips = d3.select('#st29'); chips.selectAll('*').remove();
     STEPS.forEach((st, i) => chips.append('button').attr('class', 'chip' + (i + 1 === step ? ' on' : '')).text(st[0]).on('click', () => setStep(i + 1)));
@@ -640,9 +650,9 @@ function cubicSystem(xs, ys, type, s0, sn) {                     // interpolatin
       (res < 1e-7 ? '<span class="yes">✓</span>' : '<span class="no">✗</span>') + ` · gap between the pieces vs c(t − t<sub>${sel + 1}</sub>)<sup>${n}</sup>: ${gapErr.toExponential(0)} · jump of S<sup>(${n})</sup> at t${sel + 1}: n!·c = ${(fact(n) * c[sel]).toFixed(3)}`;
     const CAP = {
       Pl: `<b>P<sub>i−1</sub></b>: the piece to the left of the knot.`, Pr: `<b>P<sub>i</sub></b>: the piece to the right of the knot.`,
-      poly: `<b>Σ a<sub>j</sub>t<sup>j</sup></b>: one ordinary polynomial of degree ${n}, the grey dashed curve. It is the spline's shape before any knot is felt.`,
+      poly: `<b>Σ a<sub>j</sub>t<sup>j</sup></b>: one ordinary polynomial of degree ${n} (grey dashed). Here j counts the terms 0 … n, so it has n + 1 = ${n + 1} coefficients, and they are free numbers: they are exactly the coefficients of the <i>first piece</i>. It acts everywhere. Change them with the sliders below the picture.`,
       trunc: `<b>Σ c<sub>i</sub>(t − t<sub>i</sub>)<sub>+</sub><sup>n</sup></b>: one term per knot: zero to the left of its knot and a power ${n} to the right (coloured). For n = 1 these are hinges, the shape of a ReLU. Each is smooth to order ${n - 1} at its knot, so adding them cannot break C<sup>${n - 1}</sup>.`,
-      c: `<b>c<sub>i</sub></b>: the one free number at knot i, the size of its hinge term.`,
+      c: `<b>c<sub>i</sub></b>: the one free number at knot i, the size of its hinge term. Unlike the polynomial part it acts only to the right of its knot (it is zero before it).`,
       D: `<b>P<sub>i</sub> − P<sub>i−1</sub> = c<sub>i</sub>(t − t<sub>i</sub>)<sup>n</sup></b>: write the difference as d₀ + d₁u + d₂u² + … + d<sub>n</sub>u<sup>n</sup> with u = t − t<sub>i</sub>. The pieces agreeing in value, slope, bend, … up to order ${n - 1} forces d₀ = … = d<sub>${n - 1}</sub> = 0. Only the last term d<sub>n</sub>u<sup>n</sup> can be left, and we call its coefficient c<sub>i</sub>. The table shows the zeros; the lower graph shows the leftover term (dashed white is the formula, yellow is measured).`,
       C: `<b>j = 0 … n − 1</b>: every derivative below the n-th has no jump at the knot (✓ rows). That is C<sup>n−1</sup>.`,
       jump: `<b>S<sup>(n)</sup> jumps by n!·c<sub>i</sub></b>: each piece's n-th derivative is a constant, so S<sup>(n)</sup> is a staircase; each knot's step height is n!·c<sub>i</sub>.`,
@@ -653,7 +663,7 @@ function cubicSystem(xs, ys, type, s0, sn) {                     // interpolatin
   g('i29n').addEventListener('input', draw);
   g('i29c').addEventListener('input', () => { c[sel] = +g('i29c').value / 0.5 ** n; collapsed = false; draw(); });
   g('z29').onclick = () => { c = c.map(() => 0); collapsed = true; draw(); };
-  g('b29').onclick = () => { lastN = 0; draw(); };
+  g('b29').onclick = () => { A0D.forEach((v, i) => { A0[i] = v; }); lastN = 0; draw(); };
   setStep(1);
 })();
 /* ---------- 24 · Interpolating cubic splines ---------- */
