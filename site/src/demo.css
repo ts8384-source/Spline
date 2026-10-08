@@ -21,3 +21,4 @@ footer{color:var(--dim);font-size:.85rem}
 code{background:#111;padding:1px 5px;border-radius:4px}
 @media (max-width:560px){.sliders{grid-template-columns:repeat(2,1fr)}}
 [data-display]{overflow-x:auto;overflow-y:hidden}
+.blue{color:var(--blue)}.yellow{color:var(--yellow)}

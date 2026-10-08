@@ -164,3 +164,58 @@ function axes(g, x, y, xt, yt) {
   };
   draw();
 })();
+
+/* ---------- 4 · Pouring board (Bernstein weights) ---------- */
+(function () {
+  const svg = d3.select('#pour'), W = 800, rowH = 50, top = 34, dx = 88, R = 18;
+  const tIn = document.getElementById('pour-t'), nIn = document.getElementById('pour-n');
+  let sel = 1;
+  function draw() {
+    const t = +tIn.value, n = +nIn.value;
+    document.getElementById('pour-tv').textContent = t.toFixed(2);
+    document.getElementById('pour-nv').textContent = n;
+    sel = Math.min(sel, n - 1);
+    const H = top + (n - 1) * rowH + 150;
+    svg.attr('viewBox', `0 0 ${W} ${H}`).selectAll('*').remove();
+    const share = [[1]], routes = [[1]];                      // row r has r+1 nodes
+    for (let r = 0; r < n - 1; r++) {
+      const s = new Array(r + 2).fill(0), c = new Array(r + 2).fill(0);
+      share[r].forEach((v, j) => { s[j] += (1 - t) * v; s[j + 1] += t * v; c[j] += routes[r][j]; c[j + 1] += routes[r][j]; });
+      share.push(s); routes.push(c);
+    }
+    const X = (r, j) => W / 2 + (j - r / 2) * dx, Y = r => top + r * rowH;
+    const onPath = (r, j) => j <= sel && sel <= j + (n - 2 - r);     // edge ends at (r+1, j) and can still reach `sel`
+    const edges = svg.append('g');
+    for (let r = 0; r < n - 1; r++) for (let j = 0; j <= r; j++) [[j, C.blue], [j + 1, C.yellow]].forEach(([jj, col]) => {
+      const hot = onPath(r, jj);
+      edges.append('line').attr('x1', X(r, j)).attr('y1', Y(r)).attr('x2', X(r + 1, jj)).attr('y2', Y(r + 1))
+        .attr('stroke', col).attr('stroke-width', hot ? 3.5 : 1.5).attr('opacity', hot ? 1 : .22);
+    });
+    const nodes = svg.append('g');
+    share.forEach((row, r) => row.forEach((v, j) => {
+      const g = nodes.append('g').attr('transform', `translate(${X(r, j)},${Y(r)})`);
+      g.append('circle').attr('r', R).attr('fill', C.bg).attr('stroke', C.gray).attr('stroke-width', 1);
+      g.append('circle').attr('r', R).attr('fill', C.green).attr('opacity', .12 + .78 * v);
+      g.append('text').attr('text-anchor', 'middle').attr('dy', '0.35em').attr('fill', '#fff').attr('font-size', 11)
+        .text(v >= .9995 ? '1' : v.toFixed(2).replace(/^0/, ''));
+    }));
+    const last = n - 1, by = Y(last) + 108;
+    share[last].forEach((v, i) => {
+      const x = X(last, i), isSel = i === sel, h = v * 80;
+      const hit = svg.append('g').style('cursor', 'pointer').on('click', () => { sel = i; draw(); });
+      hit.append('rect').attr('x', x - dx / 2).attr('y', Y(last) - R - 2).attr('width', dx).attr('height', by - Y(last) + R + 22).attr('fill', 'transparent');
+      hit.append('circle').attr('cx', x).attr('cy', Y(last)).attr('r', R + 4).attr('fill', 'none').attr('stroke', isSel ? C.red : 'none').attr('stroke-width', 3);
+      hit.append('rect').attr('x', x - 18).attr('y', by - h).attr('width', 36).attr('height', Math.max(h, 1)).attr('fill', isSel ? C.red : C.green).attr('opacity', isSel ? 1 : .6);
+      hit.append('text').attr('x', x).attr('y', by - h - 5).attr('text-anchor', 'middle').attr('fill', C.gray).attr('font-size', 11).text(v.toFixed(3));
+      hit.append('text').attr('x', x).attr('y', by + 16).attr('text-anchor', 'middle').attr('fill', isSel ? C.red : C.gray).attr('font-size', 13)
+        .text('P' + i);
+    });
+    svg.append('text').attr('x', 14).attr('y', 20).attr('fill', C.blue).attr('font-size', 12).text('← left: × (1 − t)');
+    svg.append('text').attr('x', W - 14).attr('y', 20).attr('text-anchor', 'end').attr('fill', C.yellow).attr('font-size', 12).text('right: × t →');
+    const each = (1 - t) ** (n - 1 - sel) * t ** sel;
+    document.getElementById('pour-readout').textContent =
+      `P${sel}: ${routes[last][sel]} route${routes[last][sel] > 1 ? 's' : ''} × ${each.toFixed(4)} per route = ${share[last][sel].toFixed(4)}`;
+  }
+  tIn.addEventListener('input', draw); nIn.addEventListener('input', draw);
+  draw();
+})();

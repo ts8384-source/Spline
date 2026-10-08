@@ -11,7 +11,7 @@
 <main>
   <header>
     <h1>Spline Lab</h1>
-    <p class="lede">Three interactive demos, ordered the 3Blue1Brown way: a hook, then intuition, then the formula.</p>
+    <p class="lede">Four interactive demos, ordered the 3Blue1Brown way: a hook, then intuition, then the formula.</p>
   </header>
 
   <section id="s1">
@@ -43,6 +43,16 @@
     <button id="dc-play">▶ play</button>
     <p class="name">Formalization:</p>
     <div data-tex="P_i^{(k)}=(1-t)\,P_i^{(k-1)}+t\,P_{i+1}^{(k-1)},\qquad B(t)=P_0^{(3)}" data-display="1"></div>
+  </section>
+
+  <section id="s4">
+    <h2>4 · Where do the weights come from? A pouring board</h2>
+    <p>Drop <b>1 unit of weight</b> at the top. At every node it splits: the fraction <span data-tex="1-t"></span> goes down-left (<span class="blue">blue</span>) and the fraction <span data-tex="t"></span> goes down-right (<span class="yellow">yellow</span>). Where it ends up under each control point is that point's weight in <span data-tex="B(t)"></span>.</p>
+    <svg id="pour" viewBox="0 0 800 420"></svg>
+    <label class="ctl">t <input id="pour-t" type="range" min="0" max="1" step="0.01" value="0.5"> <b id="pour-tv">0.50</b></label>
+    <label class="ctl">control points <input id="pour-n" type="range" min="2" max="8" step="1" value="4"> <b id="pour-nv">4</b></label>
+    <p id="pour-readout" class="readout"></p>
+    <p class="note">Click a control point to light up every route that reaches it. Set <b>t = 0.5</b> and <b>5 points</b> to check the quartic question yourself: at 0.5 every route weighs the same, so a point's weight is just how many routes lead to it. Slide <b>t</b> to 0 or 1 and all the weight piles onto one end.</p>
   </section>
 
   <footer>
