@@ -46,13 +46,15 @@
   </section>
 
   <section id="s4">
-    <h2>4 · Where do the weights come from? A pouring board</h2>
-    <p>Drop <b>1 unit of weight</b> at the top. At every node it splits: the fraction <span data-tex="1-t"></span> goes down-left (<span class="blue">blue</span>) and the fraction <span data-tex="t"></span> goes down-right (<span class="yellow">yellow</span>). Where it ends up under each control point is that point's weight in <span data-tex="B(t)"></span>.</p>
-    <svg id="pour" viewBox="0 0 800 420"></svg>
+    <h2>4 · The tree and the plane, side by side</h2>
+    <p><b>Left:</b> the bookkeeping. Drop 1 unit of weight at the top; at each circle it splits, <span data-tex="1-t"></span> down-left (<span class="blue">blue</span>) and <span data-tex="t"></span> down-right (<span class="yellow">yellow</span>). <b>Right:</b> the real points on the plane. Every circle on the left <i>is</i> the same-colored dot on the right. Drag the control points.</p>
+    <div id="pour-chips" class="chips"></div>
+    <div class="duo"><svg id="pour" viewBox="0 0 400 420"></svg><svg id="pourxy" viewBox="0 0 400 400"></svg></div>
     <label class="ctl">t <input id="pour-t" type="range" min="0" max="1" step="0.01" value="0.5"> <b id="pour-tv">0.50</b></label>
     <label class="ctl">control points <input id="pour-n" type="range" min="2" max="8" step="1" value="4"> <b id="pour-nv">4</b></label>
+    <p id="pour-explain" class="note"></p>
     <p id="pour-readout" class="readout"></p>
-    <p class="note">Click <b>any circle</b> to see exactly how its number is made (the two white lines flow into it), or click a bottom point to light up every route that reaches it. Set <b>t = 0.5</b> and <b>5 points</b> to check the quartic question yourself: at 0.5 every route weighs the same, so a point's weight is just how many routes lead to it. Slide <b>t</b> to 0 or 1 and all the weight piles onto one end.</p>
+    <p class="note">Rows from the bottom: control points, then each <b>blend</b> row, then B(t). Each blend row has one fewer point, because it is built from the neighbouring pairs of the row below. Control-point dot size = its weight in B(t).</p>
   </section>
 
   <footer>
