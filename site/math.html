@@ -547,7 +547,7 @@ function cubicSystem(xs, ys, type, s0, sn) {                     // interpolatin
   const STEPS = [
     ['1 · Two pieces meet', 'Look at the yellow knot. Each piece is its own polynomial of degree at most n. The question is how many derivatives (value, slope, bend, ...) the two can share there.'],
     ['2 · Match as many as possible', 'Ask for the pieces to agree in value, slope, bend, and so on up to derivative n − 1 (the ✓ rows in the table). Look at the two pieces drawn past the knot: they run together.'],
-    ['3 · What is left is one power', 'Because they agree that well, the only difference between the two polynomials is a single power: c·(t − t_i)^n. In the lower graph it is flat for a stretch and then grows. Slide c to scale the gap, or change n to change how flat it is.'],
+    ['3 · Only the top term survives', 'Write both pieces as a sum of terms in u = t − t_i: a constant, a u term, a u² term, up to a uⁿ term. Matching the value, slope, bend, ... wipes out the difference in every term except the last one. The table shows it term by term: the difference is 0, 0, 0, ... and then one number, c, on the uⁿ term. In the lower graph that single term is flat for a stretch and then grows.'],
     ['4 · One free number per knot', 'So each knot has exactly one free number, c: everything else about the next piece is inherited. Drag a step in the staircase (that is c, scaled by n!) and watch the curve above respond.'],
     ['5 · Why not smoother?', 'Suppose we also demand that the n-th derivative matches. Then c must be 0 at every knot, and the spline collapses to one polynomial (red). Press the button. So n − 1 is the smoothest a real spline of degree n can be.'],
     ['show everything', 'All the pictures at once, for exploring.']
@@ -569,7 +569,7 @@ function cubicSystem(xs, ys, type, s0, sn) {                     // interpolatin
     g('i29c').value = Math.max(-2, Math.min(2, c[sel] * 0.5 ** n)); g('o29c').textContent = (c[sel] * 0.5 ** n).toFixed(2);
     const all = step === 6;
     show(g('v29'), [1, 4, 5].includes(step) || all); show(g('s29b'), step === 4 || all); show(g('s29c'), [2, 3].includes(step) || all);
-    show(g('t29'), step === 2 || all); show(g('kn29'), [1, 2, 3].includes(step) || all); show(g('l29c'), step === 3 || all); show(g('z29'), step === 5 || all); show(g('e29-sub'), step >= 4);
+    show(g('t29'), step === 2 || step === 3 || all); show(g('kn29'), [1, 2, 3].includes(step) || all); show(g('l29c'), step === 3 || all); show(g('z29'), step === 5 || all); show(g('e29-sub'), step >= 4);
     g('st29-cap').innerHTML = '<b>' + STEPS[step - 1][0] + '.</b> ' + STEPS[step - 1][1];
     const chips = d3.select('#st29'); chips.selectAll('*').remove();
     STEPS.forEach((st, i) => chips.append('button').attr('class', 'chip' + (i + 1 === step ? ' on' : '')).text(st[0]).on('click', () => setStep(i + 1)));
@@ -620,9 +620,17 @@ function cubicSystem(xs, ys, type, s0, sn) {                     // interpolatin
     sc.append('path').attr('d', d3.line()(w.map(t => [CX(t), DYs(c[sel] * (t - ks) ** n)]))).attr('fill', 'none').attr('stroke', '#fff').attr('stroke-width', 1.5).attr('stroke-dasharray', '4 3');
     [25, 250].forEach((y0, q) => sc.append('line').attr('x1', CX(ks)).attr('x2', CX(ks)).attr('y1', q ? 180 : 25).attr('y2', q ? 262 : 130).attr('stroke', '#fbbf24').attr('stroke-width', 2));
 
-    // table
+    // table (step 3: the two pieces term by term; otherwise: derivatives at the knot)
+    const dl = r => d3.sum(a(), (aj, j) => j >= r ? aj * fact(j) / fact(j - r) * ks ** (j - r) : 0) + d3.sum(d3.range(sel), i => c[i] * fact(n) / fact(n - r) * (ks - KN[i]) ** (n - r));
+    const dr = r => dl(r) + c[sel] * fact(n) / fact(n - r) * 0 ** (n - r);
+    const termName = j => j === 0 ? '1' : j === 1 ? 'u' : 'u' + String.fromCharCode([8304, 185, 178, 179, 8308][j]);
+    const termTable = () => `<table class="mt"><tr><th></th>${d3.range(n + 1).map(j => `<th>${termName(j)}${j === 0 ? ' (value)' : j === 1 ? ' (slope)' : j === 2 ? ' (bend)' : ''}</th>`).join('')}</tr>` +
+      `<tr><td>left piece P<sub>${sel}</sub></td>${d3.range(n + 1).map(j => `<td>${(dl(j) / fact(j)).toFixed(3)}</td>`).join('')}</tr>` +
+      `<tr><td>right piece P<sub>${sel + 1}</sub></td>${d3.range(n + 1).map(j => `<td>${(dr(j) / fact(j)).toFixed(3)}</td>`).join('')}</tr>` +
+      `<tr class="hot"><td>right − left</td>${d3.range(n + 1).map(j => { const dd = (dr(j) - dl(j)) / fact(j); return `<td class="${Math.abs(dd) < 1e-9 ? 'yes' : 'no'}">${Math.abs(dd) < 1e-9 ? '0' : dd.toFixed(3)}</td>`; }).join('')}</tr></table>` +
+      `<p class="note">Each column is the coefficient of that term when a piece is written in u = t − t<sub>${sel + 1}</sub> (the knot is u = 0). The two pieces share every term except the last, so their difference has only the u<sup>${n}</sup> term, with coefficient c = ${c[sel].toFixed(3)}.</p>`;
     const e = 1e-9, rows = d3.range(n + 1).map(r => ({r, L: S(ks - e, r), R: S(ks + e, r)})); rows.forEach(q => q.eq = Math.abs(q.L - q.R) < 1e-6 * (1 + Math.abs(q.L)));
-    g('t29').innerHTML = `<table class="mt"><tr><th>derivative j</th><th>left of t<sub>${sel + 1}</sub></th><th>right of t<sub>${sel + 1}</sub></th><th>equal?</th></tr>` +
+    g('t29').innerHTML = step === 3 ? termTable() : `<table class="mt"><tr><th>derivative j</th><th>left of t<sub>${sel + 1}</sub></th><th>right of t<sub>${sel + 1}</sub></th><th>equal?</th></tr>` +
       rows.map(q => `<tr class="${hl === 'C' && q.r < n || hl === 'jump' && q.r === n ? 'hot' : ''}"><td>${q.r}${q.r === n ? ' (= n)' : ''}</td><td>${q.L.toFixed(3)}</td><td>${q.R.toFixed(3)}</td><td class="${q.eq ? 'yes' : 'no'}">${q.eq ? '✓' : '✗ jump ' + (q.R - q.L).toFixed(3)}</td></tr>`).join('') + '</table>';
     // independent check against the B-spline form
     const kv = [...new Array(n + 1).fill(0), ...KN, ...new Array(n + 1).fill(1)], nb = kv.length - n - 1, xs = d3.range(0, 1.0001, 1 / 200), Bm = xs.map(t => d3.range(nb).map(i => bspline(i, n, Math.min(t, 1), kv)));
@@ -635,7 +643,7 @@ function cubicSystem(xs, ys, type, s0, sn) {                     // interpolatin
       poly: `<b>Σ a<sub>j</sub>t<sup>j</sup></b>: one ordinary polynomial of degree ${n}, the grey dashed curve. It is the spline's shape before any knot is felt.`,
       trunc: `<b>Σ c<sub>i</sub>(t − t<sub>i</sub>)<sub>+</sub><sup>n</sup></b>: one term per knot: zero to the left of its knot and a power ${n} to the right (coloured). For n = 1 these are hinges, the shape of a ReLU. Each is smooth to order ${n - 1} at its knot, so adding them cannot break C<sup>${n - 1}</sup>.`,
       c: `<b>c<sub>i</sub></b>: the one free number at knot i, the size of its hinge term.`,
-      D: `<b>P<sub>i</sub> − P<sub>i−1</sub> = c<sub>i</sub>(t − t<sub>i</sub>)<sup>n</sup></b>: since the two pieces agree to order ${n - 1}, their difference is flat to order ${n - 1} at the knot, so it can only be a multiple of (t − t<sub>i</sub>)<sup>${n}</sup>. The lower graph shows it (the dashed white line is the formula, the yellow line is measured).`,
+      D: `<b>P<sub>i</sub> − P<sub>i−1</sub> = c<sub>i</sub>(t − t<sub>i</sub>)<sup>n</sup></b>: write the difference as d₀ + d₁u + d₂u² + … + d<sub>n</sub>u<sup>n</sup> with u = t − t<sub>i</sub>. The pieces agreeing in value, slope, bend, … up to order ${n - 1} forces d₀ = … = d<sub>${n - 1}</sub> = 0. Only the last term d<sub>n</sub>u<sup>n</sup> can be left, and we call its coefficient c<sub>i</sub>. The table shows the zeros; the lower graph shows the leftover term (dashed white is the formula, yellow is measured).`,
       C: `<b>j = 0 … n − 1</b>: every derivative below the n-th has no jump at the knot (✓ rows). That is C<sup>n−1</sup>.`,
       jump: `<b>S<sup>(n)</sup> jumps by n!·c<sub>i</sub></b>: each piece's n-th derivative is a constant, so S<sup>(n)</sup> is a staircase; each knot's step height is n!·c<sub>i</sub>.`,
       Cn: `<b>Why not C<sup>n</sup>?</b> Matching the n-th derivative too forces c<sub>i</sub> = 0 at every knot, leaving one polynomial (red). The knots would no longer do anything.`
