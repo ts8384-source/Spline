@@ -9,7 +9,8 @@
 6. Why we need `t`: regression `y=f(x)` cannot draw curves that double back
 7. Continuity at a join (C0, C1, C2): two cubic pieces, locks, curvature comb
 8. Position, velocity, acceleration refresher (learn.html section 7), and when to ask for C2
-9. What C0, C1, C2 feel like: three joins side by side, velocity and acceleration arrows, osculating circles
+9. The derivative ladder (learn.html section 8): x, x', x'' as three stacked graphs, acceleration as how much the graph bends
+10. What C0, C1, C2 feel like: three joins side by side, velocity and acceleration arrows, osculating circles
 
 ## Suggested next (in this order)
 1. ~~Joining two pieces: continuity~~ (done, learn.html section 7).

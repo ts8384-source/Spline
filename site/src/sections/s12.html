@@ -1,0 +1,9 @@
+<section id="s12">
+    <h2>8 · The derivative ladder: position, velocity, acceleration as three graphs</h2>
+    <p>Take one coordinate over time, say the height of the dot. <b>Top:</b> the height <span data-tex="x(t)"></span>. <b class="yellow">Middle:</b> its slope, which is the velocity <span data-tex="x'(t)"></span>. <b class="red">Bottom:</b> the slope of the middle graph, which is the acceleration <span data-tex="x''(t)"></span>. Each graph is "how fast the one above is changing". The coloured tangent lines show the slope being read off. Drag the four blue handles (the 1D control points) and slide the clock.</p>
+    <svg id="dl" viewBox="0 0 800 540"></svg>
+    <label class="ctl">clock <input id="dl-t" type="range" min="0" max="1" step="0.005" value="0.5"> <b id="dl-tv">0.50</b></label>
+    <button id="dl-play">▶ play</button> <button class="alt" id="dl-reset">reset</button>
+    <p id="dl-read" class="readout"></p>
+    <p class="note">Look at the top graph: where it is coloured <b style="color:#22c55e">green</b> it bends upward like a smile, and the bottom graph is above zero. Where it is <b style="color:#f97316">orange</b> it bends downward like a frown, and the bottom graph is below zero. So <b>acceleration is how much the graph bends</b>: a straight stretch has zero acceleration, a sharp bend has a large one. On the plane we do this for x and for y separately and combine the results into the arrows from the previous demo.</p>
+  </section>
