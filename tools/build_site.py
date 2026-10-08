@@ -17,12 +17,12 @@ read = lambda p: p.read_text()
 
 PAGES = {
     "learn.html": dict(
-        title="Spline Lab", h1="Spline Lab",
+        title="Spline Lab", artifact_title="Spline Lab", h1="Spline Lab",
         lede="Twelve interactive demos for learning splines, ordered the 3Blue1Brown way: a hook, then intuition, then the formula.",
         sections=[1, 2, 3, 4, 5, 6, 11, 12, 9, 10, 14, 13],
         footer="Palette and teaching order follow the vendored <code>3b1b-style-animation</code> skill; chart mechanics (scales, joins, drag, clip-paths) follow <code>d3-viz</code>."),
     "project.html": dict(
-        title="Bouncing-ball project", h1="Project: spline readout for a bouncing ball",
+        title="Bouncing-ball project", artifact_title="Bouncing Ball Splines", h1="Project: spline readout for a bouncing ball",
         lede="How splines might be used as the output of a recurrent spiking network that predicts a bouncing ball. Kept separate from the learning demos; these pages assume the ideas in the Spline Lab.",
         sections=[7, 8],
         footer="Project notes live in <code>corpus/notes/my-project-context.md</code>."),
@@ -56,6 +56,13 @@ for name, pg in PAGES.items():
         page = page.replace(key, val)
     (ROOT / name).write_text(page)
     print("wrote", name, len(page) // 1024, "KB")
+    # Artifact fragment: the Artifact viewer adds the doctype/head/body skeleton itself, so drop ours and the nav links.
+    frag = re.sub(r"<!doctype html>\s*|<html[^>]*>\s*|<head>\s*|<meta [^>]*>\s*|</head>\s*|<body>\s*|</body>\s*|</html>\s*", "", page)
+    frag = re.sub(r"\s*<nav>.*?</nav>", "", frag, flags=re.S)
+    frag = re.sub(r"<title>.*?</title>", f"<title>{pg['artifact_title']}</title>", frag, count=1)
+    (ROOT / "artifact").mkdir(exist_ok=True)
+    (ROOT / "artifact" / name).write_text(frag)
+    print("wrote artifact/" + name, len(frag) // 1024, "KB")
 
 index = f"""<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Spline</title><style>{css}</style></head><body><main>

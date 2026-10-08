@@ -21,3 +21,8 @@ Goal: learn splines. Claude presents facts; the user adds their own understandin
 - Source: `site/src/sections/sN.html` (markup), `site/src/js/sN.js` (behaviour), `site/src/js/common.js` (shared helpers), `site/src/shell.html`, `site/src/demo.css`. Which section goes on which page is the `PAGES` dict in `tools/build_site.py`.
 - Add a demo: new `sections/sN.html` + `js/sN.js`, add N to a page in `PAGES`, rebuild, test in headless Chromium (`/opt/pw-browsers/chromium`).
 - Libraries come from npm (`cd site && npm install`) and are inlined; the sandbox blocks CDNs.
+
+## Artifact copies (the in-app viewer)
+- `python tools/build_site.py` also writes `site/artifact/learn.html` and `site/artifact/project.html`: fragment versions (no doctype/head/body, title first, dark `color-scheme`) for the Artifact tool.
+- Published (private) artifacts: Spline Lab https://claude.ai/artifact/EtsNTMDuD9z9nw9GqS3bf2 and Bouncing Ball Splines https://claude.ai/artifact/DiSiobxoJ2aeYSAFLQ5nCb. After rebuilding, republish by calling the Artifact tool with the same `file_path` (keeps the URL).
+- Test fragments by wrapping them in a minimal skeleton in headless Chromium; the sandbox cannot reach CDNs, so libraries stay inlined.
