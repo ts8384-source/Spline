@@ -11,7 +11,7 @@
 <main>
   <header>
     <h1>Spline Lab</h1>
-    <p class="lede">Five interactive demos, ordered the 3Blue1Brown way: a hook, then intuition, then the formula.</p>
+    <p class="lede">Six interactive demos, ordered the 3Blue1Brown way: a hook, then intuition, then the formula.</p>
   </header>
 
   <section id="s1">
@@ -69,6 +69,21 @@
     <button id="clk-play">▶ play</button> <button id="clk-reset" class="alt">reset points</button>
     <p id="clk-read" class="readout"></p>
     <p class="note">The ticks are equally spaced in time but not on the road: the clock is steady, the car is not. The yellow line is the car's velocity arrow: speed = 3 × its length. Drag P1 far from P0 and watch the first ticks spread out.</p>
+  </section>
+
+  <section id="s6">
+    <h2>6 · Why do we even need t?</h2>
+    <p>Regression tries to write the curve as one function <span data-tex="y=f(x)"></span>: feed in an x, get <b>one</b> y. Pick a shape, then slide the vertical line. <b>Left:</b> how many y-values the real curve has at that x, and what regression answers. <b>Right:</b> the same curve written with <span data-tex="t"></span>.</p>
+    <div id="rg-shapes" class="chips">
+      <button class="chip" data-s="hill">hill (a function)</button><button class="chip" data-s="hairpin">hairpin: goes right, then back</button><button class="chip" data-s="loop">loop</button>
+    </div>
+    <div class="duo"><svg id="rg" viewBox="0 0 400 400"></svg><svg id="rgt" viewBox="0 0 400 400"></svg></div>
+    <label class="ctl">vertical line x <input id="rg-x" type="range" min="10" max="390" step="1" value="210"> <b id="rg-xv">210</b></label>
+    <label class="ctl">regression degree <input id="rg-d" type="range" min="1" max="8" step="1" value="4"> <b id="rg-dv">4</b></label>
+    <p id="rg-left" class="readout"></p>
+    <p id="rg-right" class="readout"></p>
+    <p id="rg-note" class="note"></p>
+    <p class="note"><b>Takeaway:</b> when a curve doubles back, one x belongs to several points on it, so no function of x can draw it, whatever the degree. Adding <span data-tex="t"></span> gives every point its own label, so "same x" stops being a clash. For a ball bouncing off a wall the path turns back exactly like this.</p>
   </section>
 
   <footer>
