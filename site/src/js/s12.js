@@ -39,8 +39,8 @@
     });
     [0, 1, 2].forEach(i => layer.append('circle').attr('cx', X(t)).attr('cy', Y[i](F[i](t))).attr('r', 6.5).attr('fill', '#fff').attr('stroke', C.bg));
     layer.append('path').attr('d', d3.line()(p.map((v, i) => [X(i / 3), Y[0](v)]))).attr('fill', 'none').attr('stroke', '#666').attr('stroke-dasharray', '4 4');
-    handles.selectAll('circle').data(p).join('circle').attr('cx', (d, i) => X(i / 3)).attr('cy', d => Y[0](d)).attr('r', 9).attr('fill', C.blue).style('cursor', 'ns-resize')
-      .call(d3.drag().on('drag', function (ev, d) { const i = p.indexOf(d); p[i] = Math.max(0, Math.min(300, Y[0].invert(ev.y))); draw(); }));
+    handles.selectAll('circle').data([0, 1, 2, 3]).join('circle').attr('cx', i => X(i / 3)).attr('cy', i => Y[0](p[i])).attr('r', 9).attr('fill', C.blue).style('cursor', 'ns-resize')
+      .call(d3.drag().on('drag', (ev, i) => { p[i] = Math.max(0, Math.min(300, Y[0].invert(ev.y))); draw(); }));
     const a = f2(t);
     document.getElementById('dl-read').innerHTML =
       `t = ${t.toFixed(2)}: position <b>${f0(t).toFixed(0)}</b> · velocity <b>${f1(t).toFixed(0)}</b> (${f1(t) > 1 ? 'rising' : f1(t) < -1 ? 'falling' : 'flat'}) · acceleration <b>${a.toFixed(0)}</b> (the top graph is bending ${Math.abs(a) < 1 ? 'not at all' : a > 0 ? 'upward, like a smile' : 'downward, like a frown'})`;

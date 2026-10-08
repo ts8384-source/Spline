@@ -1,0 +1,13 @@
+<section id="s13">
+    <h2>11 · Knots and the B-spline basis</h2>
+    <p>A spline curve is a weighted sum of bumps, and the <b>knots</b> decide where the bumps sit. The knots are the values of <span data-tex="t"></span> where one piece hands over to the next, written as a list called the <b>knot vector</b>. <b>Top:</b> the bumps. Drag the yellow knots along the bottom edge (click one to select it). <b>Bottom:</b> the curve you get from the bumps; drag the blue weights.</p>
+    <svg id="kb" viewBox="0 0 800 270"></svg>
+    <label class="ctl">degree p <input id="kb-p" type="range" min="0" max="3" step="1" value="3"> <b id="kb-pv">3</b></label>
+    <label class="ctl">copies of the selected knot <input id="kb-m" type="range" min="1" max="4" step="1" value="1"> <b id="kb-mv">1</b></label>
+    <button class="alt" id="kb-reset">reset knots and weights</button>
+    <svg id="kc" viewBox="0 0 800 250"></svg>
+    <p id="kb-read" class="readout"></p>
+    <p class="note"><b>Degree:</b> slide it from 0 to 3 and watch the bumps being built: boxes (0), triangles (1), rounded hats (2), the smooth cubic bump (3). Each bump is a blend of two bumps one degree lower, which is all the recursion below says. <b>Copies:</b> repeat the selected knot and the bumps pinch toward it, so the curve is allowed to bend more sharply there. At a knot with <i>m</i> copies the curve is smooth to order <i>p − m</i>: for a cubic that is C², C¹, C⁰ for 1, 2, 3 copies. With <i>p + 1</i> copies the curve may even jump. Whatever you do, the bumps add up to 1 everywhere, which is why a weighted sum of them is an average of the weights.</p>
+    <p class="name">The name for the recursion (read it as "blend the two lower bumps, weighted by how far you are across each one"):</p>
+    <div data-tex="N_{i,p}(t)=\frac{t-t_i}{t_{i+p}-t_i}\,N_{i,p-1}(t)+\frac{t_{i+p+1}-t}{t_{i+p+1}-t_{i+1}}\,N_{i+1,p-1}(t)" data-display="1"></div>
+  </section>

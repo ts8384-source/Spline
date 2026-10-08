@@ -14,7 +14,7 @@
 
 ## Suggested next (in this order)
 1. ~~Joining two pieces: continuity~~ (done, learn.html section 7).
-2. **Knots and the B-spline basis.** Knot vectors, multiplicity (m copies lowers continuity by m), the Cox-de Boor recursion, clamped vs uniform. The project page already uses these without teaching them.
+2. ~~Knots and the B-spline basis~~ (done, learn.html section 11): draggable knots, degree 0-3, multiplicity and continuity p-m, Cox-de Boor recursion, bumps add to 1.
 3. **Fitting: interpolation vs least squares vs smoothing splines.** Penalty on the bending energy, choosing the number of knots, overfitting. Links to regression and regularisation.
 4. **Derivatives: velocity and acceleration from control points.** Needed for the sliding-window idea (successive windows should join with matching velocity).
 
