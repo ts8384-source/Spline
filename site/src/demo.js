@@ -127,7 +127,7 @@ function axes(g, x, y, xt, yt) {
 /* ---------- 3 · de Casteljau ---------- */
 (function () {
   const svg = d3.select('#dc'), W = 800, H = 380;
-  const P = [[90, 310], [190, 60], [560, 40], [700, 290]];
+  const P = [[90, 310], [190, 60], [560, 40], [700, 290]], P0 = P.map(p => p.slice());
   const cols = [C.blue, C.green, C.yellow], tIn = document.getElementById('dc-t');
   const layer = svg.append('g'), handles = svg.append('g');
   const bez = (pts, t) => { let q = pts; while (q.length > 1) q = q.slice(1).map((b, i) => [(1 - t) * q[i][0] + t * b[0], (1 - t) * q[i][1] + t * b[1]]); return q[0]; };
@@ -155,6 +155,7 @@ function axes(g, x, y, xt, yt) {
       }));
   }
   tIn.addEventListener('input', draw);
+  document.getElementById('dc-reset').onclick = () => { P.forEach((p, i) => { p[0] = P0[i][0]; p[1] = P0[i][1]; }); draw(); };
   let raf = null; const btn = document.getElementById('dc-play');
   btn.onclick = () => {
     if (raf) { cancelAnimationFrame(raf); raf = null; btn.textContent = '▶ play'; return; }
@@ -301,6 +302,16 @@ function axes(g, x, y, xt, yt) {
     xyLayer.selectAll(null).data(P).join('text').attr('x', d => d[0] + 12).attr('y', d => d[1] - 12).attr('fill', C.gray).attr('font-size', 11)
       .attr('pointer-events', 'none').text((d, i) => 'P' + i);
   }
+  const presets = {
+    reset: n => gen(n),
+    straight: n => d3.range(n).map(i => [50 + 300 * i / (n - 1), 300 - 200 * i / (n - 1)]),
+    zigzag: n => d3.range(n).map(i => [50 + 300 * i / (n - 1), i % 2 ? 90 : 310]),
+    loop: () => [[130, 330], [350, 40], [50, 40], [270, 330]]
+  };
+  document.querySelectorAll('#pour-presets [data-p]').forEach(b => b.addEventListener('click', () => {
+    if (b.dataset.p === 'loop') nIn.value = 4;
+    const n = +nIn.value; P = presets[b.dataset.p](n); Pn = n; draw();
+  }));
   tIn.addEventListener('input', draw); nIn.addEventListener('input', draw);
   draw();
 })();
