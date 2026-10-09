@@ -205,7 +205,7 @@ table.mt[style*="text-align:left"] td,table.mt[style*="text-align:left"] th{text
 
 <section id="s28">
     <h2>10 · Putting it together: the curve as a matrix product</h2>
-    <p>For a curve in the plane, each control point <span data-tex="\mathbf P_i"></span> has an x and a y, and the same bumps are used for both. Sample the clock at <span data-tex="m"></span> moments. Then the whole curve is one multiplication: the matrix <span data-tex="\mathbf B"></span> of bump values (one row per moment) times the matrix <span data-tex="\mathbf P"></span> of control points. Drag a point on the plane, or drag a number in the <span data-tex="\mathbf P"></span> table up and down.</p>
+    <p>For a curve in the plane, each control point <span data-tex="\mathbf P_i"></span> has an x and a y, and the same bumps are used for both. Sample the clock at <span data-tex="m"></span> sample times. Then the whole curve is one multiplication: the matrix <span data-tex="\mathbf B"></span> of bump values (one row per sample time) times the matrix <span data-tex="\mathbf P"></span> of control points. Drag a point on the plane, or drag a number in the <span data-tex="\mathbf P"></span> table up and down.</p>
     <div id="e28" class="eqbox"></div>
     <p id="e28-cap" class="note"></p>
     <svg id="v28" viewBox="0 0 800 340"></svg>
@@ -1097,12 +1097,12 @@ function cubicSystem(xs, ys, type, s0, sn) {                     // interpolatin
 
     const act = d3.range(n).filter(i => Math.abs(Bm[kc][i]) > 1e-9), parts = act.map(i => `<span style="color:${col7(i)}">${Bm[kc][i].toFixed(2)}·P<sub>${i}</sub></span>`).join(' + ');
     g('e28-sub').innerHTML = `row ${kc} of the matrices (t<sub>${kc}</sub> = ${tk[kc].toFixed(2)}, outlined): ${mode === 'vel' ? 'velocity' : 'point'} = ${parts} = <b>(${Xm[kc][0].toFixed(1)}, ${Xm[kc][1].toFixed(1)})</b>. ` +
-      `B has ${M} × ${n} entries but only ${act.length} are non-zero in this row, because only ${act.length} bumps are alive at that moment.`;
+      `B has ${M} × ${n} entries but only ${act.length} are non-zero in this row, because only ${act.length} bumps are alive at that sample time.`;
     const CAP = {
       C: `<b>C(t)</b>: the curve, a point in the plane for each clock time t (the thick white line).`,
       P: `<b>P<sub>i</sub></b>: control point i, a pair (x, y). Each is also the weight on bump i, separately for x and for y.`,
       N: `<b>N<sub>i,p</sub>(t)</b>: how much control point i counts at time t. The lines from the curve point to the control points have thickness equal to those weights; the outlined row of B holds the same numbers.`,
-      X: `<b>X</b>: the curve sampled at m = ${M} moments, one row per moment: the grey dots on the curve are the rows of X.`,
+      X: `<b>X</b>: the curve sampled at m = ${M} sample times, one row per sample time: the grey dots on the curve are the rows of X.`,
       B: `<b>B</b>: the table of bump values. Row k lists N<sub>0,p</sub>(t<sub>k</sub>) … N<sub>n−1,p</sub>(t<sub>k</sub>); most entries are zero because each bump is local.`,
       Pm: `<b>P</b>: the control points as a matrix, one row per point, columns x and y. Drag a number to move that coordinate.`
     };
