@@ -27,6 +27,10 @@ Goal: learn splines. Claude presents facts; the user adds their own understandin
 - Published (private) artifacts: Spline Lab https://claude.ai/artifact/EtsNTMDuD9z9nw9GqS3bf2 and Bouncing Ball Splines https://claude.ai/artifact/DiSiobxoJ2aeYSAFLQ5nCb. After rebuilding, republish by calling the Artifact tool with the same `file_path` (keeps the URL).
 - Test fragments by wrapping them in a minimal skeleton in headless Chromium; the sandbox cannot reach CDNs, so libraries stay inlined.
 
+## Hermite page (site/hermite.html, sections s33-s35)
+- Separate general lesson on the cubic Hermite spline: s33 one piece (p0,m0,p1,m1 times h00,h10,h01,h11), s34 chain (C1 for free; tangent rules free / neighbour slope / C2 via `cubicSystem`), s35 fixed 8x6 matrix on a window (knots at first, middle, last sample). Checks: matrix product vs direct evaluation, slope jump ~1e-17, bend jump 0 in C2 mode.
+- Published (private) artifact: Cubic Hermite Spline https://claude.ai/artifact/W37EByyiwPDY257Wo4ZYqY (republish `site/artifact/hermite.html` with the same file path). Math page artifact: https://claude.ai/artifact/8CymcbU3Wc49pARoL7gsTn.
+
 ## Math page (site/math.html, section files s20-s28)
 - Covers the mathematics of the Wikipedia article "Spline (mathematics)" (plus "Spline interpolation" and "B-spline") as interactive equations: nine sections s21-s26, s20, s27, s28 (see `PAGES` for order and `corpus/notes/spline-math-outline.md` for the outline and sourcing).
 - Pattern: each section renders its equation with `eqLab()` (common.js; KaTeX `\htmlClass{eq-<key>}{...}`, `trust: true`), reads `eq.hl` in `draw()` to highlight the matching part of the picture and a caption, and ends with a live-substitution line that checks the claim numerically. Reuse `bsD`, `solveLinear`, `cubicSystem`, `col7`.
