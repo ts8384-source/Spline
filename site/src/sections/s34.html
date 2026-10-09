@@ -1,0 +1,10 @@
+<section id="s34">
+    <h2>2 · Chain the pieces: the slope match is built in</h2>
+    <p>Put several knots in a row. Each knot has a <b>value</b> and a <b>slope</b>, and each piece between two knots is a Hermite piece from slide 1. Because the piece on the left of a knot and the piece on the right of it are both given the <i>same</i> value and the <i>same</i> slope there, they always agree on both: the curve is <b>C¹</b> without any solving. What nothing forces is the <b>bend</b> (the second derivative), so it can jump at a knot. <b>Drag the knots; in "free" mode drag the arrows too.</b></p>
+    <div id="m34" class="chips"><button class="chip" data-m="free">tangents: free (drag the arrows)</button><button class="chip" data-m="fd">tangents: neighbour-to-neighbour slope</button><button class="chip" data-m="c2">tangents: the ones that make it C²</button></div>
+    <svg id="h2v" viewBox="0 0 800 340"></svg>
+    <svg id="h2d" viewBox="0 0 800 150"></svg>
+    <button class="alt" id="b34">reset knots</button>
+    <p id="h2-read" class="readout"></p>
+    <p class="note"><b>Top:</b> the curve, the knots (dots) and the tangent arrows. <b>Lower:</b> the bend <span data-tex="S''"></span> along the curve. Inside a piece it is a straight line; at a knot it can jump (grey dashed). Choose the third tangent rule and the jumps disappear: those tangents are exactly what the ordinary smooth cubic spline of the Math page uses, so <b>an interpolating cubic spline is a Hermite spline whose tangents were chosen to make it C²</b>. Hermite keeps the tangents as free numbers instead, which is more freedom and a little less smoothness.</p>
+  </section>

@@ -1,0 +1,12 @@
+<section id="s35">
+    <h2>3 · Hermite as a fixed matrix on a window</h2>
+    <p>Ask for the curve at 8 evenly spaced sample times (frames 0 … 7), with three knots at the first sample, the middle of the window and the last sample. The six numbers <span data-tex="\boldsymbol\theta=(o_0,m_0,o_1,m_1,o_2,m_2)"></span> are an <b>offset</b> and a <b>slope</b> at each knot (slopes are "change per sample"). Because the curve is linear in those six numbers, it is again one fixed matrix times <span data-tex="\boldsymbol\theta"></span>, like the B-spline matrix on the Math page. <b>Move the sliders, or pick a preset, and watch both the curve and the product.</b></p>
+    <div id="eh3" class="eqbox"></div>
+    <p id="eh3-cap" class="note"></p>
+    <div id="m35" class="chips"><button class="chip" data-p="steady">steady: 3 per sample</button><button class="chip" data-p="hill">up, then down</button><button class="chip" data-p="zero">all zero</button></div>
+    <svg id="h3v" viewBox="0 0 800 250"></svg>
+    <div id="sl35" class="sliders"></div>
+    <svg id="h3m" viewBox="0 0 800 330"></svg>
+    <p id="eh3-read" class="readout"></p>
+    <p class="note">The matrix <span data-tex="\mathbf B"></span> is computed once from the Hermite bumps and never depends on <span data-tex="\boldsymbol\theta"></span>. Sample 0 and sample 7 sit exactly on knots, so their rows pick out one offset each. The middle knot falls <i>between</i> samples 3 and 4, so no row equals that offset alone. Compared with 6 B-spline control points, the six numbers here mean something you can read off directly (a height and a slope at three places), but the curve is only C¹ at the middle knot.</p>
+  </section>

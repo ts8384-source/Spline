@@ -6,6 +6,7 @@ Pages (edit PAGES to add or move sections):
   learn.html    Spline Lab: general spline demos (sections 1-6, 11, 12, 9, 10, 14, 13)
   project.html  Bouncing-ball project: how splines might be used as a network readout (sections 7-8)
   math.html     Mathematics of splines: interactive annotated equations (prototype)
+  hermite.html  Cubic Hermite spline (sections 33-35)
   index.html    Landing page linking to the pages
 Sources: site/src/sections/sN.html (markup), site/src/js/sN.js (behaviour), site/src/js/common.js (shared helpers),
 site/src/demo.css, site/src/shell.html (page frame).
@@ -45,6 +46,11 @@ PAGES = {
         footer=("Source: the mathematics covered by Wikipedia's <i>Spline (mathematics)</i> article, with <i>Spline interpolation</i> and <i>B-spline</i> for the interpolation and basis parts. "
                 "The article text could not be fetched from this environment, so the outline comes from search summaries of those articles plus standard theory; check coverage against the article when access is open. "
                 "Every numerical claim on the page is checked live by the page itself.")),
+    "hermite.html": dict(
+        title="Cubic Hermite spline", artifact_title="Cubic Hermite Spline", h1="The cubic Hermite spline",
+        lede="A spline described by what you want at each knot: a value and a slope. One piece, a chain of pieces (C\u00b9 for free), and the fixed-matrix form on a window of samples.",
+        sections=[33, 34, 35],
+        footer="General lesson page; it assumes the ideas of the Spline Lab and the Math page."),
     "project.html": dict(
         title="Bouncing-ball project", artifact_title="Bouncing Ball Splines", h1="Project: spline readout for a bouncing ball",
         lede="How splines might be used as the output of a recurrent spiking network that predicts a bouncing ball. Kept separate from the learning demos; these pages assume the ideas in the Spline Lab.",
@@ -94,6 +100,7 @@ index = f"""<!doctype html><html lang="en"><head><meta charset="utf-8"><meta nam
 <div class="cards">
 <a href="learn.html"><h2>Spline Lab</h2><p>Why not one polynomial, sums of bumps, de Casteljau, the weight tree, what <i>t</i> is, and why we need it.</p></a>
 <a href="math.html"><h2>Spline Math</h2><p>The mathematics of splines as interactive equations: hover a symbol, see what it does.</p></a>
+<a href="hermite.html"><h2>Cubic Hermite spline</h2><p>Values and slopes at the knots: one piece, a chain that is C\u00b9 for free, and the fixed-matrix form.</p></a>
 <a href="project.html"><h2>Bouncing-ball project</h2><p>Knots on a bounce, and a spline as the output of a spiking network over a sliding window.</p></a>
 </div></main></body></html>"""
 (ROOT / "index.html").write_text(index)
