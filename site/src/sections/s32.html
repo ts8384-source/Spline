@@ -1,0 +1,16 @@
+<section id="s32">
+    <h2>12 · What you choose: degree, knots and basis rule</h2>
+    <p>Slide 11 let you move the learned part, the control points <span data-tex="\mathbf c_i"></span>. Here you keep moving them, and you also turn the knobs that are <i>fixed</i> in a trained model. The number of control points stays <b>7</b>: it is set by the other choices (<span data-tex="n=\#\text{knots}-p-1"></span>), so it is not a knob. The thin grey curve is the default for these same points (cubic, evenly spaced knots, B-spline), so you can see what each knob changes.</p>
+    <div id="e32" class="eqbox"></div>
+    <p id="e32-cap" class="note"></p>
+    <svg id="v32" viewBox="0 0 800 300"></svg>
+    <div id="m32" class="chips"><button class="chip" data-m="bs">basis: B-spline</button><button class="chip" data-m="bz">basis: Bézier (one piece)</button></div>
+    <label class="ctl" id="l32p">degree p <input id="i32p" type="range" min="1" max="3" step="1" value="3"> <b id="o32p">3</b></label>
+    <div id="pre32" class="chips"><button class="chip" data-k="uni">knots: evenly spaced</button><button class="chip" data-k="cor">knots: stack in the middle (corner)</button></div>
+    <svg id="k32" viewBox="0 0 800 200"></svg>
+    <label class="ctl" id="l32t">t (the clock) <input id="i32t" type="range" min="0" max="1" step="0.002" value="0.45"> <b id="o32t">0.45</b></label>
+    <button class="alt" id="b32">reset points</button>
+    <p id="e32-sub" class="readout"></p>
+    <p id="e32-kn" class="readout"></p>
+    <p class="note"><b>Top:</b> the curve for the current choices. <b>Lower picture:</b> the bumps <span data-tex="B_{i,p}"></span> that those choices produce, and the <b>inner knots</b> as white handles on the baseline: drag them sideways. A number like ×3 means that many knots sit at the same place. The ends carry <span data-tex="p+1"></span> knots each (clamped), which is why the curve starts and ends exactly on the first and last control point.</p>
+  </section>

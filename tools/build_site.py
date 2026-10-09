@@ -26,7 +26,7 @@ PAGES = {
         title="Spline Math", artifact_title="Spline Math", h1="Mathematics of splines",
         lede=("Every equation here is interactive: hover or tap a symbol and the picture shows what it is, and each equation is filled in with live numbers. "
               "Contents: <a href=\"#s21\">1 Definition</a> · <a href=\"#s22\">2 Smoothness</a> · <a href=\"#s23\">3 Counting</a> · <a href=\"#s29\">4 Why C^(n−1)</a> · <a href=\"#s24\">5 Interpolating cubic splines</a> · "
-              "<a href=\"#s25\">6 Bending energy</a> · <a href=\"#s26\">7 Cox–de Boor recursion</a> · <a href=\"#s20\">8 The core equation</a> · <a href=\"#s27\">9 Basis properties</a> · <a href=\"#s28\">10 The matrix form</a> · <a href=\"#s31\">11 Move the control points</a>"
+              "<a href=\"#s25\">6 Bending energy</a> · <a href=\"#s26\">7 Cox–de Boor recursion</a> · <a href=\"#s20\">8 The core equation</a> · <a href=\"#s27\">9 Basis properties</a> · <a href=\"#s28\">10 The matrix form</a> · <a href=\"#s31\">11 Move the control points</a> · <a href=\"#s32\">12 What you choose</a>"
               "<details class=\"symkey\"><summary>Symbols used on this page (the same letter sometimes means different things)</summary>"
               "<table class=\"mt\" style=\"text-align:left\"><tr><th>symbol</th><th>meaning</th><th>where</th></tr>"
               "<tr><td>n</td><td><b>degree</b> of the pieces (cubic: 3)</td><td>slides 1–4</td></tr>"
@@ -41,7 +41,7 @@ PAGES = {
               "<tr><td>r</td><td>how many derivatives match at a knot (C<sup>r</sup>)</td><td>slides 2–4</td></tr>"
               "<tr><td>c<sub>i</sub></td><td>one free number at knot i (slide 4), or the weight of bump i (slides 8–9)</td><td>as stated</td></tr>"
               "</table></details>"),
-        sections=[21, 22, 23, 29, 24, 25, 26, 20, 27, 28, 31],
+        sections=[21, 22, 23, 29, 24, 25, 26, 20, 27, 28, 31, 32],
         footer=("Source: the mathematics covered by Wikipedia's <i>Spline (mathematics)</i> article, with <i>Spline interpolation</i> and <i>B-spline</i> for the interpolation and basis parts. "
                 "The article text could not be fetched from this environment, so the outline comes from search summaries of those articles plus standard theory; check coverage against the article when access is open. "
                 "Every numerical claim on the page is checked live by the page itself.")),
