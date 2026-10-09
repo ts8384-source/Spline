@@ -35,6 +35,12 @@ A forecast made at frame τ covers τ+1 … τ+W. Each target frame arrives late
 - Bounce: extra control points, or triple knot with predicted bounce time?
 - Does the loss weight near frames more than far frames?
 
+## 5. Hermite head and continuity (added later)
+- A Hermite chain is **C¹ by construction**: both pieces at a knot share the same value and the same tangent. A corner (bounce) needs a **C⁰** knot: give that knot a separate left and right tangent.
+- Output counts per axis (x and y each): 3 knots, shared tangents = 3 offsets + 3 tangents = **6** (12 readout units, the same as 6 control points × 2). Split tangent at the middle knot = **7** (14 units). Plus a learned bounce time = **+1** (15 units).
+- With knots fixed at first/middle/last sample, a corner appears only if the bounce is at the middle knot. A learned knot time makes **B no longer fixed** (it depends on the time); it is polynomial in the time, so gradients exist, but the pulled-back error rule `Bᵀ(X̂ − X)` no longer covers that one parameter. Not derived or tested.
+- Linear head (degree 1) is C⁰ at every knot; a cubic B-spline with a triple knot is C⁰ there.
+
 ## My understanding
 
 ## In my projects
