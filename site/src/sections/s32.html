@@ -6,7 +6,8 @@
     <svg id="v32" viewBox="0 0 800 300"></svg>
     <div id="m32" class="chips"><button class="chip" data-m="bs">basis: B-spline</button><button class="chip" data-m="bz">basis: Bézier (one piece)</button></div>
     <label class="ctl" id="l32p">degree p <input id="i32p" type="range" min="1" max="3" step="1" value="3"> <b id="o32p">3</b></label>
-    <div id="pre32" class="chips"><button class="chip" data-k="uni">knots: evenly spaced</button><button class="chip" data-k="cor">knots: stack in the middle (corner)</button></div>
+    <div id="pre32" class="chips"><button class="chip" data-k="uni">knots: evenly spaced</button><button class="chip" data-k="cor">knots: pile 3 in the middle</button></div>
+    <p class="note"><b>What a knot is.</b> The curve is made of cubic pieces glued end to end. A <b>knot</b> is the seam: the clock time where one piece hands over to the next. On the curve above, each seam is marked with a yellow ring and its smoothness. Drag a white handle below to slide a seam along the clock. <b>Pile all 3 seams on one spot</b> and the curve is allowed to turn sharply there, because it no longer has to match slope and bend across the seam. That is the "corner" a bounce needs.</p>
     <svg id="k32" viewBox="0 0 800 200"></svg>
     <label class="ctl" id="l32t">t (the clock) <input id="i32t" type="range" min="0" max="1" step="0.002" value="0.45"> <b id="o32t">0.45</b></label>
     <button class="alt" id="b32">reset points</button>

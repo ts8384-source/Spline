@@ -32,6 +32,11 @@
       .attr('stroke', hl === 'c' ? '#fff' : '#1c1c1c').attr('stroke-width', 2.5).style('cursor', 'grab')
       .call(d3.drag().on('drag', (ev, i) => { P[i] = [Math.max(10, Math.min(W - 10, ev.x)), Math.max(10, Math.min(H - 10, ev.y))]; draw(); }));
     svg.selectAll('.cl').data(d3.range(N)).join('text').attr('class', 'cl').attr('x', i => P[i][0]).attr('y', i => P[i][1] + 4).attr('text-anchor', 'middle').attr('fill', '#111').attr('font-size', 11).attr('font-weight', 700).attr('pointer-events', 'none').text(i => i);
+    if (!bz) d3.rollups(inner, v => v.length, v => v.toFixed(4)).map(([v, m]) => [+v, m]).forEach(([v, m]) => {
+      const q = cur(v), r = p - m;
+      svg.append('circle').attr('cx', q[0]).attr('cy', q[1]).attr('r', hl === 'T' ? 11 : 8).attr('fill', 'none').attr('stroke', '#fbbf24').attr('stroke-width', 3);
+      svg.append('text').attr('x', q[0]).attr('y', q[1] - 14).attr('text-anchor', 'middle').attr('fill', '#fbbf24').attr('font-size', 12).attr('font-weight', 700).text(r >= 0 ? (r === 0 ? 'corner allowed (C⁰)' : `smooth (C${['⁰', '¹', '²'][r] || r})`) : 'can break');
+    });
     svg.append('text').attr('x', 10).attr('y', 16).attr('fill', '#9ca3af').attr('font-size', 11).text('grey = default (cubic, evenly spaced knots, B-spline)');
 
     // bumps + knot handles

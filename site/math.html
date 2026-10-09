@@ -263,7 +263,8 @@ table.mt[style*="text-align:left"] td,table.mt[style*="text-align:left"] th{text
     <svg id="v32" viewBox="0 0 800 300"></svg>
     <div id="m32" class="chips"><button class="chip" data-m="bs">basis: B-spline</button><button class="chip" data-m="bz">basis: Bézier (one piece)</button></div>
     <label class="ctl" id="l32p">degree p <input id="i32p" type="range" min="1" max="3" step="1" value="3"> <b id="o32p">3</b></label>
-    <div id="pre32" class="chips"><button class="chip" data-k="uni">knots: evenly spaced</button><button class="chip" data-k="cor">knots: stack in the middle (corner)</button></div>
+    <div id="pre32" class="chips"><button class="chip" data-k="uni">knots: evenly spaced</button><button class="chip" data-k="cor">knots: pile 3 in the middle</button></div>
+    <p class="note"><b>What a knot is.</b> The curve is made of cubic pieces glued end to end. A <b>knot</b> is the seam: the clock time where one piece hands over to the next. On the curve above, each seam is marked with a yellow ring and its smoothness. Drag a white handle below to slide a seam along the clock. <b>Pile all 3 seams on one spot</b> and the curve is allowed to turn sharply there, because it no longer has to match slope and bend across the seam. That is the "corner" a bounce needs.</p>
     <svg id="k32" viewBox="0 0 800 200"></svg>
     <label class="ctl" id="l32t">t (the clock) <input id="i32t" type="range" min="0" max="1" step="0.002" value="0.45"> <b id="o32t">0.45</b></label>
     <button class="alt" id="b32">reset points</button>
@@ -1257,6 +1258,11 @@ function cubicSystem(xs, ys, type, s0, sn) {                     // interpolatin
       .attr('stroke', hl === 'c' ? '#fff' : '#1c1c1c').attr('stroke-width', 2.5).style('cursor', 'grab')
       .call(d3.drag().on('drag', (ev, i) => { P[i] = [Math.max(10, Math.min(W - 10, ev.x)), Math.max(10, Math.min(H - 10, ev.y))]; draw(); }));
     svg.selectAll('.cl').data(d3.range(N)).join('text').attr('class', 'cl').attr('x', i => P[i][0]).attr('y', i => P[i][1] + 4).attr('text-anchor', 'middle').attr('fill', '#111').attr('font-size', 11).attr('font-weight', 700).attr('pointer-events', 'none').text(i => i);
+    if (!bz) d3.rollups(inner, v => v.length, v => v.toFixed(4)).map(([v, m]) => [+v, m]).forEach(([v, m]) => {
+      const q = cur(v), r = p - m;
+      svg.append('circle').attr('cx', q[0]).attr('cy', q[1]).attr('r', hl === 'T' ? 11 : 8).attr('fill', 'none').attr('stroke', '#fbbf24').attr('stroke-width', 3);
+      svg.append('text').attr('x', q[0]).attr('y', q[1] - 14).attr('text-anchor', 'middle').attr('fill', '#fbbf24').attr('font-size', 12).attr('font-weight', 700).text(r >= 0 ? (r === 0 ? 'corner allowed (C⁰)' : `smooth (C${['⁰', '¹', '²'][r] || r})`) : 'can break');
+    });
     svg.append('text').attr('x', 10).attr('y', 16).attr('fill', '#9ca3af').attr('font-size', 11).text('grey = default (cubic, evenly spaced knots, B-spline)');
 
     // bumps + knot handles
