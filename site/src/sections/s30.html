@@ -1,0 +1,13 @@
+<section id="s30">
+    <h2>3 · Training without peeking</h2>
+    <p>The network may only <i>see</i> frames up to "now", yet it must forecast the next <i>W</i> frames, and you need a loss. The way out is <b>time</b>: a forecast made at frame <span data-tex="\tau"></span> covers frames <span data-tex="\tau+1\ldots\tau+W"></span>, and each of those frames <i>arrives</i> later. Nothing is peeked at; you grade the forecast when its answer shows up. Below, each cell of the grid is one pair (forecast made at <span data-tex="\tau"></span>, target frame <span data-tex="f"></span>). Green cells already have their answer, grey ones are still waiting. Pick a way to build the loss and see which cells it uses.</p>
+    <div id="lg-chips" class="chips"></div>
+    <svg id="lgt" viewBox="0 0 800 250"></svg>
+    <svg id="lgg" viewBox="0 0 800 300"></svg>
+    <label class="ctl">now (frame) <input id="lg-now" type="range" min="50" max="140" step="1" value="90"> <b id="lg-nowv">90</b></label>
+    <label class="ctl">forecast length W <input id="lg-w" type="range" min="10" max="60" step="1" value="30"> <b id="lg-wv">30</b></label>
+    <label class="ctl">forecast made at frame <input id="lg-t0" type="range" min="0" max="140" step="1" value="70"> <b id="lg-t0v">70</b> <span class="note">(used by B and C)</span></label>
+    <label class="ctl">past frames also output (C) <input id="lg-wp" type="range" min="5" max="40" step="1" value="15"> <b id="lg-wpv">15</b></label>
+    <p id="lg-read" class="readout"></p>
+    <p class="note"><b>Top:</b> the true path (solid up to now, faint after: the network never sees that part) and forecast splines. <b>Grid:</b> horizontal = target frame, vertical = the frame the forecast was made at. The forecasts here are a <i>stand-in</i>: the best spline fit plus a made-up error that grows with lead time. They show the bookkeeping, not a trained network. The "which cells to score" rules are standard multi-step-ahead training bookkeeping; the note about gradients is my reasoning and I have not tested it on your network.</p>
+  </section>

@@ -48,7 +48,7 @@ PAGES = {
     "project.html": dict(
         title="Bouncing-ball project", artifact_title="Bouncing Ball Splines", h1="Project: spline readout for a bouncing ball",
         lede="How splines might be used as the output of a recurrent spiking network that predicts a bouncing ball. Kept separate from the learning demos; these pages assume the ideas in the Spline Lab.",
-        sections=[7, 8],
+        sections=[7, 8, 30],
         footer="Project notes live in <code>corpus/notes/my-project-context.md</code>."),
 }
 
