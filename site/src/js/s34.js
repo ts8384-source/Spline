@@ -2,7 +2,7 @@
 (function () {
   const g = id => document.getElementById(id), top = d3.select('#h2v'), bend = d3.select('#h2d'), W = 800, Hh = 340, D = 46, clamp = (v, a, b) => Math.max(a, Math.min(b, v));
   const X0 = [70, 220, 370, 540, 730], Y0 = [210, 90, 230, 100, 180];
-  let xs = X0.slice(), ys = Y0.slice(), m = [], mode = 'fd';
+  let xs = X0.slice(), ys = Y0.slice(), m = [], mode = 'free';
   const fdTan = () => xs.map((x, i) => { const a = Math.max(0, i - 1), b = Math.min(xs.length - 1, i + 1); return (ys[b] - ys[a]) / (xs[b] - xs[a]); });
   const c2Tan = () => { const S = cubicSystem(xs, ys, 'natural'); return xs.map(x => S.ev(x, 1)); };
   const H = u => [2 * u ** 3 - 3 * u ** 2 + 1, u ** 3 - 2 * u ** 2 + u, -2 * u ** 3 + 3 * u ** 2, u ** 3 - u ** 2];
