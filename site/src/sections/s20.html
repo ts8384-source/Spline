@@ -8,4 +8,17 @@
     <label class="ctl" id="eq-p-l">degree p <input id="eq-p" type="range" min="0" max="3" step="1" value="3"> <b id="eq-pv">3</b></label>
     <button class="alt" id="eq-reset">reset weights</button>
     <p id="eq-sub" class="readout"></p>
+    <label class="ctl"><input id="eq-learn-cb" type="checkbox"> colour the equation by <b>learned</b> (green) vs <b>fixed / chosen</b> (grey)</label>
+    <div id="eq-learn" style="display:none">
+      <div class="tablewrap"><table class="mt">
+        <tr><th style="text-align:left">piece</th><th style="text-align:left">what it is</th><th style="text-align:left">learned?</th></tr>
+        <tr><td style="text-align:left"><span data-tex="c_i"></span></td><td style="text-align:left">the <i>n</i> weights (control points)</td><td style="text-align:left;color:#22c55e"><b>learned</b>: the only numbers training changes</td></tr>
+        <tr><td style="text-align:left"><span data-tex="B_{i,p}(t)"></span></td><td style="text-align:left">bump values, built from the knots and the degree</td><td style="text-align:left">fixed: computed once from choices below</td></tr>
+        <tr><td style="text-align:left">knots</td><td style="text-align:left">where the bumps sit along t</td><td style="text-align:left">chosen up front. Learning them too is possible, but then S is no longer linear in the unknowns and fitting gets harder</td></tr>
+        <tr><td style="text-align:left"><span data-tex="p"></span>, <span data-tex="n"></span></td><td style="text-align:left">degree and number of bumps</td><td style="text-align:left">chosen (hyperparameters)</td></tr>
+        <tr><td style="text-align:left"><span data-tex="t"></span></td><td style="text-align:left">the clock</td><td style="text-align:left">the input, not a parameter</td></tr>
+        <tr><td style="text-align:left"><span data-tex="S(t)"></span></td><td style="text-align:left">the curve</td><td style="text-align:left">the output</td></tr>
+      </table></div>
+      <p id="eq-learn-live" class="readout"></p>
+    </div>
   </section>

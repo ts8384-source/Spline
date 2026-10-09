@@ -65,3 +65,5 @@ table.mt tr.hot td{background:rgba(251,191,36,.18)}
 .stepcap{background:var(--bg);border-left:4px solid var(--yellow);padding:10px 14px;border-radius:4px;margin:10px 0}
 .lede details.symkey{margin-top:10px;font-size:.9rem}.lede details summary{cursor:pointer;color:var(--blue)}
 table.mt[style*="text-align:left"] td,table.mt[style*="text-align:left"] th{text-align:left}
+
+.eqbox.learnview .eq-c{color:#22c55e}.eqbox.learnview .eq-B,.eqbox.learnview .eq-p{color:#9ca3af}.eqbox.learnview .eq-t{color:#9ca3af}

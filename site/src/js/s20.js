@@ -64,7 +64,9 @@
     g('eq-cap').innerHTML = hl ? CAP[hl] : 'Hover a symbol, or tap it to keep it highlighted.';
     g('eq-sub').innerHTML = `S(${t.toFixed(2)}) = Σ c<sub>i</sub>·B<sub>i</sub>(t) = ` +
       act.map(i => `<span style="color:${col(i)}">${c[i].toFixed(2)}·${bt[i].toFixed(2)}</span>`).join(' + ') + ` = <b>${S.toFixed(3)}</b>`;
+    g('eq-learn-live').innerHTML = `Because S is a plain weighted sum, <b>∂S/∂c<sub>i</sub> = B<sub>i,p</sub>(t)</b>: the bump values <i>are</i> the gradient weights. At t = ${t.toFixed(2)} only bump${act.length === 1 ? '' : 's'} ${act.join(', ')} ${act.length === 1 ? 'has' : 'have'} a non-zero gradient (${act.map(i => bt[i].toFixed(2)).join(', ')}), so only those weights would move if the error at this t were reduced. With B fixed, S is linear in c, so fitting c to data is a linear least-squares problem.`;
   }
+  g('eq-learn-cb').addEventListener('change', e => { eq.classList.toggle('learnview', e.target.checked); g('eq-learn').style.display = e.target.checked ? '' : 'none'; });
   tIn.addEventListener('input', draw); pIn.addEventListener('input', draw);
   g('eq-reset').onclick = () => { c = []; draw(); };
   draw();
